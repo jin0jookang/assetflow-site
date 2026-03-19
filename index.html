@@ -33,65 +33,41 @@
 html { font-size: 15px; }
 body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
-/* ── PAGE SWITCH ── */
 .page { display: none; }
 .page.active { display: block; animation: fadeIn .25s ease; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
-/* ══════════════════════════════════════
-   HOME PAGE
-══════════════════════════════════════ */
-.home-nav {
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  padding: 0 48px;
-  height: 64px;
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-}
-.nav-logo { font-size: 20px; font-weight: 800; color: var(--blue); cursor: pointer; letter-spacing: -.5px; }
-.nav-links { display: flex; gap: 28px; list-style: none; }
-.nav-links a { font-size: 13.5px; font-weight: 500; color: var(--text2); text-decoration: none; transition: color .18s; }
-.nav-links a:hover { color: var(--g500); }
-.nav-badge { background: var(--g100); color: var(--g700); font-size: 11.5px; font-weight: 600; padding: 5px 14px; border-radius: 100px; }
-
-.hero { padding: 72px 48px 48px; max-width: 1280px; margin: 0 auto; }
-.hero-label { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--g500); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 20px; }
-.hero-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--g400); }
-.hero-title { font-size: clamp(32px,3.5vw,48px); font-weight: 800; color: var(--g900); line-height: 1.15; letter-spacing: -1.5px; margin-bottom: 14px; }
-.hero-title span { color: var(--blue); }
-.hero-sub { font-size: 15px; color: var(--text2); line-height: 1.7; max-width: 500px; margin-bottom: 56px; }
-
-.section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 48px; max-width: 1280px; margin-left: auto; margin-right: auto; }
-.section-title { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
-
-.card-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; padding: 0 48px 72px; max-width: 1280px; margin: 0 auto; }
-
-.tool-card {
-  background: var(--white); border-radius: var(--radius); padding: 32px 28px 28px;
-  cursor: pointer; transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease;
-  box-shadow: var(--shadow); border: 1px solid var(--border);
-  display: flex; flex-direction: column; position: relative; overflow: hidden;
-  animation: cardUp .5s cubic-bezier(.4,0,.2,1) both;
-}
-.tool-card:nth-child(1){animation-delay:.04s} .tool-card:nth-child(2){animation-delay:.10s}
-.tool-card:nth-child(3){animation-delay:.16s} .tool-card:nth-child(4){animation-delay:.22s}
+/* ── HOME ── */
+.home-nav { background:var(--white); border-bottom:1px solid var(--border); padding:0 48px; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+.nav-logo { font-size:20px; font-weight:800; color:var(--blue); cursor:pointer; letter-spacing:-.5px; }
+.nav-links { display:flex; gap:28px; list-style:none; }
+.nav-links a { font-size:13.5px; font-weight:500; color:var(--text2); text-decoration:none; transition:color .18s; }
+.nav-links a:hover { color:var(--g500); }
+.nav-badge { background:var(--g100); color:var(--g700); font-size:11.5px; font-weight:600; padding:5px 14px; border-radius:100px; }
+.hero { padding:72px 48px 48px; max-width:1280px; margin:0 auto; }
+.hero-label { display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:600; color:var(--g500); letter-spacing:1.2px; text-transform:uppercase; margin-bottom:20px; }
+.hero-label .dot { width:6px; height:6px; border-radius:50%; background:var(--g400); }
+.hero-title { font-size:clamp(32px,3.5vw,48px); font-weight:800; color:var(--g900); line-height:1.15; letter-spacing:-1.5px; margin-bottom:14px; }
+.hero-title span { color:var(--blue); }
+.hero-sub { font-size:15px; color:var(--text2); line-height:1.7; max-width:500px; margin-bottom:56px; }
+.section-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding:0 48px; max-width:1280px; margin-left:auto; margin-right:auto; }
+.section-title { font-size:12px; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.card-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; padding:0 48px 72px; max-width:1280px; margin:0 auto; }
+.tool-card { background:var(--white); border-radius:var(--radius); padding:32px 28px 28px; cursor:pointer; transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease; box-shadow:var(--shadow); border:1px solid var(--border); display:flex; flex-direction:column; position:relative; overflow:hidden; animation:cardUp .5s cubic-bezier(.4,0,.2,1) both; }
+.tool-card:nth-child(1){animation-delay:.04s} .tool-card:nth-child(2){animation-delay:.10s} .tool-card:nth-child(3){animation-delay:.16s} .tool-card:nth-child(4){animation-delay:.22s}
 @keyframes cardUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
-.tool-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.tool-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); }
 .tool-card::after { content:''; position:absolute; bottom:0; right:0; width:80px; height:80px; border-radius:40px 0 var(--radius) 0; opacity:.06; transition:opacity .3s; }
 .tool-card:hover::after { opacity:.1; }
 .card1::after{background:#2e8b57} .card2::after{background:#1a7a6a} .card3::after{background:#2d7a4a} .card4::after{background:#3d6e3a}
-
 .card-icon-wrap { width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:22px; transition:transform .3s cubic-bezier(.34,1.56,.64,1); flex-shrink:0; }
 .tool-card:hover .card-icon-wrap { transform:scale(1.1); }
 .card1 .card-icon-wrap{background:#e8f7ef} .card2 .card-icon-wrap{background:#e6f4f1} .card3 .card-icon-wrap{background:#eaf5ec} .card4 .card-icon-wrap{background:#edf5e9}
 .card-icon-wrap svg { width:26px; height:26px; }
-
 .card-title-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; white-space:nowrap; }
 .card-title { font-size:15px; font-weight:700; color:var(--g900); letter-spacing:-.3px; white-space:nowrap; }
 .card-pill { font-size:10px; font-weight:700; padding:3px 9px; border-radius:100px; flex-shrink:0; }
 .card1 .card-pill{background:#e8f7ef;color:#2e8b57} .card2 .card-pill{background:#e6f4f1;color:#1a7a6a} .card3 .card-pill{background:#eaf5ec;color:#2d7a4a} .card4 .card-pill{background:#edf5e9;color:#3d6e3a}
-
 .card-desc { font-size:13px; color:var(--text2); line-height:1.65; flex:1; margin-bottom:24px; }
 .card-bottom { display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
 .card-tags { display:flex; gap:5px; flex-wrap:wrap; }
@@ -102,100 +78,107 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
 .tool-card:hover .card-arrow { transform:translate(2px,-2px); }
 .card-arrow svg { transition:stroke .22s; }
 .tool-card:hover .card-arrow svg { stroke:white; }
-
 .home-footer { background:var(--white); border-top:1px solid var(--border); padding:24px 48px; display:flex; align-items:center; justify-content:space-between; }
 .footer-logo { font-size:15px; font-weight:800; color:var(--blue); }
 .footer-copy { font-size:12px; color:var(--muted); }
 
-/* ══════════════════════════════════════
-   DIVIDEND CALCULATOR PAGE
-══════════════════════════════════════ */
-.div-nav {
-  background: var(--white); border-bottom: 1px solid var(--border);
-  padding: 0 32px; height: 60px;
-  display: flex; align-items: center; gap: 16px;
-  position: sticky; top: 0; z-index: 200;
-}
-.back-btn {
-  display: flex; align-items: center; gap: 6px;
-  background: var(--g50); border: 1px solid var(--border);
-  border-radius: 100px; padding: 6px 14px 6px 10px;
-  cursor: pointer; font-size: 13px; font-weight: 600; color: var(--g700);
-  transition: all .18s; font-family: var(--sans);
-}
-.back-btn:hover { background: var(--g100); }
-.div-nav-title { font-size: 16px; font-weight: 800; color: var(--g900); letter-spacing: -.4px; }
-.div-nav-badge { margin-left: auto; background: var(--g100); color: var(--g700); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; }
+/* ── DIVIDEND PAGE ── */
+.div-nav { background:var(--white); border-bottom:1px solid var(--border); padding:0 32px; height:60px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:200; }
+.back-btn { display:flex; align-items:center; gap:6px; background:var(--g50); border:1px solid var(--border); border-radius:100px; padding:6px 14px 6px 10px; cursor:pointer; font-size:13px; font-weight:600; color:var(--g700); transition:all .18s; font-family:var(--sans); }
+.back-btn:hover { background:var(--g100); }
+.div-nav-title { font-size:16px; font-weight:800; color:var(--g900); letter-spacing:-.4px; }
 
-/* Layout */
-.div-layout { display: grid; grid-template-columns: 420px 1fr; gap: 24px; padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
+.refresh-btn { display:flex; align-items:center; gap:6px; background:var(--white); border:1.5px solid var(--g400); border-radius:100px; padding:6px 16px; cursor:pointer; font-size:12px; font-weight:700; color:var(--g700); transition:all .18s; font-family:var(--sans); white-space:nowrap; }
+.refresh-btn:hover:not(:disabled) { background:var(--g50); }
+.refresh-btn:disabled { opacity:.6; cursor:not-allowed; }
+.refresh-btn.live { border-color:var(--g500); color:var(--g500); }
+.refresh-btn.err { border-color:var(--red); color:var(--red); }
+
+.div-nav-badge { margin-left:auto; background:var(--g100); color:var(--g700); font-size:11px; font-weight:700; padding:4px 12px; border-radius:100px; white-space:nowrap; }
+
+.div-layout { display:grid; grid-template-columns:420px 1fr; gap:24px; padding:28px 32px; max-width:1440px; margin:0 auto; }
 @media(max-width:1100px){ .div-layout{grid-template-columns:1fr} }
 
-/* LEFT PANEL */
-.panel { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
-.panel-header { padding: 20px 24px 0; }
-.panel-title { font-size: 14px; font-weight: 800; color: var(--g900); letter-spacing: -.3px; margin-bottom: 16px; }
+.panel { background:var(--white); border-radius:var(--radius); border:1px solid var(--border); box-shadow:var(--shadow); overflow:hidden; }
+.panel-header { padding:20px 24px 0; }
+.panel-title { font-size:14px; font-weight:800; color:var(--g900); letter-spacing:-.3px; margin-bottom:12px; }
 
-/* Market tabs */
-.mkt-tabs { display: flex; background: var(--bg); border-radius: 10px; padding: 3px; gap: 2px; }
-.mkt-tab { flex:1; padding:8px; border:none; background:transparent; border-radius:8px; font-family:var(--sans); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .18s; }
+/* Market tabs 2x2 */
+.mkt-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; background:var(--bg); border-radius:10px; padding:3px; margin-bottom:16px; }
+.mkt-tab { padding:8px 6px; border:none; background:transparent; border-radius:8px; font-family:var(--sans); font-size:12px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .18s; text-align:center; }
 .mkt-tab.active { background:var(--white); color:var(--g700); box-shadow:0 1px 6px rgba(0,0,0,.08); }
 
 /* Search */
-.search-wrap { padding: 16px 24px; position: relative; }
-.search-input {
-  width: 100%; padding: 11px 16px 11px 40px;
-  background: var(--bg); border: 1.5px solid var(--border);
-  border-radius: 10px; font-family: var(--sans); font-size: 14px; color: var(--text);
-  outline: none; transition: border-color .18s, box-shadow .18s;
-}
-.search-input:focus { border-color: var(--g400); box-shadow: 0 0 0 3px rgba(58,175,111,.12); background: var(--white); }
+.search-wrap { padding:12px 24px; position:relative; }
+.search-input { width:100%; padding:10px 16px 10px 40px; background:var(--bg); border:1.5px solid var(--border); border-radius:10px; font-family:var(--sans); font-size:14px; color:var(--text); outline:none; transition:border-color .18s,box-shadow .18s; }
+.search-input:focus { border-color:var(--g400); box-shadow:0 0 0 3px rgba(58,175,111,.12); background:var(--white); }
 .search-icon { position:absolute; left:36px; top:50%; transform:translateY(-50%); pointer-events:none; }
+.search-dropdown { position:absolute; top:calc(100% - 8px); left:24px; right:24px; background:var(--white); border:1.5px solid var(--border); border-radius:12px; box-shadow:var(--shadow-lg); z-index:300; max-height:260px; overflow-y:auto; display:none; }
+.search-dropdown.open { display:block; }
+.drop-item { padding:11px 16px; cursor:pointer; display:flex; align-items:center; gap:10px; transition:background .15s; border-bottom:1px solid var(--border); }
+.drop-item:last-child { border-bottom:none; }
+.drop-item:hover { background:var(--g50); }
+.drop-ticker { font-size:11px; font-weight:700; color:var(--g700); background:var(--g100); padding:2px 7px; border-radius:5px; flex-shrink:0; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.drop-name { font-size:12px; color:var(--text); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.drop-yield { font-size:11px; font-weight:600; color:var(--g500); flex-shrink:0; }
+.drop-type { font-size:9px; font-weight:700; padding:1px 6px; border-radius:4px; flex-shrink:0; }
+.drop-type.etf { background:var(--g100); color:var(--g700); }
+.drop-type.stock { background:#dbeafe; color:#1d4ed8; }
 
-/* Dropdown */
-.search-dropdown {
-  position: absolute; top: calc(100% - 8px); left: 24px; right: 24px;
-  background: var(--white); border: 1.5px solid var(--border); border-radius: 12px;
-  box-shadow: var(--shadow-lg); z-index: 300; max-height: 260px; overflow-y: auto;
-  display: none;
-}
-.search-dropdown.open { display: block; }
-.drop-item { padding: 11px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background .15s; border-bottom: 1px solid var(--border); }
-.drop-item:last-child { border-bottom: none; }
-.drop-item:hover { background: var(--g50); }
-.drop-ticker { font-size: 12px; font-weight: 700; color: var(--g700); background: var(--g100); padding: 2px 8px; border-radius: 6px; flex-shrink: 0; }
-.drop-name { font-size: 13px; color: var(--text); flex: 1; }
-.drop-yield { font-size: 12px; font-weight: 600; color: var(--g500); flex-shrink: 0; }
+/* Custom entry form */
+.custom-entry { padding:12px 24px 16px; border-top:1px solid var(--border); display:none; }
+.custom-entry.show { display:block; }
+.custom-entry-title { font-size:11px; font-weight:700; color:var(--muted); letter-spacing:.5px; text-transform:uppercase; margin-bottom:10px; }
+.custom-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px; }
+.custom-input { width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:8px; font-family:var(--sans); font-size:13px; color:var(--text); background:var(--bg); outline:none; transition:border-color .18s; }
+.custom-input:focus { border-color:var(--g400); background:var(--white); }
+.custom-select { width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:8px; font-family:var(--sans); font-size:13px; color:var(--text); background:var(--bg); outline:none; cursor:pointer; }
+.custom-add-btn { width:100%; padding:10px; border:none; border-radius:8px; background:var(--g500); color:white; font-family:var(--sans); font-size:13px; font-weight:700; cursor:pointer; transition:background .18s; margin-top:4px; }
+.custom-add-btn:hover { background:var(--g700); }
 
-/* ETF list */
-.etf-list { padding: 0 24px 24px; display: flex; flex-direction: column; gap: 10px; max-height: 500px; overflow-y: auto; }
-.etf-item {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
-  padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-  animation: fadeIn .2s ease;
-}
-.etf-color { width: 4px; height: 40px; border-radius: 4px; flex-shrink: 0; }
-.etf-info { flex: 1; min-width: 0; }
-.etf-ticker { font-size: 12px; font-weight: 700; color: var(--g700); }
-.etf-name { font-size: 12px; color: var(--muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.etf-price { font-size: 13px; font-weight: 600; color: var(--text); text-align: right; flex-shrink: 0; }
-.etf-price-sub { font-size: 10px; color: var(--muted); }
-.qty-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.qty-btn { width: 26px; height: 26px; border-radius: 8px; border: 1px solid var(--border); background: var(--white); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--text2); transition: all .15s; }
-.qty-btn:hover { background: var(--g100); border-color: var(--g400); color: var(--g700); }
-.qty-input { width: 52px; text-align: center; border: 1px solid var(--border); border-radius: 8px; padding: 4px 6px; font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--text); background: var(--white); outline: none; }
-.qty-input:focus { border-color: var(--g400); }
-.etf-remove { width: 24px; height: 24px; border-radius: 6px; border: none; background: transparent; cursor: pointer; color: var(--muted); font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all .15s; flex-shrink: 0; }
-.etf-remove:hover { background: #fee2e2; color: var(--red); }
+/* Account section */
+.acct-section { padding:16px 24px; border-bottom:1px solid var(--border); }
+.acct-section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.acct-section-title { font-size:12px; font-weight:700; color:var(--g900); }
+.acct-add-toggle { background:none; border:1px solid var(--border); border-radius:6px; padding:3px 10px; font-family:var(--sans); font-size:11px; font-weight:600; color:var(--text2); cursor:pointer; transition:all .15s; }
+.acct-add-toggle:hover { background:var(--g50); border-color:var(--g400); color:var(--g700); }
+.acct-chips { display:flex; flex-wrap:wrap; gap:6px; min-height:24px; }
+.acct-chip { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:4px 10px; border-radius:100px; border:1.5px solid var(--border); background:var(--bg); color:var(--text2); cursor:default; }
+.acct-chip .chip-del { width:14px; height:14px; border-radius:50%; background:var(--muted); color:white; border:none; cursor:pointer; font-size:10px; display:flex; align-items:center; justify-content:center; transition:background .15s; flex-shrink:0; }
+.acct-chip .chip-del:hover { background:var(--red); }
+.acct-form { display:none; margin-top:10px; }
+.acct-form.show { display:flex; gap:6px; }
+.acct-form input { flex:1; padding:7px 10px; border:1.5px solid var(--border); border-radius:8px; font-family:var(--sans); font-size:12px; color:var(--text); background:var(--bg); outline:none; }
+.acct-form input:focus { border-color:var(--g400); }
+.acct-form button { padding:7px 14px; border:none; border-radius:8px; background:var(--g500); color:white; font-family:var(--sans); font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; }
 
-.empty-list { padding: 48px 24px; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.7; }
-.empty-list .e-icon { font-size: 36px; margin-bottom: 12px; }
+/* ETF/Stock list */
+.etf-list { padding:0 24px 24px; display:flex; flex-direction:column; gap:10px; max-height:520px; overflow-y:auto; }
+.etf-item { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:10px; animation:fadeIn .2s ease; }
+.etf-color { width:4px; height:40px; border-radius:4px; flex-shrink:0; }
+.etf-info { flex:1; min-width:0; }
+.etf-ticker { font-size:11px; font-weight:700; color:var(--g700); display:flex; align-items:center; gap:4px; }
+.etf-name { font-size:11px; color:var(--muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.etf-acct { font-size:9px; font-weight:600; padding:1px 6px; border-radius:4px; background:#e0f2fe; color:#0369a1; margin-top:2px; display:inline-block; }
+.type-badge { font-size:9px; font-weight:700; padding:1px 5px; border-radius:4px; }
+.type-badge.etf { background:var(--g100); color:var(--g700); }
+.type-badge.stock { background:#dbeafe; color:#1d4ed8; }
+.etf-price { font-size:12px; font-weight:600; color:var(--text); text-align:right; flex-shrink:0; }
+.etf-price-sub { font-size:9px; color:var(--muted); }
+.price-live-dot { display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--g400); margin-right:2px; animation:pulse 2s infinite; }
+.qty-wrap { display:flex; align-items:center; gap:5px; flex-shrink:0; }
+.qty-btn { width:24px; height:24px; border-radius:7px; border:1px solid var(--border); background:var(--white); cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; color:var(--text2); transition:all .15s; }
+.qty-btn:hover { background:var(--g100); border-color:var(--g400); color:var(--g700); }
+.qty-input { width:48px; text-align:center; border:1px solid var(--border); border-radius:7px; padding:4px 4px; font-family:var(--sans); font-size:12px; font-weight:600; color:var(--text); background:var(--white); outline:none; }
+.qty-input:focus { border-color:var(--g400); }
+.etf-remove { width:22px; height:22px; border-radius:5px; border:none; background:transparent; cursor:pointer; color:var(--muted); font-size:15px; display:flex; align-items:center; justify-content:center; transition:all .15s; flex-shrink:0; }
+.etf-remove:hover { background:#fee2e2; color:var(--red); }
+.empty-list { padding:48px 24px; text-align:center; color:var(--muted); font-size:13px; line-height:1.7; }
+.empty-list .e-icon { font-size:36px; margin-bottom:12px; }
 
-/* RIGHT PANEL */
-.right-col { display: flex; flex-direction: column; gap: 20px; }
-
-/* Summary cards */
-.summary-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+/* RIGHT */
+.right-col { display:flex; flex-direction:column; gap:20px; }
+.summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
 @media(max-width:900px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
 .sum-card { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
 .sum-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; }
@@ -204,101 +187,84 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); min-
 .sum-value { font-size:22px; font-weight:800; letter-spacing:-1px; line-height:1; }
 .sum-value.green{color:var(--g700)} .sum-value.blue{color:var(--blue)} .sum-value.gold{color:var(--gold)} .sum-value.teal{color:#0d9488}
 .sum-sub { font-size:11px; color:var(--muted); margin-top:5px; }
-
-/* Filter tabs */
-.filter-tabs { display:flex; gap:6px; }
-.filter-tab { padding:7px 18px; border-radius:100px; border:1.5px solid var(--border); background:var(--white); font-family:var(--sans); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .18s; }
+.filter-tabs { display:flex; gap:6px; flex-wrap:wrap; }
+.filter-tab { padding:6px 14px; border-radius:100px; border:1.5px solid var(--border); background:var(--white); font-family:var(--sans); font-size:12px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .18s; }
 .filter-tab.active { background:var(--g700); border-color:var(--g700); color:white; }
-
-/* Portfolio panel */
-.port-body { padding: 20px 24px; }
-.port-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.port-body { padding:20px 24px; }
+.port-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 @media(max-width:700px){.port-row{grid-template-columns:1fr}}
-
-/* Donut chart */
-.donut-wrap { display: flex; flex-direction: column; align-items: center; }
-.donut-canvas { position: relative; width: 180px; height: 180px; }
-canvas#donut { width: 180px; height: 180px; }
-.donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
-.donut-center-val { font-size: 20px; font-weight: 800; color: var(--g900); letter-spacing: -1px; line-height: 1; }
-.donut-center-sub { font-size: 10px; color: var(--muted); margin-top: 3px; font-weight: 500; }
-
-/* Legend */
-.legend { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; width: 100%; }
-.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
-.legend-name { flex: 1; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.legend-pct { font-weight: 700; font-size: 12px; flex-shrink: 0; }
-
-/* Table */
-.etf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.etf-table th { font-size: 11px; font-weight: 700; color: var(--muted); padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); letter-spacing: .5px; text-transform: uppercase; }
-.etf-table td { padding: 12px 12px; border-bottom: 1px solid rgba(226,236,230,.5); vertical-align: middle; }
-.etf-table tr:last-child td { border-bottom: none; }
-.etf-table tr:hover td { background: var(--g50); }
-.t-ticker { font-size: 11px; font-weight: 700; color: var(--g700); background: var(--g100); padding: 2px 8px; border-radius: 5px; display: inline-block; }
-.t-bar-wrap { display: flex; align-items: center; gap: 8px; }
-.t-bar-bg { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-.t-bar-fill { height: 100%; border-radius: 2px; transition: width .5s cubic-bezier(.4,0,.2,1); }
-.t-pct { font-size: 12px; font-weight: 700; width: 38px; text-align: right; flex-shrink: 0; }
-
-/* Simulation panel */
-.sim-body { padding: 20px 24px; }
-.sim-note { font-size: 12.5px; color: var(--text2); line-height: 1.65; margin-bottom: 20px; padding: 12px 14px; background: var(--g50); border-radius: 10px; border: 1px solid var(--g100); }
-.sim-items { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-.sim-item { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: grid; grid-template-columns: 1fr 140px 1fr; gap: 12px; align-items: center; }
-.sim-etf-info .si-ticker { font-size: 12px; font-weight: 700; color: var(--g700); }
-.sim-etf-info .si-current { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.sim-delta-wrap label { font-size: 10px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 4px; letter-spacing: .5px; text-transform: uppercase; }
-.sim-delta-input { width: 100%; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); outline: none; text-align: center; transition: border-color .18s; }
-.sim-delta-input:focus { border-color: var(--g400); }
-.sim-result-item { text-align: right; }
-.sim-result-item .sr-after { font-size: 14px; font-weight: 700; color: var(--text); }
-.sim-result-item .sr-delta { font-size: 12px; font-weight: 600; margin-top: 2px; }
-.sr-delta.pos { color: var(--g500); }
-.sr-delta.neg { color: var(--red); }
-
-/* Sim summary box */
-.sim-summary { background: linear-gradient(135deg, var(--g50), #f0fdf8); border: 1.5px solid var(--g200, #b8dfc8); border-radius: 14px; padding: 20px; display: none; }
-.sim-summary.show { display: block; animation: fadeIn .3s ease; }
-.sim-sum-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g600, #257a47); margin-bottom: 14px; }
-.sim-sum-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.donut-wrap { display:flex; flex-direction:column; align-items:center; }
+.donut-canvas { position:relative; width:180px; height:180px; }
+canvas#donut { width:180px; height:180px; }
+.donut-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
+.donut-center-val { font-size:20px; font-weight:800; color:var(--g900); letter-spacing:-1px; line-height:1; }
+.donut-center-sub { font-size:10px; color:var(--muted); margin-top:3px; font-weight:500; }
+.legend { display:flex; flex-direction:column; gap:8px; margin-top:12px; width:100%; }
+.legend-item { display:flex; align-items:center; gap:8px; font-size:12px; }
+.legend-dot { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+.legend-name { flex:1; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.legend-pct { font-weight:700; font-size:12px; flex-shrink:0; }
+.etf-table { width:100%; border-collapse:collapse; font-size:13px; }
+.etf-table th { font-size:11px; font-weight:700; color:var(--muted); padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); letter-spacing:.5px; text-transform:uppercase; }
+.etf-table td { padding:10px 12px; border-bottom:1px solid rgba(226,236,230,.5); vertical-align:middle; }
+.etf-table tr:last-child td { border-bottom:none; }
+.etf-table tr:hover td { background:var(--g50); }
+.t-ticker { font-size:11px; font-weight:700; padding:2px 8px; border-radius:5px; display:inline-block; }
+.t-bar-wrap { display:flex; align-items:center; gap:8px; }
+.t-bar-bg { flex:1; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.t-bar-fill { height:100%; border-radius:2px; transition:width .5s cubic-bezier(.4,0,.2,1); }
+.t-pct { font-size:12px; font-weight:700; width:38px; text-align:right; flex-shrink:0; }
+.sim-body { padding:20px 24px; }
+.sim-note { font-size:12.5px; color:var(--text2); line-height:1.65; margin-bottom:20px; padding:12px 14px; background:var(--g50); border-radius:10px; border:1px solid var(--g100); }
+.sim-items { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.sim-item { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:14px 16px; display:grid; grid-template-columns:1fr 140px 1fr; gap:12px; align-items:center; }
+.sim-etf-info .si-ticker { font-size:12px; font-weight:700; color:var(--g700); }
+.sim-etf-info .si-current { font-size:11px; color:var(--muted); margin-top:2px; }
+.sim-delta-wrap label { font-size:10px; font-weight:600; color:var(--muted); display:block; margin-bottom:4px; letter-spacing:.5px; text-transform:uppercase; }
+.sim-delta-input { width:100%; padding:8px 10px; border:1.5px solid var(--border); border-radius:8px; font-family:var(--sans); font-size:14px; font-weight:600; color:var(--text); background:var(--white); outline:none; text-align:center; transition:border-color .18s; }
+.sim-delta-input:focus { border-color:var(--g400); }
+.sim-result-item { text-align:right; }
+.sim-result-item .sr-after { font-size:14px; font-weight:700; color:var(--text); }
+.sim-result-item .sr-delta { font-size:12px; font-weight:600; margin-top:2px; }
+.sr-delta.pos { color:var(--g500); }
+.sr-delta.neg { color:var(--red); }
+.sim-summary { background:linear-gradient(135deg,var(--g50),#f0fdf8); border:1.5px solid var(--g100); border-radius:14px; padding:20px; display:none; }
+.sim-summary.show { display:block; animation:fadeIn .3s ease; }
+.sim-sum-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--g700); margin-bottom:14px; }
+.sim-sum-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
 @media(max-width:600px){.sim-sum-grid{grid-template-columns:1fr 1fr}}
-.ssm { }
-.ssm-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
-.ssm-value { font-size: 18px; font-weight: 800; letter-spacing: -.5px; line-height: 1; }
-.ssm-extra { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
-
-/* Fee section */
-.fee-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; padding: 20px 24px; }
+.ssm-label { font-size:11px; color:var(--muted); margin-bottom:4px; }
+.ssm-value { font-size:18px; font-weight:800; letter-spacing:-.5px; line-height:1; }
+.ssm-extra { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+.fee-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; padding:20px 24px; }
 @media(max-width:600px){.fee-grid{grid-template-columns:1fr}}
-.fee-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
-.fee-label { font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
-.fee-value { font-size: 16px; font-weight: 700; color: var(--text); }
-.fee-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
-
-/* Utility */
-.panel-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
-.panel-section-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px 14px; }
-.psh-title { font-size: 14px; font-weight: 700; color: var(--g900); }
-.psh-sub { font-size: 12px; color: var(--muted); }
-
-/* AI status */
-.ai-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--g700); background: var(--g50); border: 1px solid var(--g100); border-radius: 100px; padding: 3px 10px; }
-.ai-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--g400); animation: pulse 2s infinite; }
+.fee-card { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+.fee-label { font-size:11px; font-weight:600; color:var(--muted); margin-bottom:6px; }
+.fee-value { font-size:16px; font-weight:700; color:var(--text); }
+.fee-sub { font-size:11px; color:var(--muted); margin-top:3px; }
+.panel-divider { border:none; border-top:1px solid var(--border); margin:0; }
+.panel-section-header { display:flex; align-items:center; justify-content:space-between; padding:18px 24px 14px; }
+.psh-title { font-size:14px; font-weight:700; color:var(--g900); }
+.psh-sub { font-size:12px; color:var(--muted); }
+.ai-badge { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; color:var(--g700); background:var(--g50); border:1px solid var(--g100); border-radius:100px; padding:3px 10px; }
+.ai-dot { width:5px; height:5px; border-radius:50%; background:var(--g400); animation:pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-
-.spin { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--g100); border-top-color: var(--g500); border-radius: 50%; animation: spin .7s linear infinite; }
+.spin { display:inline-block; width:11px; height:11px; border:2px solid var(--g100); border-top-color:var(--g500); border-radius:50%; animation:spin .7s linear infinite; vertical-align:middle; }
 @keyframes spin { to{transform:rotate(360deg)} }
+::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:transparent; } ::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
 
-::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+/* account filter row */
+.acct-filter-row { display:flex; gap:6px; flex-wrap:wrap; padding:12px 24px; border-bottom:1px solid var(--border); }
+.acct-filter-chip { padding:5px 12px; border-radius:100px; border:1.5px solid var(--border); background:var(--white); font-family:var(--sans); font-size:11px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .15s; }
+.acct-filter-chip.active { background:#0369a1; border-color:#0369a1; color:white; }
+
+/* price update notice */
+.price-notice { font-size:11px; color:var(--muted); padding:6px 24px 0; display:flex; align-items:center; gap:5px; }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════
-     HOME PAGE
-══════════════════════════════════════ -->
+<!-- HOME PAGE -->
 <div id="page-home" class="page active">
   <nav class="home-nav">
     <div class="nav-logo">자산플로우</div>
@@ -309,29 +275,21 @@ canvas#donut { width: 180px; height: 180px; }
     </ul>
     <div class="nav-badge">4가지 무료 계산기</div>
   </nav>
-
   <section class="hero">
     <div class="hero-label"><span class="dot"></span>금융 분석 도구</div>
     <h1 class="hero-title">내 자산을 <span>정확하게</span><br>계획하세요</h1>
     <p class="hero-sub">배당금 수익부터 세금, 내 집 마련, 소비 분석까지—<br>복잡한 계산을 간단하게 해결합니다.</p>
   </section>
-
   <div class="section-row">
     <span class="section-title">계산기 도구</span>
     <span style="font-size:12px;color:var(--muted);">총 4개</span>
   </div>
-
   <div class="card-grid">
     <div class="tool-card card1" onclick="goDiv()">
-      <div class="card-icon-wrap">
-        <svg viewBox="0 0 26 26" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="10"/><path d="M13 7v1.5M13 17.5V19M9.5 11c0-1.4 1.6-2 3.5-2s3.5.6 3.5 2-1.6 2-3.5 2-3.5.6-3.5 2 1.6 2 3.5 2 3.5-.6 3.5-2"/></svg>
-      </div>
-      <div class="card-title-row"><span class="card-title">월 배당금 계산기</span><span class="card-pill">ETF</span></div>
-      <p class="card-desc">국내·해외 ETF 실시간 주가 반영, 포트폴리오 분석, 수량 변동 시뮬레이션까지.</p>
-      <div class="card-bottom">
-        <div class="card-tags"><span class="card-tag">실시간</span><span class="card-tag">포트폴리오</span></div>
-        <div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div>
-      </div>
+      <div class="card-icon-wrap"><svg viewBox="0 0 26 26" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="10"/><path d="M13 7v1.5M13 17.5V19M9.5 11c0-1.4 1.6-2 3.5-2s3.5.6 3.5 2-1.6 2-3.5 2-3.5.6-3.5 2 1.6 2 3.5 2 3.5-.6 3.5-2"/></svg></div>
+      <div class="card-title-row"><span class="card-title">월 배당금 계산기</span><span class="card-pill">ETF·주식</span></div>
+      <p class="card-desc">국내·해외 ETF/주식 실시간 주가 반영, 계좌별 포트폴리오 관리, 수량 변동 시뮬레이션.</p>
+      <div class="card-bottom"><div class="card-tags"><span class="card-tag">실시간</span><span class="card-tag">계좌관리</span><span class="card-tag">개별주식</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
     </div>
     <div class="tool-card card2">
       <div class="card-icon-wrap"><svg viewBox="0 0 26 26" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="16" height="20" rx="2"/><path d="M9 8h8M9 12h8M9 16h5"/></svg></div>
@@ -352,101 +310,135 @@ canvas#donut { width: 180px; height: 180px; }
       <div class="card-bottom"><div class="card-tags"><span class="card-tag">복리</span><span class="card-tag">미래가치</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#3d6e3a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
     </div>
   </div>
-
   <footer class="home-footer">
     <div class="footer-logo">자산플로우</div>
     <div class="footer-copy">© 2025 자산플로우 · 모든 계산은 참고용입니다</div>
   </footer>
 </div>
 
-
-<!-- ══════════════════════════════════════
-     DIVIDEND CALCULATOR PAGE
-══════════════════════════════════════ -->
+<!-- DIVIDEND CALCULATOR PAGE -->
 <div id="page-div" class="page">
 
-  <!-- NAV -->
   <div class="div-nav">
     <button class="back-btn" onclick="goHome()">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg>
       홈으로
     </button>
     <span class="div-nav-title">월 배당금 계산기</span>
-    <span class="ai-badge"><span class="ai-dot"></span>AI 실시간 조회</span>
+    <button class="refresh-btn" id="refreshBtn" onclick="fetchRealTimePrices()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10.5 2A5 5 0 1 0 11 6"/><polyline points="8,1 10.5,2 9.5,4.5"/></svg>
+      실시간 갱신
+    </button>
+    <span id="priceUpdateTime" style="font-size:10px;color:var(--muted);"></span>
+    <span class="div-nav-badge" style="margin-left:auto;" id="navBadge">데이터 로드 중...</span>
   </div>
 
   <div class="div-layout">
 
-    <!-- ── LEFT: ETF INPUT ── -->
+    <!-- LEFT PANEL -->
     <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Account Management -->
+      <div class="panel">
+        <div class="acct-section">
+          <div class="acct-section-header">
+            <span class="acct-section-title">📂 내 증권 계좌</span>
+            <button class="acct-add-toggle" onclick="toggleAcctForm()">+ 계좌 추가</button>
+          </div>
+          <div class="acct-chips" id="acctChips">
+            <span style="font-size:11px;color:var(--muted);">계좌를 추가하면 종목을 계좌별로 관리할 수 있습니다.</span>
+          </div>
+          <div class="acct-form" id="acctForm">
+            <input id="acctNameInput" placeholder="계좌명 (예: 키움 메인)" maxlength="20">
+            <input id="acctNumInput" placeholder="계좌번호 끝 4자리 (선택)" maxlength="4">
+            <button onclick="addAccount()">추가</button>
+          </div>
+        </div>
+      </div>
 
       <!-- Search Panel -->
       <div class="panel">
         <div class="panel-header">
-          <div class="panel-title">ETF 검색 &amp; 추가</div>
-          <div class="mkt-tabs" style="margin-bottom:16px;">
-            <button class="mkt-tab active" onclick="setMkt('KR',this)">🇰🇷 국내 ETF</button>
-            <button class="mkt-tab" onclick="setMkt('US',this)">🇺🇸 해외 ETF</button>
+          <div class="panel-title">종목 검색 &amp; 추가</div>
+          <div class="mkt-grid">
+            <button class="mkt-tab active" onclick="setMkt('KR','ETF',this)">🇰🇷 국내 ETF</button>
+            <button class="mkt-tab" onclick="setMkt('US','ETF',this)">🇺🇸 해외 ETF</button>
+            <button class="mkt-tab" onclick="setMkt('KR','STOCK',this)">🇰🇷 국내 주식</button>
+            <button class="mkt-tab" onclick="setMkt('US','STOCK',this)">🇺🇸 해외 주식</button>
           </div>
         </div>
         <div class="search-wrap" style="position:relative;">
           <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8a9aaa" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><path d="M12 12l-2.5-2.5"/></svg>
-          <input class="search-input" id="searchInput" placeholder="티커 또는 ETF명 검색 (예: TIGER, SPY)" autocomplete="off" oninput="onSearch(this.value)" onfocus="showDrop()" onblur="hideDrop()">
+          <input class="search-input" id="searchInput" placeholder="티커 또는 종목명 검색" autocomplete="off" oninput="onSearch(this.value)" onfocus="showDrop()" onblur="hideDrop()">
           <div class="search-dropdown" id="searchDrop"></div>
         </div>
-        <div style="padding:0 24px 12px;font-size:11px;color:var(--muted);">
+        <div style="padding:0 24px 12px;font-size:11px;color:var(--muted);" id="quickBar">
           인기: <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('TIGER미국배당다우존스')">TIGER미국배당</span> &nbsp;
           <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('KODEX고배당')">KODEX고배당</span> &nbsp;
           <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('SCHD')">SCHD</span> &nbsp;
           <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('JEPI')">JEPI</span>
         </div>
+
+        <!-- Custom Manual Entry -->
+        <div class="custom-entry" id="customEntry">
+          <div class="custom-entry-title">직접 입력 (미등록 종목)</div>
+          <div class="custom-row">
+            <input class="custom-input" id="c-name" placeholder="종목명 *">
+            <input class="custom-input" id="c-ticker" placeholder="티커/코드 (선택)">
+          </div>
+          <div class="custom-row">
+            <input class="custom-input" id="c-price" placeholder="현재가 (원/$) *" type="number">
+            <input class="custom-input" id="c-yield" placeholder="연 배당수익률 (%) *" type="number" step="0.1">
+          </div>
+          <div class="custom-row">
+            <select class="custom-select" id="c-freq">
+              <option value="monthly">월 배당</option>
+              <option value="quarterly">분기 배당</option>
+              <option value="semi-annual">반기 배당</option>
+              <option value="annual" selected>연 1회 배당</option>
+            </select>
+            <select class="custom-select" id="c-acct">
+              <option value="">계좌 선택</option>
+            </select>
+          </div>
+          <button class="custom-add-btn" onclick="addCustomItem()">+ 포트폴리오에 추가</button>
+        </div>
       </div>
 
-      <!-- ETF List -->
+      <!-- Holdings List -->
       <div class="panel">
         <div class="panel-section-header">
-          <span class="psh-title">내 ETF 목록</span>
+          <span class="psh-title">내 보유 자산</span>
           <span class="psh-sub" id="etfCount">0개</span>
         </div>
         <hr class="panel-divider">
         <div class="etf-list" id="etfList">
           <div class="empty-list">
             <div class="e-icon">📭</div>
-            <div>ETF를 검색하여 추가해주세요<br><span style="color:var(--g500);">국내·해외 ETF 모두 지원합니다</span></div>
+            <div>종목을 검색하여 추가해주세요<br><span style="color:var(--g500);">ETF · 국내주식 · 해외주식 모두 지원</span></div>
           </div>
         </div>
       </div>
 
     </div>
 
-    <!-- ── RIGHT: RESULTS ── -->
+    <!-- RIGHT PANEL -->
     <div class="right-col">
+
+      <!-- Account filter -->
+      <div class="panel" id="acctFilterPanel" style="display:none;">
+        <div class="acct-filter-row" id="acctFilterRow"></div>
+      </div>
 
       <!-- Summary -->
       <div class="summary-grid">
-        <div class="sum-card c-green">
-          <div class="sum-label">총 투자금액</div>
-          <div class="sum-value green" id="s-invest">0</div>
-          <div class="sum-sub">원</div>
-        </div>
-        <div class="sum-card c-teal">
-          <div class="sum-label">월 배당금 (세후)</div>
-          <div class="sum-value teal" id="s-monthly">0</div>
-          <div class="sum-sub">원 / 월</div>
-        </div>
-        <div class="sum-card c-blue">
-          <div class="sum-label">연 배당금 (세후)</div>
-          <div class="sum-value blue" id="s-annual">0</div>
-          <div class="sum-sub">원 / 년</div>
-        </div>
-        <div class="sum-card c-gold">
-          <div class="sum-label">평균 배당수익률</div>
-          <div class="sum-value gold" id="s-yield">0.00%</div>
-          <div class="sum-sub">세후 연 기준</div>
-        </div>
+        <div class="sum-card c-green"><div class="sum-label">총 투자금액</div><div class="sum-value green" id="s-invest">0</div><div class="sum-sub">원</div></div>
+        <div class="sum-card c-teal"><div class="sum-label">월 배당금 (세후)</div><div class="sum-value teal" id="s-monthly">0</div><div class="sum-sub">원 / 월</div></div>
+        <div class="sum-card c-blue"><div class="sum-label">연 배당금 (세후)</div><div class="sum-value blue" id="s-annual">0</div><div class="sum-sub">원 / 년</div></div>
+        <div class="sum-card c-gold"><div class="sum-label">평균 배당수익률</div><div class="sum-value gold" id="s-yield">0.00%</div><div class="sum-sub">세후 연 기준</div></div>
       </div>
 
-      <!-- Portfolio Panel -->
+      <!-- Portfolio Chart -->
       <div class="panel">
         <div class="panel-section-header">
           <span class="psh-title">포트폴리오 구성</span>
@@ -454,6 +446,8 @@ canvas#donut { width: 180px; height: 180px; }
             <button class="filter-tab active" onclick="setFilter('all',this)">전체</button>
             <button class="filter-tab" onclick="setFilter('KR',this)">국내</button>
             <button class="filter-tab" onclick="setFilter('US',this)">해외</button>
+            <button class="filter-tab" onclick="setFilter('ETF',this)">ETF</button>
+            <button class="filter-tab" onclick="setFilter('STOCK',this)">주식</button>
           </div>
         </div>
         <hr class="panel-divider">
@@ -470,15 +464,14 @@ canvas#donut { width: 180px; height: 180px; }
               <div class="legend" id="donut-legend"></div>
             </div>
             <div>
-              <!-- Investment weight table -->
               <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;letter-spacing:.5px;text-transform:uppercase;">투자 비중</div>
               <table class="etf-table" id="weightTable">
-                <thead><tr><th>ETF</th><th>금액</th><th>비중</th></tr></thead>
+                <thead><tr><th>종목</th><th>금액</th><th>비중</th></tr></thead>
                 <tbody id="weightBody"></tbody>
               </table>
               <div style="margin-top:18px;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;letter-spacing:.5px;text-transform:uppercase;">배당 기여도</div>
               <table class="etf-table" id="divTable">
-                <thead><tr><th>ETF</th><th>월 배당금</th><th>기여도</th></tr></thead>
+                <thead><tr><th>종목</th><th>월 배당금</th><th>기여도</th></tr></thead>
                 <tbody id="divBody"></tbody>
               </table>
             </div>
@@ -494,10 +487,8 @@ canvas#donut { width: 180px; height: 180px; }
         </div>
         <hr class="panel-divider">
         <div class="sim-body">
-          <div class="sim-note">수량을 변동하면 월 배당금 변화와 추가 비용(수수료 포함)을 실시간으로 확인할 수 있습니다.</div>
-          <div class="sim-items" id="simItems">
-            <div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;">ETF를 추가하면 시뮬레이션이 표시됩니다.</div>
-          </div>
+          <div class="sim-note">수량을 변동하면 월 배당금 변화와 추가 비용을 실시간으로 확인합니다.</div>
+          <div class="sim-items" id="simItems"><div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;">종목을 추가하면 시뮬레이션이 표시됩니다.</div></div>
           <div class="sim-summary" id="simSummary">
             <div class="sim-sum-title">📊 시뮬레이션 결과</div>
             <div class="sim-sum-grid">
@@ -522,12 +513,15 @@ canvas#donut { width: 180px; height: 180px; }
         </div>
         <hr class="panel-divider">
         <div class="fee-grid">
-          <div class="fee-card"><div class="fee-label">국내 ETF 거래세</div><div class="fee-value" id="fee-kr-tax">0원</div><div class="fee-sub">매도 시 0.18% (증권거래세)</div></div>
-          <div class="fee-card"><div class="fee-label">해외 ETF 거래세</div><div class="fee-value" id="fee-us-tax">0원</div><div class="fee-sub">양도소득세 22% (250만원 초과분)</div></div>
-          <div class="fee-card"><div class="fee-label">국내 ETF 배당세</div><div class="fee-value" id="fee-kr-div">0원</div><div class="fee-sub">배당소득세 15.4% 원천징수</div></div>
-          <div class="fee-card"><div class="fee-label">해외 ETF 배당세</div><div class="fee-value" id="fee-us-div">0원</div><div class="fee-sub">배당소득세 15% (미국 원천징수)</div></div>
+          <div class="fee-card"><div class="fee-label">국내 ETF/주식 거래세</div><div class="fee-value" id="fee-kr-tax">0원</div><div class="fee-sub">매도 시 0.18% (증권거래세)</div></div>
+          <div class="fee-card"><div class="fee-label">해외 ETF/주식 거래세</div><div class="fee-value" id="fee-us-tax">0원</div><div class="fee-sub">양도소득세 22% (250만원 초과분)</div></div>
+          <div class="fee-card"><div class="fee-label">국내 배당소득세</div><div class="fee-value" id="fee-kr-div">0원</div><div class="fee-sub">15.4% 원천징수</div></div>
+          <div class="fee-card"><div class="fee-label">해외 배당소득세</div><div class="fee-value" id="fee-us-div">0원</div><div class="fee-sub">15% 미국 원천징수</div></div>
           <div class="fee-card"><div class="fee-label">증권사 매매수수료 (추정)</div><div class="fee-value" id="fee-brokerage">0원</div><div class="fee-sub">국내 0.015% / 해외 0.25% 기준</div></div>
-          <div class="fee-card" style="background:var(--g50);border-color:var(--g200,#b8dfc8);"><div class="fee-label">연간 실수령 배당금 (세후)</div><div class="fee-value" id="fee-net" style="color:var(--g700);font-size:18px;font-weight:800;">0원</div><div class="fee-sub">모든 세금 공제 후</div></div>
+          <div class="fee-card" style="background:var(--g50);border-color:var(--g100);"><div class="fee-label">연간 실수령 배당금 (세후)</div><div class="fee-value" id="fee-net" style="color:var(--g700);font-size:18px;font-weight:800;">0원</div><div class="fee-sub">모든 세금 공제 후</div></div>
+        </div>
+        <div style="padding:0 20px 16px;font-size:11px;color:var(--muted);line-height:1.6;">
+          ⚠ 배당수익률은 최근 12개월 기준 참고값입니다. 실제 배당금은 기업 실적에 따라 변동될 수 있습니다. 이 계산기는 참고용이며, 실제 투자 결정은 전문가와 상담하세요.
         </div>
       </div>
 
@@ -537,55 +531,143 @@ canvas#donut { width: 180px; height: 180px; }
 
 <script>
 // ════════════════════════════════════════
-// ETF DATABASE
+// UNIFIED ASSET DATABASE
 // ════════════════════════════════════════
-const ETF_DB = {
-  // 국내
-  'TIGER미국배당다우존스':    {name:'TIGER 미국배당다우존스',    market:'KR', price:11520,  annualYield:5.8,  ter:0.19},
-  'KODEX미국배당프리미엄액티브':{name:'KODEX 미국배당프리미엄액티브',market:'KR', price:10340,  annualYield:8.2,  ter:0.39},
-  'TIGER200':                 {name:'TIGER 코스피200',           market:'KR', price:36200,  annualYield:1.8,  ter:0.05},
-  'KODEX고배당':              {name:'KODEX 배당가치',            market:'KR', price:8120,   annualYield:5.2,  ter:0.30},
-  'TIGER리츠부동산인프라':    {name:'TIGER 리츠부동산인프라',    market:'KR', price:4630,   annualYield:6.1,  ter:0.29},
-  'KODEX200':                 {name:'KODEX 200',                 market:'KR', price:36080,  annualYield:1.7,  ter:0.15},
-  'TIGER나스닥100':           {name:'TIGER 미국나스닥100',       market:'KR', price:102400, annualYield:0.5,  ter:0.07},
-  'KODEX삼성그룹':            {name:'KODEX 삼성그룹',           market:'KR', price:12500,  annualYield:2.3,  ter:0.45},
-  'TIGER미국S&P500':          {name:'TIGER 미국S&P500',         market:'KR', price:16240,  annualYield:1.4,  ter:0.07},
-  'KODEX미국배당커버드콜':    {name:'KODEX 미국배당커버드콜',    market:'KR', price:9870,   annualYield:9.5,  ter:0.39},
-  'TIGER배당성장':            {name:'TIGER 배당성장',           market:'KR', price:13200,  annualYield:3.1,  ter:0.29},
-  'KODEX Korea밸류업':        {name:'KODEX Korea밸류업',        market:'KR', price:10450,  annualYield:3.8,  ter:0.09},
-  // 해외
-  'SCHD': {name:'Schwab US Dividend Equity ETF', market:'US', price:82.4,   annualYield:3.5,  ter:0.06},
-  'JEPI': {name:'JPMorgan Equity Premium Income', market:'US', price:57.2,   annualYield:7.8,  ter:0.35},
-  'JEPQ': {name:'JPMorgan Nasdaq Equity Premium', market:'US', price:54.8,   annualYield:9.2,  ter:0.35},
-  'QYLD': {name:'Global X NASDAQ-100 Covered Call',market:'US', price:17.3,   annualYield:11.4, ter:0.60},
-  'VYM':  {name:'Vanguard High Dividend Yield',   market:'US', price:124.6,  annualYield:2.8,  ter:0.06},
-  'VIG':  {name:'Vanguard Dividend Appreciation', market:'US', price:193.2,  annualYield:1.7,  ter:0.06},
-  'DVY':  {name:'iShares Select Dividend ETF',    market:'US', price:126.8,  annualYield:3.6,  ter:0.38},
-  'DGRO': {name:'iShares Core Dividend Growth',   market:'US', price:58.4,   annualYield:2.4,  ter:0.08},
-  'SPY':  {name:'SPDR S&P 500 ETF Trust',         market:'US', price:538.2,  annualYield:1.3,  ter:0.09},
-  'QQQ':  {name:'Invesco QQQ Trust',              market:'US', price:472.6,  annualYield:0.6,  ter:0.20},
-  'RYLD': {name:'Global X Russell 2000 Covered Call',market:'US',price:17.8,  annualYield:12.1, ter:0.60},
-  'O':    {name:'Realty Income Corp',             market:'US', price:54.2,   annualYield:5.6,  ter:0},
-  'MAIN': {name:'Main Street Capital Corp',       market:'US', price:52.8,   annualYield:6.2,  ter:0},
+// fields: name, market('KR'|'US'), type('ETF'|'STOCK'),
+//         price (KRW for KR, USD for US), annualYield(%),
+//         ter(%), freq('monthly'|'quarterly'|'semi-annual'|'annual'),
+//         yahooSym (Yahoo Finance symbol for real-time fetch)
+const ASSET_DB = {
+  // ── 국내 ETF ──
+  'TIGER미국배당다우존스':     {name:'TIGER 미국배당다우존스',       market:'KR',type:'ETF', price:11520,  annualYield:5.8,  ter:0.19, freq:'quarterly', yahooSym:'458730.KS'},
+  'KODEX미국배당프리미엄액티브':{name:'KODEX 미국배당프리미엄액티브', market:'KR',type:'ETF', price:10340,  annualYield:8.2,  ter:0.39, freq:'monthly',   yahooSym:'414040.KS'},
+  'TIGER200':                  {name:'TIGER 코스피200',              market:'KR',type:'ETF', price:36200,  annualYield:1.8,  ter:0.05, freq:'quarterly', yahooSym:'102110.KS'},
+  'KODEX고배당':               {name:'KODEX 배당가치',               market:'KR',type:'ETF', price:8120,   annualYield:5.2,  ter:0.30, freq:'quarterly', yahooSym:'279540.KS'},
+  'TIGER리츠부동산인프라':     {name:'TIGER 리츠부동산인프라',        market:'KR',type:'ETF', price:4630,   annualYield:6.1,  ter:0.29, freq:'monthly',   yahooSym:'329200.KS'},
+  'KODEX200':                  {name:'KODEX 200',                    market:'KR',type:'ETF', price:36080,  annualYield:1.7,  ter:0.15, freq:'quarterly', yahooSym:'069500.KS'},
+  'TIGER나스닥100':            {name:'TIGER 미국나스닥100',           market:'KR',type:'ETF', price:102400, annualYield:0.5,  ter:0.07, freq:'quarterly', yahooSym:'133690.KS'},
+  'KODEX삼성그룹':             {name:'KODEX 삼성그룹',               market:'KR',type:'ETF', price:12500,  annualYield:2.3,  ter:0.45, freq:'quarterly', yahooSym:'156080.KS'},
+  'TIGER미국S&P500':           {name:'TIGER 미국S&P500',             market:'KR',type:'ETF', price:16240,  annualYield:1.4,  ter:0.07, freq:'quarterly', yahooSym:'360750.KS'},
+  'KODEX미국배당커버드콜':     {name:'KODEX 미국배당커버드콜',        market:'KR',type:'ETF', price:9870,   annualYield:9.5,  ter:0.39, freq:'monthly',   yahooSym:'459580.KS'},
+  'TIGER배당성장':             {name:'TIGER 배당성장',               market:'KR',type:'ETF', price:13200,  annualYield:3.1,  ter:0.29, freq:'quarterly', yahooSym:'414570.KS'},
+  'KODEX Korea밸류업':         {name:'KODEX Korea밸류업',            market:'KR',type:'ETF', price:10450,  annualYield:3.8,  ter:0.09, freq:'quarterly', yahooSym:'458730.KS'},
+  'TIGER월배당고배당주':       {name:'TIGER 월배당 고배당주',         market:'KR',type:'ETF', price:9240,   annualYield:6.8,  ter:0.29, freq:'monthly',   yahooSym:'395160.KS'},
+  'KODEX미국S&P500':           {name:'KODEX 미국S&P500',             market:'KR',type:'ETF', price:15870,  annualYield:1.3,  ter:0.05, freq:'quarterly', yahooSym:'379800.KS'},
+  'SOL미국배당다우존스':       {name:'SOL 미국배당다우존스',          market:'KR',type:'ETF', price:11380,  annualYield:5.6,  ter:0.19, freq:'monthly',   yahooSym:'446720.KS'},
+  // ── 해외 ETF ──
+  'SCHD': {name:'Schwab US Dividend Equity ETF',     market:'US',type:'ETF', price:82.4,  annualYield:3.5,  ter:0.06, freq:'quarterly', yahooSym:'SCHD'},
+  'JEPI': {name:'JPMorgan Equity Premium Income',    market:'US',type:'ETF', price:57.2,  annualYield:7.8,  ter:0.35, freq:'monthly',   yahooSym:'JEPI'},
+  'JEPQ': {name:'JPMorgan Nasdaq Equity Premium',    market:'US',type:'ETF', price:54.8,  annualYield:9.2,  ter:0.35, freq:'monthly',   yahooSym:'JEPQ'},
+  'QYLD': {name:'Global X NASDAQ-100 Covered Call',  market:'US',type:'ETF', price:17.3,  annualYield:11.4, ter:0.60, freq:'monthly',   yahooSym:'QYLD'},
+  'VYM':  {name:'Vanguard High Dividend Yield',      market:'US',type:'ETF', price:124.6, annualYield:2.8,  ter:0.06, freq:'quarterly', yahooSym:'VYM'},
+  'VIG':  {name:'Vanguard Dividend Appreciation',    market:'US',type:'ETF', price:193.2, annualYield:1.7,  ter:0.06, freq:'quarterly', yahooSym:'VIG'},
+  'DVY':  {name:'iShares Select Dividend ETF',       market:'US',type:'ETF', price:126.8, annualYield:3.6,  ter:0.38, freq:'quarterly', yahooSym:'DVY'},
+  'DGRO': {name:'iShares Core Dividend Growth',      market:'US',type:'ETF', price:58.4,  annualYield:2.4,  ter:0.08, freq:'quarterly', yahooSym:'DGRO'},
+  'SPY':  {name:'SPDR S&P 500 ETF Trust',            market:'US',type:'ETF', price:538.2, annualYield:1.3,  ter:0.09, freq:'quarterly', yahooSym:'SPY'},
+  'QQQ':  {name:'Invesco QQQ Trust',                 market:'US',type:'ETF', price:472.6, annualYield:0.6,  ter:0.20, freq:'quarterly', yahooSym:'QQQ'},
+  'RYLD': {name:'Global X Russell 2000 Covered Call',market:'US',type:'ETF', price:17.8,  annualYield:12.1, ter:0.60, freq:'monthly',   yahooSym:'RYLD'},
+  'XYLD': {name:'Global X S&P 500 Covered Call',     market:'US',type:'ETF', price:43.2,  annualYield:10.2, ter:0.60, freq:'monthly',   yahooSym:'XYLD'},
+  'O':    {name:'Realty Income Corp (REIT)',          market:'US',type:'ETF', price:54.2,  annualYield:5.6,  ter:0,    freq:'monthly',   yahooSym:'O'},
+  'MAIN': {name:'Main Street Capital Corp (BDC)',     market:'US',type:'ETF', price:52.8,  annualYield:6.2,  ter:0,    freq:'monthly',   yahooSym:'MAIN'},
+  'BST':  {name:'BlackRock Science & Tech Trust',    market:'US',type:'ETF', price:38.5,  annualYield:7.4,  ter:1.03, freq:'monthly',   yahooSym:'BST'},
+  // ── 국내 개별 주식 ──
+  '005930': {name:'삼성전자',         market:'KR',type:'STOCK', price:74400,   annualYield:2.8,  ter:0, freq:'annual',      yahooSym:'005930.KS'},
+  '000660': {name:'SK하이닉스',       market:'KR',type:'STOCK', price:198000,  annualYield:1.5,  ter:0, freq:'annual',      yahooSym:'000660.KS'},
+  '005380': {name:'현대차',           market:'KR',type:'STOCK', price:230000,  annualYield:3.8,  ter:0, freq:'quarterly',   yahooSym:'005380.KS'},
+  '000270': {name:'기아',             market:'KR',type:'STOCK', price:102500,  annualYield:4.2,  ter:0, freq:'annual',      yahooSym:'000270.KS'},
+  '017670': {name:'SK텔레콤',         market:'KR',type:'STOCK', price:59300,   annualYield:6.5,  ter:0, freq:'quarterly',   yahooSym:'017670.KS'},
+  '030200': {name:'KT',               market:'KR',type:'STOCK', price:46300,   annualYield:6.8,  ter:0, freq:'semi-annual', yahooSym:'030200.KS'},
+  '033780': {name:'KT&G',             market:'KR',type:'STOCK', price:109500,  annualYield:5.8,  ter:0, freq:'semi-annual', yahooSym:'033780.KS'},
+  '005490': {name:'POSCO홀딩스',      market:'KR',type:'STOCK', price:350000,  annualYield:3.5,  ter:0, freq:'annual',      yahooSym:'005490.KS'},
+  '105560': {name:'KB금융',           market:'KR',type:'STOCK', price:88200,   annualYield:7.2,  ter:0, freq:'quarterly',   yahooSym:'105560.KS'},
+  '055550': {name:'신한지주',         market:'KR',type:'STOCK', price:57800,   annualYield:7.5,  ter:0, freq:'quarterly',   yahooSym:'055550.KS'},
+  '086790': {name:'하나금융지주',     market:'KR',type:'STOCK', price:69500,   annualYield:8.1,  ter:0, freq:'quarterly',   yahooSym:'086790.KS'},
+  '316140': {name:'우리금융지주',     market:'KR',type:'STOCK', price:17400,   annualYield:9.2,  ter:0, freq:'quarterly',   yahooSym:'316140.KS'},
+  '024110': {name:'기업은행',         market:'KR',type:'STOCK', price:15200,   annualYield:9.8,  ter:0, freq:'quarterly',   yahooSym:'024110.KS'},
+  '003550': {name:'LG',               market:'KR',type:'STOCK', price:95800,   annualYield:4.5,  ter:0, freq:'quarterly',   yahooSym:'003550.KS'},
+  '088980': {name:'맥쿼리인프라',     market:'KR',type:'STOCK', price:13200,   annualYield:7.8,  ter:0, freq:'quarterly',   yahooSym:'088980.KS'},
+  '036460': {name:'한국가스공사',     market:'KR',type:'STOCK', price:35400,   annualYield:5.8,  ter:0, freq:'semi-annual', yahooSym:'036460.KS'},
+  '009540': {name:'HD한국조선해양',   market:'KR',type:'STOCK', price:258000,  annualYield:2.1,  ter:0, freq:'annual',      yahooSym:'009540.KS'},
+  '035420': {name:'NAVER',            market:'KR',type:'STOCK', price:199000,  annualYield:0.3,  ter:0, freq:'annual',      yahooSym:'035420.KS'},
+  '051910': {name:'LG화학',           market:'KR',type:'STOCK', price:290000,  annualYield:2.2,  ter:0, freq:'annual',      yahooSym:'051910.KS'},
+  '000810': {name:'삼성화재',         market:'KR',type:'STOCK', price:345000,  annualYield:4.8,  ter:0, freq:'annual',      yahooSym:'000810.KS'},
+  '032830': {name:'삼성생명',         market:'KR',type:'STOCK', price:108000,  annualYield:3.2,  ter:0, freq:'annual',      yahooSym:'032830.KS'},
+  '096770': {name:'SK이노베이션',     market:'KR',type:'STOCK', price:118500,  annualYield:1.8,  ter:0, freq:'annual',      yahooSym:'096770.KS'},
+  '003490': {name:'대한항공',         market:'KR',type:'STOCK', price:24600,   annualYield:1.5,  ter:0, freq:'annual',      yahooSym:'003490.KS'},
+  // ── 해외 개별 주식 ──
+  'AAPL':  {name:'Apple Inc.',                 market:'US',type:'STOCK', price:226.5, annualYield:0.5,  ter:0, freq:'quarterly', yahooSym:'AAPL'},
+  'MSFT':  {name:'Microsoft Corp.',            market:'US',type:'STOCK', price:421.0, annualYield:0.8,  ter:0, freq:'quarterly', yahooSym:'MSFT'},
+  'NVDA':  {name:'NVIDIA Corp.',               market:'US',type:'STOCK', price:875.0, annualYield:0.04, ter:0, freq:'quarterly', yahooSym:'NVDA'},
+  'GOOGL': {name:'Alphabet Inc. (Google)',     market:'US',type:'STOCK', price:174.5, annualYield:0.5,  ter:0, freq:'quarterly', yahooSym:'GOOGL'},
+  'AMZN':  {name:'Amazon.com Inc.',            market:'US',type:'STOCK', price:188.4, annualYield:0,    ter:0, freq:'annual',    yahooSym:'AMZN'},
+  'META':  {name:'Meta Platforms Inc.',        market:'US',type:'STOCK', price:498.2, annualYield:0.4,  ter:0, freq:'quarterly', yahooSym:'META'},
+  'KO':    {name:'Coca-Cola Company',          market:'US',type:'STOCK', price:64.2,  annualYield:3.1,  ter:0, freq:'quarterly', yahooSym:'KO'},
+  'PEP':   {name:'PepsiCo Inc.',               market:'US',type:'STOCK', price:158.3, annualYield:3.2,  ter:0, freq:'quarterly', yahooSym:'PEP'},
+  'JNJ':   {name:'Johnson & Johnson',          market:'US',type:'STOCK', price:156.8, annualYield:3.4,  ter:0, freq:'quarterly', yahooSym:'JNJ'},
+  'PG':    {name:'Procter & Gamble',           market:'US',type:'STOCK', price:160.2, annualYield:2.5,  ter:0, freq:'quarterly', yahooSym:'PG'},
+  'T':     {name:'AT&T Inc.',                  market:'US',type:'STOCK', price:21.8,  annualYield:6.5,  ter:0, freq:'quarterly', yahooSym:'T'},
+  'VZ':    {name:'Verizon Communications',     market:'US',type:'STOCK', price:41.5,  annualYield:6.8,  ter:0, freq:'quarterly', yahooSym:'VZ'},
+  'ABBV':  {name:'AbbVie Inc.',                market:'US',type:'STOCK', price:178.4, annualYield:3.8,  ter:0, freq:'quarterly', yahooSym:'ABBV'},
+  'MCD':   {name:"McDonald's Corp.",           market:'US',type:'STOCK', price:292.5, annualYield:2.4,  ter:0, freq:'quarterly', yahooSym:'MCD'},
+  'TSLA':  {name:'Tesla Inc.',                 market:'US',type:'STOCK', price:241.8, annualYield:0,    ter:0, freq:'annual',    yahooSym:'TSLA'},
 };
 
 const USD_KRW = 1385;
-const COLORS   = ['#2e8b57','#3aaf6f','#0d9488','#1a5fa8','#7c3aed','#d4a017','#e05252','#0891b2','#6d28d9','#059669','#dc2626','#2563eb'];
+const COLORS = ['#2e8b57','#3aaf6f','#0d9488','#1a5fa8','#7c3aed','#d4a017','#e05252','#0891b2','#6d28d9','#059669','#dc2626','#2563eb','#9333ea','#b45309','#0f766e'];
 
 // ════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════
-let portfolio = []; // {id, ticker, meta, qty}
-let currentMkt   = 'KR';
+let portfolio = [];   // {id, ticker, meta, qty, accountId}
+let accounts = [];    // {id, name, broker}
+let currentMkt = 'KR';
+let currentType = 'ETF';
 let currentFilter = 'all';
+let currentAccountFilter = 'all';
 let dropTimer;
 
 function uid() { return Math.random().toString(36).slice(2,9); }
 
 // ════════════════════════════════════════
+// LOCALSTORAGE PERSISTENCE
+// ════════════════════════════════════════
+function saveState() {
+  try {
+    localStorage.setItem('af_portfolio', JSON.stringify(portfolio.map(p => ({
+      id: p.id, ticker: p.ticker, qty: p.qty, accountId: p.accountId || '',
+      // save custom meta fields for custom items
+      customMeta: p.meta.isCustom ? p.meta : null
+    }))));
+    localStorage.setItem('af_accounts', JSON.stringify(accounts));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const savedAccts = localStorage.getItem('af_accounts');
+    if (savedAccts) accounts = JSON.parse(savedAccts);
+
+    const savedPort = localStorage.getItem('af_portfolio');
+    if (savedPort) {
+      const items = JSON.parse(savedPort);
+      portfolio = items.map(item => {
+        let meta;
+        if (item.customMeta) {
+          meta = item.customMeta;
+        } else {
+          meta = ASSET_DB[item.ticker] ? { ...ASSET_DB[item.ticker] } : null;
+        }
+        if (!meta) return null;
+        return { id: item.id, ticker: item.ticker, meta, qty: item.qty || 0, accountId: item.accountId || '' };
+      }).filter(Boolean);
+    }
+  } catch(e) { portfolio = []; accounts = []; }
+}
+
+// ════════════════════════════════════════
 // NAVIGATION
 // ════════════════════════════════════════
-function goDiv()  { show('page-div');  render(); }
+function goDiv() { loadState(); show('page-div'); renderAccounts(); renderAll(); }
 function goHome() { show('page-home'); }
 function show(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -594,16 +676,120 @@ function show(id) {
 }
 
 // ════════════════════════════════════════
+// ACCOUNT MANAGEMENT
+// ════════════════════════════════════════
+function toggleAcctForm() {
+  const f = document.getElementById('acctForm');
+  f.classList.toggle('show');
+  if (f.classList.contains('show')) document.getElementById('acctNameInput').focus();
+}
+
+function addAccount() {
+  const name = document.getElementById('acctNameInput').value.trim();
+  const num  = document.getElementById('acctNumInput').value.trim();
+  if (!name) return;
+  accounts.push({ id: uid(), name, num });
+  document.getElementById('acctNameInput').value = '';
+  document.getElementById('acctNumInput').value = '';
+  document.getElementById('acctForm').classList.remove('show');
+  saveState();
+  renderAccounts();
+  updateCustomAcctSelect();
+}
+
+function removeAccount(id) {
+  accounts = accounts.filter(a => a.id !== id);
+  portfolio.forEach(p => { if (p.accountId === id) p.accountId = ''; });
+  if (currentAccountFilter === id) currentAccountFilter = 'all';
+  saveState();
+  renderAccounts();
+  renderAll();
+}
+
+function renderAccounts() {
+  const chips = document.getElementById('acctChips');
+  if (!accounts.length) {
+    chips.innerHTML = `<span style="font-size:11px;color:var(--muted);">계좌를 추가하면 종목을 계좌별로 관리할 수 있습니다.</span>`;
+  } else {
+    chips.innerHTML = accounts.map(a => `
+      <span class="acct-chip">
+        🏦 ${a.name}${a.num ? ' ···'+a.num : ''}
+        <button class="chip-del" onclick="removeAccount('${a.id}')" title="삭제">×</button>
+      </span>`).join('');
+  }
+
+  // Account filter panel
+  const filterPanel = document.getElementById('acctFilterPanel');
+  const filterRow = document.getElementById('acctFilterRow');
+  if (accounts.length > 0) {
+    filterPanel.style.display = 'block';
+    filterRow.innerHTML = `
+      <button class="acct-filter-chip ${currentAccountFilter==='all'?'active':''}" onclick="setAcctFilter('all',this)">전체 계좌</button>
+      <button class="acct-filter-chip ${currentAccountFilter===''?'active':''}" onclick="setAcctFilter('',this)">미분류</button>
+      ${accounts.map(a => `<button class="acct-filter-chip ${currentAccountFilter===a.id?'active':''}" onclick="setAcctFilter('${a.id}',this)">🏦 ${a.name}</button>`).join('')}`;
+  } else {
+    filterPanel.style.display = 'none';
+  }
+
+  updateCustomAcctSelect();
+}
+
+function updateCustomAcctSelect() {
+  const sel = document.getElementById('c-acct');
+  sel.innerHTML = `<option value="">계좌 선택 (선택)</option>` +
+    accounts.map(a => `<option value="${a.id}">${a.name}${a.num?' ···'+a.num:''}</option>`).join('');
+}
+
+function setAcctFilter(id, btn) {
+  currentAccountFilter = id;
+  document.querySelectorAll('.acct-filter-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+// ════════════════════════════════════════
 // MARKET TAB
 // ════════════════════════════════════════
-function setMkt(mkt, btn) {
+function setMkt(mkt, type, btn) {
   currentMkt = mkt;
+  currentType = type;
   document.querySelectorAll('.mkt-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const ph = mkt === 'KR' ? '티커 또는 ETF명 검색 (예: TIGER, KODEX)' : '티커 검색 (예: SCHD, JEPI, SPY)';
-  document.getElementById('searchInput').placeholder = ph;
+
+  const isStock = type === 'STOCK';
+  const customEl = document.getElementById('customEntry');
+  const quickBar = document.getElementById('quickBar');
+
+  if (isStock) {
+    customEl.classList.add('show');
+    quickBar.style.display = 'none';
+  } else {
+    customEl.classList.remove('show');
+    quickBar.style.display = 'block';
+  }
+
+  const placeholders = {
+    'KR-ETF': '티커 또는 ETF명 검색 (예: TIGER, KODEX)',
+    'US-ETF': '티커 검색 (예: SCHD, JEPI, SPY)',
+    'KR-STOCK': '종목명 또는 코드 검색 (예: 삼성전자, 005930)',
+    'US-STOCK': '종목명 또는 티커 (예: Apple, AAPL)',
+  };
+  document.getElementById('searchInput').placeholder = placeholders[mkt+'-'+type] || '검색...';
   document.getElementById('searchInput').value = '';
   document.getElementById('searchDrop').classList.remove('open');
+
+  // Update quick bar for KR ETF
+  if (mkt === 'KR' && type === 'ETF') {
+    quickBar.innerHTML = `인기: <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('TIGER미국배당다우존스')">TIGER미국배당</span> &nbsp;
+      <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('KODEX고배당')">KODEX고배당</span> &nbsp;
+      <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('SOL미국배당다우존스')">SOL미국배당</span> &nbsp;
+      <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('TIGER리츠부동산인프라')">TIGER리츠</span>`;
+  } else if (mkt === 'US' && type === 'ETF') {
+    quickBar.innerHTML = `인기: <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('SCHD')">SCHD</span> &nbsp;
+      <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('JEPI')">JEPI</span> &nbsp;
+      <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('JEPQ')">JEPQ</span> &nbsp;
+      <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('QYLD')">QYLD</span>`;
+  }
 }
 
 // ════════════════════════════════════════
@@ -619,19 +805,24 @@ function renderDrop(val) {
   const q = val.trim().toUpperCase();
   if (!q) { drop.classList.remove('open'); return; }
 
-  const results = Object.entries(ETF_DB)
-    .filter(([k,v]) => v.market === currentMkt && (k.toUpperCase().includes(q) || v.name.toUpperCase().includes(q)))
+  const results = Object.entries(ASSET_DB)
+    .filter(([k,v]) => v.market === currentMkt && v.type === currentType &&
+      (k.toUpperCase().includes(q) || v.name.toUpperCase().includes(q)))
     .slice(0, 8);
 
   if (!results.length) {
-    drop.innerHTML = `<div class="drop-item" style="color:var(--muted);cursor:default;">검색 결과 없음</div>`;
+    drop.innerHTML = `<div class="drop-item" style="color:var(--muted);cursor:default;font-size:12px;">검색 결과 없음 — 아래 '직접 입력'을 사용하세요</div>`;
   } else {
-    drop.innerHTML = results.map(([k,v]) => `
-      <div class="drop-item" onmousedown="addETF('${k}')">
+    drop.innerHTML = results.map(([k,v]) => {
+      const priceStr = v.market === 'US' ? `$${v.price.toLocaleString()}` : `${fmt(v.price)}원`;
+      const freqLabel = {'monthly':'월배당','quarterly':'분기','semi-annual':'반기','annual':'연1회'}[v.freq] || '';
+      return `<div class="drop-item" onmousedown="addItem('${k}')">
         <span class="drop-ticker">${k}</span>
         <span class="drop-name">${v.name}</span>
-        <span class="drop-yield">${v.annualYield}%</span>
-      </div>`).join('');
+        <span class="drop-type ${v.type.toLowerCase()}">${v.type}</span>
+        <span class="drop-yield">${v.annualYield}% · ${freqLabel}</span>
+      </div>`;
+    }).join('');
   }
   drop.classList.add('open');
 }
@@ -640,73 +831,206 @@ function showDrop() { if (document.getElementById('searchInput').value) document
 function hideDrop() { setTimeout(() => document.getElementById('searchDrop').classList.remove('open'), 200); }
 
 // ════════════════════════════════════════
-// ADD / REMOVE ETF
+// ADD ITEMS
 // ════════════════════════════════════════
-function addETF(ticker) {
-  const meta = ETF_DB[ticker];
+function addItem(ticker) {
+  const meta = ASSET_DB[ticker];
   if (!meta) return;
   if (portfolio.find(p => p.ticker === ticker)) {
     document.getElementById('searchInput').value = '';
     return;
   }
-  portfolio.push({ id: uid(), ticker, meta, qty: 10 });
+  portfolio.push({ id: uid(), ticker, meta: {...meta}, qty: 10, accountId: '' });
   document.getElementById('searchInput').value = '';
   document.getElementById('searchDrop').classList.remove('open');
+  saveState();
   renderAll();
 }
 
-function quickAdd(t) { setMkt(ETF_DB[t]?.market || 'KR', document.querySelectorAll('.mkt-tab')[ETF_DB[t]?.market==='US'?1:0]); addETF(t); }
+function quickAdd(t) {
+  const meta = ASSET_DB[t];
+  if (!meta) return;
+  // Switch to the right tab
+  const tabIdx = meta.market === 'KR' ? (meta.type === 'ETF' ? 0 : 2) : (meta.type === 'ETF' ? 1 : 3);
+  const tabs = document.querySelectorAll('.mkt-tab');
+  const mktMap = ['KR','US','KR','US'];
+  const typeMap = ['ETF','ETF','STOCK','STOCK'];
+  setMkt(mktMap[tabIdx], typeMap[tabIdx], tabs[tabIdx]);
+  addItem(t);
+}
 
-function removeETF(id) {
+function addCustomItem() {
+  const name   = document.getElementById('c-name').value.trim();
+  const ticker = document.getElementById('c-ticker').value.trim() || ('CUSTOM_' + uid());
+  const price  = parseFloat(document.getElementById('c-price').value);
+  const yld    = parseFloat(document.getElementById('c-yield').value);
+  const freq   = document.getElementById('c-freq').value;
+  const acctId = document.getElementById('c-acct').value;
+
+  if (!name || isNaN(price) || price <= 0 || isNaN(yld)) {
+    alert('종목명, 현재가, 배당수익률은 필수입니다.');
+    return;
+  }
+
+  const key = ticker.toUpperCase().replace(/\s/g, '_');
+  if (portfolio.find(p => p.ticker === key)) {
+    alert('이미 추가된 종목입니다.');
+    return;
+  }
+
+  const meta = {
+    name, market: currentMkt, type: currentType,
+    price, annualYield: yld, ter: 0, freq,
+    yahooSym: ticker !== key ? ticker : null,
+    isCustom: true
+  };
+
+  portfolio.push({ id: uid(), ticker: key, meta, qty: 10, accountId: acctId });
+  ['c-name','c-ticker','c-price','c-yield'].forEach(id => document.getElementById(id).value = '');
+  saveState();
+  renderAll();
+}
+
+function removeItem(id) {
   portfolio = portfolio.filter(p => p.id !== id);
+  saveState();
   renderAll();
 }
 
 function updateQty(id, val) {
   const p = portfolio.find(x => x.id === id);
-  if (p) { p.qty = Math.max(0, parseInt(val) || 0); renderAll(); }
+  if (p) { p.qty = Math.max(0, parseInt(val) || 0); saveState(); renderAll(); }
+}
+
+function stepQty(id, delta) {
+  const p = portfolio.find(x => x.id === id);
+  if (p) { p.qty = Math.max(0, p.qty + delta); saveState(); renderAll(); }
+}
+
+function updateAccountForItem(id, acctId) {
+  const p = portfolio.find(x => x.id === id);
+  if (p) { p.accountId = acctId; saveState(); renderList(); }
+}
+
+// ════════════════════════════════════════
+// REAL-TIME PRICE FETCH (Yahoo Finance)
+// ════════════════════════════════════════
+async function fetchRealTimePrices() {
+  if (!portfolio.length) return;
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> 조회 중...';
+  btn.className = 'refresh-btn';
+
+  let successCount = 0;
+  const promises = portfolio.map(async (p) => {
+    const sym = p.meta.yahooSym;
+    if (!sym) return;
+    try {
+      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=1d&range=1d`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+      if (!res.ok) return;
+      const json = await res.json();
+      const result = json?.chart?.result?.[0];
+      if (!result) return;
+      const price = result.meta?.regularMarketPrice;
+      const trailingYield = result.meta?.trailingAnnualDividendYield;
+      if (price && price > 0) {
+        p.meta.price = price;
+        p.meta.priceSource = 'live';
+        p.meta.priceAt = new Date().toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'});
+        // Update yield if available from Yahoo and not a custom item
+        if (trailingYield && trailingYield > 0 && !p.meta.isCustom) {
+          p.meta.annualYield = +(trailingYield * 100).toFixed(2);
+        }
+        successCount++;
+      }
+    } catch(e) { /* CORS or timeout — skip */ }
+  });
+
+  await Promise.all(promises);
+
+  btn.disabled = false;
+  if (successCount > 0) {
+    btn.innerHTML = `✓ ${successCount}개 갱신`;
+    btn.className = 'refresh-btn live';
+    const now = new Date().toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'});
+    document.getElementById('priceUpdateTime').textContent = `기준: ${now}`;
+    saveState();
+  } else {
+    btn.innerHTML = '⚠ CORS 차단';
+    btn.className = 'refresh-btn err';
+    document.getElementById('priceUpdateTime').textContent = '브라우저 CORS 정책으로 직접 조회 불가';
+  }
+  setTimeout(() => {
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10.5 2A5 5 0 1 0 11 6"/><polyline points="8,1 10.5,2 9.5,4.5"/></svg> 실시간 갱신';
+    btn.className = 'refresh-btn';
+  }, 5000);
+  renderAll();
 }
 
 // ════════════════════════════════════════
 // RENDER ALL
 // ════════════════════════════════════════
-function renderAll() { renderList(); render(); }
+function renderAll() {
+  renderList();
+  render();
+  const count = portfolio.length;
+  document.getElementById('navBadge').textContent = `${count}개 종목 · ${accounts.length}개 계좌`;
+}
 
 function renderList() {
   const el = document.getElementById('etfList');
   document.getElementById('etfCount').textContent = portfolio.length + '개';
   if (!portfolio.length) {
-    el.innerHTML = `<div class="empty-list"><div class="e-icon">📭</div><div>ETF를 검색하여 추가해주세요<br><span style="color:var(--g500);">국내·해외 ETF 모두 지원합니다</span></div></div>`;
+    el.innerHTML = `<div class="empty-list"><div class="e-icon">📭</div><div>종목을 검색하여 추가해주세요<br><span style="color:var(--g500);">ETF · 국내주식 · 해외주식 모두 지원</span></div></div>`;
     return;
   }
+
+  const acctMap = {};
+  accounts.forEach(a => acctMap[a.id] = a);
+
   el.innerHTML = portfolio.map((p, i) => {
-    const priceKRW = p.meta.market === 'US' ? p.meta.price * USD_KRW : p.meta.price;
-    const invest   = priceKRW * p.qty;
-    const priceStr = p.meta.market === 'US' ? `$${p.meta.price.toFixed(2)} (${fmt(priceKRW)}원)` : `${fmt(p.meta.price)}원`;
+    const priceKRW = toKRW(p);
+    const invest = priceKRW * p.qty;
+    const priceStr = p.meta.market === 'US'
+      ? `$${p.meta.price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} (${fmt(priceKRW)}원)`
+      : `${fmt(p.meta.price)}원`;
+    const acct = p.accountId && acctMap[p.accountId] ? acctMap[p.accountId] : null;
+    const isLive = p.meta.priceSource === 'live';
+    const freqLabel = {monthly:'월배당',quarterly:'분기배당','semi-annual':'반기배당',annual:'연배당'}[p.meta.freq] || '';
+
+    const acctOptions = `<option value="">미분류</option>` +
+      accounts.map(a => `<option value="${a.id}" ${p.accountId===a.id?'selected':''}>${a.name}</option>`).join('');
+
     return `
     <div class="etf-item">
       <div class="etf-color" style="background:${COLORS[i%COLORS.length]};"></div>
       <div class="etf-info">
-        <div class="etf-ticker">${p.meta.market==='US'?'🇺🇸':'🇰🇷'} ${p.ticker}</div>
+        <div class="etf-ticker">
+          ${p.meta.market==='US'?'🇺🇸':'🇰🇷'}
+          <span class="type-badge ${p.meta.type.toLowerCase()}">${p.meta.type}</span>
+          ${p.ticker}
+        </div>
         <div class="etf-name">${p.meta.name}</div>
+        <div style="display:flex;align-items:center;gap:4px;margin-top:3px;">
+          ${accounts.length ? `<select style="font-size:9px;padding:1px 4px;border:1px solid var(--border);border-radius:4px;background:var(--bg);font-family:var(--sans);color:var(--text2);cursor:pointer;" onchange="updateAccountForItem('${p.id}',this.value)">${acctOptions}</select>` : ''}
+          <span style="font-size:9px;color:var(--muted);">${freqLabel}</span>
+        </div>
       </div>
       <div class="etf-price">
-        <div>${priceStr}</div>
-        <div class="etf-price-sub">배당률 ${p.meta.annualYield}%/년</div>
+        <div>${isLive?'<span class="price-live-dot"></span>':''}${priceStr}</div>
+        <div class="etf-price-sub">배당률 ${p.meta.annualYield}%/년${isLive?' · 실시간':' · 기준가'}</div>
+        <div class="etf-price-sub">${fmt(invest)}원 보유</div>
       </div>
       <div class="qty-wrap">
         <button class="qty-btn" onclick="stepQty('${p.id}',-1)">−</button>
         <input class="qty-input" type="number" value="${p.qty}" min="0" onchange="updateQty('${p.id}',this.value)">
         <button class="qty-btn" onclick="stepQty('${p.id}',1)">＋</button>
       </div>
-      <button class="etf-remove" onclick="removeETF('${p.id}')">×</button>
+      <button class="etf-remove" onclick="removeItem('${p.id}')">×</button>
     </div>`;
   }).join('');
-}
-
-function stepQty(id, delta) {
-  const p = portfolio.find(x => x.id === id);
-  if (p) { p.qty = Math.max(0, p.qty + delta); renderAll(); }
 }
 
 // ════════════════════════════════════════
@@ -720,8 +1044,17 @@ function setFilter(f, btn) {
 }
 
 function filtered() {
-  if (currentFilter === 'all') return portfolio;
-  return portfolio.filter(p => p.meta.market === currentFilter);
+  let fp = portfolio;
+  // account filter
+  if (currentAccountFilter !== 'all') {
+    fp = fp.filter(p => p.accountId === currentAccountFilter);
+  }
+  // market/type filter
+  if (currentFilter === 'KR') return fp.filter(p => p.meta.market === 'KR');
+  if (currentFilter === 'US') return fp.filter(p => p.meta.market === 'US');
+  if (currentFilter === 'ETF') return fp.filter(p => p.meta.type === 'ETF');
+  if (currentFilter === 'STOCK') return fp.filter(p => p.meta.type === 'STOCK');
+  return fp;
 }
 
 // ════════════════════════════════════════
@@ -745,11 +1078,19 @@ function render() {
   renderFees();
 }
 
-function toKRW(p) { return p.meta.market === 'US' ? p.meta.price * USD_KRW : p.meta.price; }
+// ════════════════════════════════════════
+// CALCULATIONS
+// ════════════════════════════════════════
+function toKRW(p) {
+  return p.meta.market === 'US' ? p.meta.price * USD_KRW : p.meta.price;
+}
+
 function monthlyNet(p) {
   const invest = toKRW(p) * p.qty;
   const taxRate = p.meta.market === 'US' ? 0.15 : 0.154;
-  return invest * (p.meta.annualYield / 100) / 12 * (1 - taxRate);
+  const annualGross = invest * (p.meta.annualYield / 100);
+  const annualNet = annualGross * (1 - taxRate);
+  return annualNet / 12;
 }
 
 // ════════════════════════════════════════
@@ -760,7 +1101,6 @@ function renderDonut(fp, total) {
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0,0,180,180);
   document.getElementById('donut-val').textContent = fp.length;
-
   if (!fp.length || total === 0) { renderLegend(fp, total); return; }
 
   let angle = -Math.PI/2;
@@ -774,16 +1114,14 @@ function renderDonut(fp, total) {
     ctx.fill();
     angle += slice;
   });
-  // hole
   ctx.beginPath(); ctx.arc(90,90,48,0,Math.PI*2);
   ctx.fillStyle = '#ffffff'; ctx.fill();
-
   renderLegend(fp, total);
 }
 
 function renderLegend(fp, total) {
   const el = document.getElementById('donut-legend');
-  el.innerHTML = fp.map((p,i) => {
+  el.innerHTML = fp.map((p) => {
     const pct = total > 0 ? (toKRW(p)*p.qty/total*100).toFixed(1) : '0.0';
     const c = COLORS[portfolio.indexOf(p)%COLORS.length];
     return `<div class="legend-item">
@@ -800,12 +1138,13 @@ function renderLegend(fp, total) {
 function renderWeightTable(fp, totalInvest, totalMonthly) {
   const wb = document.getElementById('weightBody');
   const db = document.getElementById('divBody');
-  if (!fp.length) { wb.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:20px;font-size:13px;">ETF를 추가해주세요</td></tr>`; db.innerHTML = wb.innerHTML; return; }
+  const empty = `<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:20px;font-size:13px;">종목을 추가해주세요</td></tr>`;
+  if (!fp.length) { wb.innerHTML = empty; db.innerHTML = empty; return; }
 
-  wb.innerHTML = fp.map((p,i) => {
-    const inv  = toKRW(p) * p.qty;
-    const pct  = totalInvest > 0 ? inv/totalInvest*100 : 0;
-    const c    = COLORS[portfolio.indexOf(p)%COLORS.length];
+  wb.innerHTML = fp.map((p) => {
+    const inv = toKRW(p) * p.qty;
+    const pct = totalInvest > 0 ? inv/totalInvest*100 : 0;
+    const c = COLORS[portfolio.indexOf(p)%COLORS.length];
     return `<tr>
       <td><span class="t-ticker" style="background:${c}18;color:${c};">${p.ticker}</span></td>
       <td style="font-size:12px;font-weight:600;">${fmt(inv)}원</td>
@@ -813,13 +1152,14 @@ function renderWeightTable(fp, totalInvest, totalMonthly) {
     </tr>`;
   }).join('');
 
-  db.innerHTML = fp.map((p,i) => {
+  db.innerHTML = fp.map((p) => {
     const mo  = monthlyNet(p);
     const pct = totalMonthly > 0 ? mo/totalMonthly*100 : 0;
-    const c   = COLORS[portfolio.indexOf(p)%COLORS.length];
+    const c = COLORS[portfolio.indexOf(p)%COLORS.length];
+    const freqNote = p.meta.freq !== 'monthly' ? `<span style="font-size:9px;color:var(--muted);">(월 환산)</span>` : '';
     return `<tr>
       <td><span class="t-ticker" style="background:${c}18;color:${c};">${p.ticker}</span></td>
-      <td style="font-size:12px;font-weight:600;color:var(--g700);">${fmt(Math.round(mo))}원</td>
+      <td style="font-size:12px;font-weight:600;color:var(--g700);">${fmt(Math.round(mo))}원 ${freqNote}</td>
       <td><div class="t-bar-wrap"><div class="t-bar-bg"><div class="t-bar-fill" style="width:${pct.toFixed(1)}%;background:${c};"></div></div><span class="t-pct" style="color:${c};">${pct.toFixed(1)}%</span></div></td>
     </tr>`;
   }).join('');
@@ -831,11 +1171,11 @@ function renderWeightTable(fp, totalInvest, totalMonthly) {
 function renderSim() {
   const el = document.getElementById('simItems');
   if (!portfolio.length) {
-    el.innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;">ETF를 추가하면 시뮬레이션이 표시됩니다.</div>`;
+    el.innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;">종목을 추가하면 시뮬레이션이 표시됩니다.</div>`;
     document.getElementById('simSummary').classList.remove('show');
     return;
   }
-  el.innerHTML = portfolio.map((p,i) => {
+  el.innerHTML = portfolio.map((p) => {
     const mo = monthlyNet(p);
     return `
     <div class="sim-item">
@@ -863,20 +1203,17 @@ function calcSim() {
   portfolio.forEach(p => {
     const delta = parseInt(document.getElementById(`sdelta-${p.id}`)?.value) || 0;
     const newQty = Math.max(0, p.qty + delta);
-    const newMo  = (() => {
-      const invest = toKRW(p) * newQty;
-      const taxRate = p.meta.market === 'US' ? 0.15 : 0.154;
-      return invest * (p.meta.annualYield/100) / 12 * (1-taxRate);
-    })();
-    const oldMo  = monthlyNet(p);
-    const diff   = newMo - oldMo;
+    const invest = toKRW(p) * newQty;
+    const taxRate = p.meta.market === 'US' ? 0.15 : 0.154;
+    const newMo = invest * (p.meta.annualYield/100) / 12 * (1-taxRate);
+    const oldMo = monthlyNet(p);
+    const diff = newMo - oldMo;
     afterTotal += newMo;
 
     const cost = toKRW(p) * Math.abs(delta);
     const feeRate = p.meta.market === 'US' ? 0.0025 : 0.00015;
-    const fee = cost * feeRate;
+    totalFee += cost * feeRate;
     extraInvest += toKRW(p) * delta;
-    totalFee += fee;
 
     const afterEl = document.getElementById(`sr-after-${p.id}`);
     const deltaEl = document.getElementById(`sr-delta-${p.id}`);
@@ -913,13 +1250,12 @@ function renderFees() {
   const krInvest = kr.reduce((s,p) => s + p.meta.price * p.qty, 0);
   const usInvest = us.reduce((s,p) => s + p.meta.price * USD_KRW * p.qty, 0);
 
-  // Annual dividend gross
   const krDivGross = kr.reduce((s,p) => s + p.meta.price * p.qty * p.meta.annualYield/100, 0);
   const usDivGross = us.reduce((s,p) => s + p.meta.price * USD_KRW * p.qty * p.meta.annualYield/100, 0);
 
-  const krDivTax = krDivGross * 0.154;
-  const usDivTax = usDivGross * 0.15;
-  const krTradeTax = krInvest * 0.0018; // 매도 시 거래세
+  const krDivTax   = krDivGross * 0.154;
+  const usDivTax   = usDivGross * 0.15;
+  const krTradeTax = krInvest * 0.0018;
   const brokerKR   = krInvest * 0.00015;
   const brokerUS   = usInvest * 0.0025;
   const netAnnual  = (krDivGross - krDivTax) + (usDivGross - usDivTax);
@@ -936,6 +1272,8 @@ function renderFees() {
 // UTIL
 // ════════════════════════════════════════
 function fmt(n) { return isNaN(n) ? '0' : Math.round(n).toLocaleString('ko-KR'); }
+
+const FREQ_LABEL = {'monthly':'월배당','quarterly':'분기배당','semi-annual':'반기배당','annual':'연배당'};
 </script>
 </body>
 </html>
