@@ -3,573 +3,305 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>자산플로우</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>자산플로우 — 월 배당금 계산기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg:        #f4f7f4;
-  --white:     #ffffff;
-  --green-900: #0d2b1e;
-  --green-700: #1a5c38;
-  --green-500: #2e8b57;
-  --green-400: #3aaf6f;
-  --green-200: #b8dfc8;
-  --green-100: #dff0e7;
-  --green-50:  #f0f9f4;
-  --blue:      #1a5fa8;
-  --text:      #1a1a1a;
-  --text2:     #4a5568;
-  --muted:     #8a9aaa;
-  --border:    #e2ece6;
-  --sans:      'Noto Sans KR', sans-serif;
-  --radius:    20px;
-  --shadow:    0 4px 24px rgba(0,0,0,0.07);
-  --shadow-hover: 0 16px 48px rgba(0,0,0,0.13);
+  --bg:       #f4f7f4;
+  --white:    #ffffff;
+  --g900:     #0d2b1e;
+  --g700:     #1a5c38;
+  --g500:     #2e8b57;
+  --g400:     #3aaf6f;
+  --g100:     #dff0e7;
+  --g50:      #f0f9f4;
+  --blue:     #1a5fa8;
+  --text:     #1a1a1a;
+  --text2:    #4a5568;
+  --muted:    #8a9aaa;
+  --border:   #e2ece6;
+  --red:      #e05252;
+  --gold:     #d4a017;
+  --sans:     'Noto Sans KR', sans-serif;
+  --radius:   16px;
+  --shadow:   0 2px 16px rgba(0,0,0,0.07);
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.12);
 }
 
-html { font-size: 16px; }
+html { font-size: 15px; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ─── PAGE ROUTING ─── */
+/* ── PAGE SWITCH ── */
 .page { display: none; }
-.page.active { display: block; min-height: 100vh; }
+.page.active { display: block; animation: fadeIn .25s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
-/* ─── GLOBAL NAV ─── */
-nav {
+/* ══════════════════════════════════════
+   HOME PAGE
+══════════════════════════════════════ */
+.home-nav {
   background: var(--white);
   border-bottom: 1px solid var(--border);
   padding: 0 48px;
   height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
 }
+.nav-logo { font-size: 20px; font-weight: 800; color: var(--blue); cursor: pointer; letter-spacing: -.5px; }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a { font-size: 13.5px; font-weight: 500; color: var(--text2); text-decoration: none; transition: color .18s; }
+.nav-links a:hover { color: var(--g500); }
+.nav-badge { background: var(--g100); color: var(--g700); font-size: 11.5px; font-weight: 600; padding: 5px 14px; border-radius: 100px; }
 
-.nav-logo {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--blue);
-  letter-spacing: -0.5px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.nav-links {
-  display: flex;
-  gap: 32px;
-  list-style: none;
-}
-
-.nav-links a {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--text2);
-  text-decoration: none;
-  transition: color 0.18s;
-}
-
-.nav-links a:hover { color: var(--green-500); }
-
-.nav-badge {
-  background: var(--green-100);
-  color: var(--green-700);
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 5px 14px;
-  border-radius: 100px;
-}
-
-/* ─── HOME: HERO ─── */
-.hero {
-  padding: 72px 48px 48px;
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-.hero-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--green-500);
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-
-.hero-label .dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--green-400);
-}
-
-.hero-title {
-  font-size: clamp(32px, 3.5vw, 48px);
-  font-weight: 800;
-  color: var(--green-900);
-  line-height: 1.15;
-  letter-spacing: -1.5px;
-  margin-bottom: 14px;
-}
-
+.hero { padding: 72px 48px 48px; max-width: 1280px; margin: 0 auto; }
+.hero-label { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--g500); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 20px; }
+.hero-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--g400); }
+.hero-title { font-size: clamp(32px,3.5vw,48px); font-weight: 800; color: var(--g900); line-height: 1.15; letter-spacing: -1.5px; margin-bottom: 14px; }
 .hero-title span { color: var(--blue); }
+.hero-sub { font-size: 15px; color: var(--text2); line-height: 1.7; max-width: 500px; margin-bottom: 56px; }
 
-.hero-sub {
-  font-size: 15px;
-  font-weight: 400;
-  color: var(--text2);
-  line-height: 1.7;
-  max-width: 500px;
-  margin-bottom: 56px;
-}
+.section-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 48px; max-width: 1280px; margin-left: auto; margin-right: auto; }
+.section-title { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
 
-/* ─── CARD SECTION LABEL ─── */
-.section-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  padding: 0 48px;
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-}
+.card-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; padding: 0 48px 72px; max-width: 1280px; margin: 0 auto; }
 
-.section-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-
-.section-count {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-/* ─── CARD GRID ─── */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 0 48px 72px;
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-@media (max-width: 1024px) { .card-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px)  { .card-grid { grid-template-columns: 1fr; padding: 0 20px 48px; } }
-@media (max-width: 900px)  { nav, .hero, .section-row { padding-left: 20px; padding-right: 20px; } }
-
-/* ─── TOOL CARD ─── */
 .tool-card {
-  background: var(--white);
-  border-radius: var(--radius);
-  padding: 32px 28px 28px;
-  cursor: pointer;
-  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s ease;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  position: relative;
-  overflow: hidden;
-  animation: cardUp 0.5s cubic-bezier(.4,0,.2,1) both;
+  background: var(--white); border-radius: var(--radius); padding: 32px 28px 28px;
+  cursor: pointer; transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease;
+  box-shadow: var(--shadow); border: 1px solid var(--border);
+  display: flex; flex-direction: column; position: relative; overflow: hidden;
+  animation: cardUp .5s cubic-bezier(.4,0,.2,1) both;
 }
+.tool-card:nth-child(1){animation-delay:.04s} .tool-card:nth-child(2){animation-delay:.10s}
+.tool-card:nth-child(3){animation-delay:.16s} .tool-card:nth-child(4){animation-delay:.22s}
+@keyframes cardUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+.tool-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.tool-card::after { content:''; position:absolute; bottom:0; right:0; width:80px; height:80px; border-radius:40px 0 var(--radius) 0; opacity:.06; transition:opacity .3s; }
+.tool-card:hover::after { opacity:.1; }
+.card1::after{background:#2e8b57} .card2::after{background:#1a7a6a} .card3::after{background:#2d7a4a} .card4::after{background:#3d6e3a}
 
-.tool-card:nth-child(1) { animation-delay: 0.04s; }
-.tool-card:nth-child(2) { animation-delay: 0.10s; }
-.tool-card:nth-child(3) { animation-delay: 0.16s; }
-.tool-card:nth-child(4) { animation-delay: 0.22s; }
+.card-icon-wrap { width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:22px; transition:transform .3s cubic-bezier(.34,1.56,.64,1); flex-shrink:0; }
+.tool-card:hover .card-icon-wrap { transform:scale(1.1); }
+.card1 .card-icon-wrap{background:#e8f7ef} .card2 .card-icon-wrap{background:#e6f4f1} .card3 .card-icon-wrap{background:#eaf5ec} .card4 .card-icon-wrap{background:#edf5e9}
+.card-icon-wrap svg { width:26px; height:26px; }
 
-@keyframes cardUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
+.card-title-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; white-space:nowrap; }
+.card-title { font-size:15px; font-weight:700; color:var(--g900); letter-spacing:-.3px; white-space:nowrap; }
+.card-pill { font-size:10px; font-weight:700; padding:3px 9px; border-radius:100px; flex-shrink:0; }
+.card1 .card-pill{background:#e8f7ef;color:#2e8b57} .card2 .card-pill{background:#e6f4f1;color:#1a7a6a} .card3 .card-pill{background:#eaf5ec;color:#2d7a4a} .card4 .card-pill{background:#edf5e9;color:#3d6e3a}
+
+.card-desc { font-size:13px; color:var(--text2); line-height:1.65; flex:1; margin-bottom:24px; }
+.card-bottom { display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
+.card-tags { display:flex; gap:5px; flex-wrap:wrap; }
+.card-tag { font-size:10.5px; color:var(--muted); background:var(--bg); padding:3px 9px; border-radius:100px; font-weight:500; border:1px solid var(--border); }
+.card-arrow { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .22s; }
+.card1 .card-arrow{background:#e8f7ef} .card2 .card-arrow{background:#e6f4f1} .card3 .card-arrow{background:#eaf5ec} .card4 .card-arrow{background:#edf5e9}
+.card1:hover .card-arrow{background:#2e8b57} .card2:hover .card-arrow{background:#1a7a6a} .card3:hover .card-arrow{background:#2d7a4a} .card4:hover .card-arrow{background:#3d6e3a}
+.tool-card:hover .card-arrow { transform:translate(2px,-2px); }
+.card-arrow svg { transition:stroke .22s; }
+.tool-card:hover .card-arrow svg { stroke:white; }
+
+.home-footer { background:var(--white); border-top:1px solid var(--border); padding:24px 48px; display:flex; align-items:center; justify-content:space-between; }
+.footer-logo { font-size:15px; font-weight:800; color:var(--blue); }
+.footer-copy { font-size:12px; color:var(--muted); }
+
+/* ══════════════════════════════════════
+   DIVIDEND CALCULATOR PAGE
+══════════════════════════════════════ */
+.div-nav {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 0 32px; height: 60px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 200;
 }
-
-.tool-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-hover);
-}
-
-/* Corner accent */
-.tool-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0; right: 0;
-  width: 80px; height: 80px;
-  border-radius: 40px 0 var(--radius) 0;
-  opacity: 0.06;
-  transition: opacity 0.3s;
-}
-
-.tool-card:hover::after { opacity: 0.1; }
-
-.card1::after { background: #2e8b57; }
-.card2::after { background: #1a7a6a; }
-.card3::after { background: #2d7a4a; }
-.card4::after { background: #3d6e3a; }
-
-/* Icon wrapper */
-.card-icon-wrap {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 22px;
-  flex-shrink: 0;
-  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
-}
-
-.tool-card:hover .card-icon-wrap { transform: scale(1.1); }
-
-.card1 .card-icon-wrap { background: #e8f7ef; }
-.card2 .card-icon-wrap { background: #e6f4f1; }
-.card3 .card-icon-wrap { background: #eaf5ec; }
-.card4 .card-icon-wrap { background: #edf5e9; }
-
-.card-icon-wrap svg { width: 26px; height: 26px; }
-
-/* Title row — single line */
-.card-title-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  white-space: nowrap;
-}
-
-.card-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--green-900);
-  letter-spacing: -0.3px;
-  white-space: nowrap;
-}
-
-/* Colored pill */
-.card-pill {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 100px;
-  letter-spacing: 0.3px;
-  flex-shrink: 0;
-}
-
-.card1 .card-pill { background: #e8f7ef; color: #2e8b57; }
-.card2 .card-pill { background: #e6f4f1; color: #1a7a6a; }
-.card3 .card-pill { background: #eaf5ec; color: #2d7a4a; }
-.card4 .card-pill { background: #edf5e9; color: #3d6e3a; }
-
-.card-desc {
-  font-size: 13px;
-  color: var(--text2);
-  line-height: 1.65;
-  font-weight: 400;
-  flex: 1;
-  margin-bottom: 24px;
-}
-
-/* Bottom row */
-.card-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: auto;
-}
-
-.card-tags {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-
-.card-tag {
-  font-size: 10.5px;
-  color: var(--muted);
-  background: var(--bg);
-  padding: 3px 9px;
-  border-radius: 100px;
-  font-weight: 500;
-  border: 1px solid var(--border);
-}
-
-.card-arrow {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.22s;
-}
-
-.card1 .card-arrow { background: #e8f7ef; }
-.card2 .card-arrow { background: #e6f4f1; }
-.card3 .card-arrow { background: #eaf5ec; }
-.card4 .card-arrow { background: #edf5e9; }
-
-.tool-card:hover .card-arrow { transform: translate(2px, -2px); }
-.card1:hover .card-arrow { background: #2e8b57; }
-.card2:hover .card-arrow { background: #1a7a6a; }
-.card3:hover .card-arrow { background: #2d7a4a; }
-.card4:hover .card-arrow { background: #3d6e3a; }
-
-.card-arrow svg { transition: stroke 0.22s; }
-.tool-card:hover .card-arrow svg { stroke: white; }
-
-/* ─── FOOTER ─── */
-footer {
-  background: var(--white);
-  border-top: 1px solid var(--border);
-  padding: 24px 48px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.footer-logo { font-size: 15px; font-weight: 800; color: var(--blue); }
-.footer-copy  { font-size: 12px; color: var(--muted); }
-
-/* ═══════════════════════════════════════════
-   INNER PAGES
-═══════════════════════════════════════════ */
-.inner-nav {
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  padding: 0 48px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
 .back-btn {
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border);
-  background: transparent;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.18s;
-  flex-shrink: 0;
+  display: flex; align-items: center; gap: 6px;
+  background: var(--g50); border: 1px solid var(--border);
+  border-radius: 100px; padding: 6px 14px 6px 10px;
+  cursor: pointer; font-size: 13px; font-weight: 600; color: var(--g700);
+  transition: all .18s; font-family: var(--sans);
 }
+.back-btn:hover { background: var(--g100); }
+.div-nav-title { font-size: 16px; font-weight: 800; color: var(--g900); letter-spacing: -.4px; }
+.div-nav-badge { margin-left: auto; background: var(--g100); color: var(--g700); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px; }
 
-.back-btn:hover { background: var(--green-500); border-color: var(--green-500); }
-.back-btn:hover svg { stroke: white; }
-.back-btn svg { transition: stroke 0.18s; }
+/* Layout */
+.div-layout { display: grid; grid-template-columns: 420px 1fr; gap: 24px; padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
+@media(max-width:1100px){ .div-layout{grid-template-columns:1fr} }
 
-.inner-nav-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--green-900);
-  letter-spacing: -0.3px;
+/* LEFT PANEL */
+.panel { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
+.panel-header { padding: 20px 24px 0; }
+.panel-title { font-size: 14px; font-weight: 800; color: var(--g900); letter-spacing: -.3px; margin-bottom: 16px; }
+
+/* Market tabs */
+.mkt-tabs { display: flex; background: var(--bg); border-radius: 10px; padding: 3px; gap: 2px; }
+.mkt-tab { flex:1; padding:8px; border:none; background:transparent; border-radius:8px; font-family:var(--sans); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .18s; }
+.mkt-tab.active { background:var(--white); color:var(--g700); box-shadow:0 1px 6px rgba(0,0,0,.08); }
+
+/* Search */
+.search-wrap { padding: 16px 24px; position: relative; }
+.search-input {
+  width: 100%; padding: 11px 16px 11px 40px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 10px; font-family: var(--sans); font-size: 14px; color: var(--text);
+  outline: none; transition: border-color .18s, box-shadow .18s;
 }
+.search-input:focus { border-color: var(--g400); box-shadow: 0 0 0 3px rgba(58,175,111,.12); background: var(--white); }
+.search-icon { position:absolute; left:36px; top:50%; transform:translateY(-50%); pointer-events:none; }
 
-.inner-nav-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  margin-left: auto;
-}
-
-.inner-body {
-  max-width: 840px;
-  margin: 0 auto;
-  padding: 48px 48px 80px;
-}
-
-@media (max-width: 700px) { .inner-body { padding: 28px 20px 60px; } .inner-nav { padding: 0 20px; } }
-
-/* Tabs */
-.tabs {
-  display: flex;
-  background: var(--bg);
-  border-radius: 12px;
-  padding: 4px;
-  gap: 2px;
-  margin-bottom: 32px;
-  border: 1px solid var(--border);
-}
-
-.tab-btn {
-  flex: 1;
-  padding: 10px 12px;
-  border: none;
-  background: transparent;
-  border-radius: 9px;
-  font-family: var(--sans);
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.18s;
-}
-
-.tab-btn.active { background: var(--white); color: var(--green-700); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-/* Section heading */
-.field-section {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--muted);
-  margin-bottom: 18px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-}
-
-/* Form grid */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-@media (max-width: 540px) { .form-grid { grid-template-columns: 1fr; } }
-
-.fg { display: flex; flex-direction: column; gap: 7px; }
-
-.fg label {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text2);
-}
-
-.fg input, .fg select {
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 11px;
-  padding: 12px 15px;
-  font-family: var(--sans);
-  font-size: 14.5px;
-  font-weight: 500;
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.18s, box-shadow 0.18s;
-  width: 100%;
-  appearance: none;
-}
-
-.fg input:focus, .fg select:focus {
-  border-color: var(--green-400);
-  box-shadow: 0 0 0 3px rgba(58,175,111,0.12);
-  background: var(--white);
-}
-
-.fg input::placeholder { color: var(--muted); font-weight: 400; font-size: 13px; }
-
-/* Calc button */
-.calc-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 13px 28px;
-  border: none;
-  border-radius: 12px;
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: var(--green-500);
-  color: white;
-}
-
-.calc-btn:hover { background: var(--green-700); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(46,139,87,0.3); }
-
-/* Result card */
-.result-card {
-  background: var(--white);
-  border: 1.5px solid var(--border);
-  border-radius: 18px;
-  padding: 28px;
-  margin-top: 24px;
+/* Dropdown */
+.search-dropdown {
+  position: absolute; top: calc(100% - 8px); left: 24px; right: 24px;
+  background: var(--white); border: 1.5px solid var(--border); border-radius: 12px;
+  box-shadow: var(--shadow-lg); z-index: 300; max-height: 260px; overflow-y: auto;
   display: none;
-  animation: fadeUp 0.3s ease;
 }
+.search-dropdown.open { display: block; }
+.drop-item { padding: 11px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: background .15s; border-bottom: 1px solid var(--border); }
+.drop-item:last-child { border-bottom: none; }
+.drop-item:hover { background: var(--g50); }
+.drop-ticker { font-size: 12px; font-weight: 700; color: var(--g700); background: var(--g100); padding: 2px 8px; border-radius: 6px; flex-shrink: 0; }
+.drop-name { font-size: 13px; color: var(--text); flex: 1; }
+.drop-yield { font-size: 12px; font-weight: 600; color: var(--g500); flex-shrink: 0; }
 
-.result-card.show { display: block; }
-
-@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-
-.result-header {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--muted);
-  margin-bottom: 20px;
+/* ETF list */
+.etf-list { padding: 0 24px 24px; display: flex; flex-direction: column; gap: 10px; max-height: 500px; overflow-y: auto; }
+.etf-item {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+  animation: fadeIn .2s ease;
 }
+.etf-color { width: 4px; height: 40px; border-radius: 4px; flex-shrink: 0; }
+.etf-info { flex: 1; min-width: 0; }
+.etf-ticker { font-size: 12px; font-weight: 700; color: var(--g700); }
+.etf-name { font-size: 12px; color: var(--muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.etf-price { font-size: 13px; font-weight: 600; color: var(--text); text-align: right; flex-shrink: 0; }
+.etf-price-sub { font-size: 10px; color: var(--muted); }
+.qty-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.qty-btn { width: 26px; height: 26px; border-radius: 8px; border: 1px solid var(--border); background: var(--white); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--text2); transition: all .15s; }
+.qty-btn:hover { background: var(--g100); border-color: var(--g400); color: var(--g700); }
+.qty-input { width: 52px; text-align: center; border: 1px solid var(--border); border-radius: 8px; padding: 4px 6px; font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--text); background: var(--white); outline: none; }
+.qty-input:focus { border-color: var(--g400); }
+.etf-remove { width: 24px; height: 24px; border-radius: 6px; border: none; background: transparent; cursor: pointer; color: var(--muted); font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all .15s; flex-shrink: 0; }
+.etf-remove:hover { background: #fee2e2; color: var(--red); }
 
-.result-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
-}
+.empty-list { padding: 48px 24px; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.empty-list .e-icon { font-size: 36px; margin-bottom: 12px; }
 
-.result-item .r-label { font-size: 12px; color: var(--muted); margin-bottom: 5px; font-weight: 500; }
-.result-item .r-value { font-size: 24px; font-weight: 800; letter-spacing: -0.8px; line-height: 1; color: var(--green-700); }
-.result-item .r-unit  { font-size: 11px; color: var(--muted); margin-top: 4px; font-weight: 400; }
+/* RIGHT PANEL */
+.right-col { display: flex; flex-direction: column; gap: 20px; }
 
-.info-tip {
-  margin-top: 20px;
-  padding: 12px 16px;
-  background: var(--green-50);
-  border-radius: 10px;
-  font-size: 12px;
-  color: var(--text2);
-  line-height: 1.65;
-  border: 1px solid var(--green-100);
-}
+/* Summary cards */
+.summary-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+@media(max-width:900px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+.sum-card { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+.sum-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; }
+.sum-card.c-green::after{background:var(--g500)} .sum-card.c-blue::after{background:var(--blue)} .sum-card.c-gold::after{background:var(--gold)} .sum-card.c-teal::after{background:#0d9488}
+.sum-label { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:.5px; margin-bottom:8px; }
+.sum-value { font-size:22px; font-weight:800; letter-spacing:-1px; line-height:1; }
+.sum-value.green{color:var(--g700)} .sum-value.blue{color:var(--blue)} .sum-value.gold{color:var(--gold)} .sum-value.teal{color:#0d9488}
+.sum-sub { font-size:11px; color:var(--muted); margin-top:5px; }
 
-/* Bar chart */
-.bar-chart {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  height: 100px;
-  margin-top: 24px;
-}
+/* Filter tabs */
+.filter-tabs { display:flex; gap:6px; }
+.filter-tab { padding:7px 18px; border-radius:100px; border:1.5px solid var(--border); background:var(--white); font-family:var(--sans); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .18s; }
+.filter-tab.active { background:var(--g700); border-color:var(--g700); color:white; }
 
-.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
-.bar { width: 100%; border-radius: 5px 5px 0 0; transition: height 0.6s cubic-bezier(.4,0,.2,1); background: var(--green-400); }
-.bar-yr { font-size: 10px; color: var(--muted); white-space: nowrap; }
+/* Portfolio panel */
+.port-body { padding: 20px 24px; }
+.port-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media(max-width:700px){.port-row{grid-template-columns:1fr}}
+
+/* Donut chart */
+.donut-wrap { display: flex; flex-direction: column; align-items: center; }
+.donut-canvas { position: relative; width: 180px; height: 180px; }
+canvas#donut { width: 180px; height: 180px; }
+.donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
+.donut-center-val { font-size: 20px; font-weight: 800; color: var(--g900); letter-spacing: -1px; line-height: 1; }
+.donut-center-sub { font-size: 10px; color: var(--muted); margin-top: 3px; font-weight: 500; }
+
+/* Legend */
+.legend { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; width: 100%; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.legend-name { flex: 1; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.legend-pct { font-weight: 700; font-size: 12px; flex-shrink: 0; }
+
+/* Table */
+.etf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.etf-table th { font-size: 11px; font-weight: 700; color: var(--muted); padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); letter-spacing: .5px; text-transform: uppercase; }
+.etf-table td { padding: 12px 12px; border-bottom: 1px solid rgba(226,236,230,.5); vertical-align: middle; }
+.etf-table tr:last-child td { border-bottom: none; }
+.etf-table tr:hover td { background: var(--g50); }
+.t-ticker { font-size: 11px; font-weight: 700; color: var(--g700); background: var(--g100); padding: 2px 8px; border-radius: 5px; display: inline-block; }
+.t-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.t-bar-bg { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.t-bar-fill { height: 100%; border-radius: 2px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+.t-pct { font-size: 12px; font-weight: 700; width: 38px; text-align: right; flex-shrink: 0; }
+
+/* Simulation panel */
+.sim-body { padding: 20px 24px; }
+.sim-note { font-size: 12.5px; color: var(--text2); line-height: 1.65; margin-bottom: 20px; padding: 12px 14px; background: var(--g50); border-radius: 10px; border: 1px solid var(--g100); }
+.sim-items { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.sim-item { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: grid; grid-template-columns: 1fr 140px 1fr; gap: 12px; align-items: center; }
+.sim-etf-info .si-ticker { font-size: 12px; font-weight: 700; color: var(--g700); }
+.sim-etf-info .si-current { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.sim-delta-wrap label { font-size: 10px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 4px; letter-spacing: .5px; text-transform: uppercase; }
+.sim-delta-input { width: 100%; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); outline: none; text-align: center; transition: border-color .18s; }
+.sim-delta-input:focus { border-color: var(--g400); }
+.sim-result-item { text-align: right; }
+.sim-result-item .sr-after { font-size: 14px; font-weight: 700; color: var(--text); }
+.sim-result-item .sr-delta { font-size: 12px; font-weight: 600; margin-top: 2px; }
+.sr-delta.pos { color: var(--g500); }
+.sr-delta.neg { color: var(--red); }
+
+/* Sim summary box */
+.sim-summary { background: linear-gradient(135deg, var(--g50), #f0fdf8); border: 1.5px solid var(--g200, #b8dfc8); border-radius: 14px; padding: 20px; display: none; }
+.sim-summary.show { display: block; animation: fadeIn .3s ease; }
+.sim-sum-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--g600, #257a47); margin-bottom: 14px; }
+.sim-sum-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+@media(max-width:600px){.sim-sum-grid{grid-template-columns:1fr 1fr}}
+.ssm { }
+.ssm-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.ssm-value { font-size: 18px; font-weight: 800; letter-spacing: -.5px; line-height: 1; }
+.ssm-extra { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+
+/* Fee section */
+.fee-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; padding: 20px 24px; }
+@media(max-width:600px){.fee-grid{grid-template-columns:1fr}}
+.fee-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.fee-label { font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+.fee-value { font-size: 16px; font-weight: 700; color: var(--text); }
+.fee-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* Utility */
+.panel-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+.panel-section-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px 14px; }
+.psh-title { font-size: 14px; font-weight: 700; color: var(--g900); }
+.psh-sub { font-size: 12px; color: var(--muted); }
+
+/* AI status */
+.ai-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--g700); background: var(--g50); border: 1px solid var(--g100); border-radius: 100px; padding: 3px 10px; }
+.ai-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--g400); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.spin { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--g100); border-top-color: var(--g500); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════ HOME ═══════════════ -->
+<!-- ══════════════════════════════════════
+     HOME PAGE
+══════════════════════════════════════ -->
 <div id="page-home" class="page active">
-  <nav>
-    <div class="nav-logo" onclick="goHome()">자산플로우</div>
+  <nav class="home-nav">
+    <div class="nav-logo">자산플로우</div>
     <ul class="nav-links">
       <li><a href="#">도구</a></li>
       <li><a href="#">가이드</a></li>
@@ -586,510 +318,624 @@ footer {
 
   <div class="section-row">
     <span class="section-title">계산기 도구</span>
-    <span class="section-count">총 4개</span>
+    <span style="font-size:12px;color:var(--muted);">총 4개</span>
   </div>
 
   <div class="card-grid">
-
-    <!-- 1 -->
-    <div class="tool-card card1" onclick="showPage('dividend')">
+    <div class="tool-card card1" onclick="goDiv()">
       <div class="card-icon-wrap">
-        <svg viewBox="0 0 26 26" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="13" cy="13" r="10"/>
-          <path d="M13 7v1.5M13 17.5V19M9.5 11c0-1.4 1.6-2 3.5-2s3.5.6 3.5 2-1.6 2-3.5 2-3.5.6-3.5 2 1.6 2 3.5 2 3.5-.6 3.5-2"/>
-        </svg>
+        <svg viewBox="0 0 26 26" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="10"/><path d="M13 7v1.5M13 17.5V19M9.5 11c0-1.4 1.6-2 3.5-2s3.5.6 3.5 2-1.6 2-3.5 2-3.5.6-3.5 2 1.6 2 3.5 2 3.5-.6 3.5-2"/></svg>
       </div>
-      <div class="card-title-row">
-        <span class="card-title">월 배당금 계산기</span>
-        <span class="card-pill">ETF</span>
-      </div>
-      <p class="card-desc">투자금과 배당률로 월 배당 수익을 계산하고, 목표 배당금에 필요한 투자금을 역산합니다.</p>
+      <div class="card-title-row"><span class="card-title">월 배당금 계산기</span><span class="card-pill">ETF</span></div>
+      <p class="card-desc">국내·해외 ETF 실시간 주가 반영, 포트폴리오 분석, 수량 변동 시뮬레이션까지.</p>
       <div class="card-bottom">
-        <div class="card-tags">
-          <span class="card-tag">배당률</span>
-          <span class="card-tag">월배당</span>
-        </div>
-        <div class="card-arrow">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/>
-          </svg>
-        </div>
+        <div class="card-tags"><span class="card-tag">실시간</span><span class="card-tag">포트폴리오</span></div>
+        <div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div>
       </div>
     </div>
-
-    <!-- 2 -->
-    <div class="tool-card card2" onclick="showPage('tax')">
-      <div class="card-icon-wrap">
-        <svg viewBox="0 0 26 26" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="5" y="3" width="16" height="20" rx="2"/>
-          <path d="M9 8h8M9 12h8M9 16h5"/>
-          <circle cx="19.5" cy="19.5" r="3.5" fill="#e6f4f1" stroke="#1a7a6a" stroke-width="1.5"/>
-          <path d="M19.5 18.2v1.3l.8.8"/>
-        </svg>
-      </div>
-      <div class="card-title-row">
-        <span class="card-title">세금 계산기</span>
-        <span class="card-pill">부동산 · 연말</span>
-      </div>
+    <div class="tool-card card2">
+      <div class="card-icon-wrap"><svg viewBox="0 0 26 26" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="16" height="20" rx="2"/><path d="M9 8h8M9 12h8M9 16h5"/></svg></div>
+      <div class="card-title-row"><span class="card-title">세금 계산기</span><span class="card-pill">부동산 · 연말</span></div>
       <p class="card-desc">부동산 양도소득세·취득세와 근로소득 연말정산 환급액을 간편하게 추정합니다.</p>
-      <div class="card-bottom">
-        <div class="card-tags">
-          <span class="card-tag">양도세</span>
-          <span class="card-tag">연말정산</span>
-        </div>
-        <div class="card-arrow">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/>
-          </svg>
-        </div>
-      </div>
+      <div class="card-bottom"><div class="card-tags"><span class="card-tag">양도세</span><span class="card-tag">연말정산</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
     </div>
-
-    <!-- 3 -->
-    <div class="tool-card card3" onclick="showPage('house')">
-      <div class="card-icon-wrap">
-        <svg viewBox="0 0 26 26" fill="none" stroke="#2d7a4a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 12L13 3l10 9v11H17v-6h-4v6H3V12z"/>
-        </svg>
-      </div>
-      <div class="card-title-row">
-        <span class="card-title">집 구매 가능 시뮬레이터</span>
-      </div>
+    <div class="tool-card card3">
+      <div class="card-icon-wrap"><svg viewBox="0 0 26 26" fill="none" stroke="#2d7a4a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L13 3l10 9v11H17v-6h-4v6H3V12z"/></svg></div>
+      <div class="card-title-row"><span class="card-title">집 구매 가능 시뮬레이터</span></div>
       <p class="card-desc">소득·자기자본·LTV·DTI 기준으로 살 수 있는 최대 주택가격과 월 상환액을 계산합니다.</p>
-      <div class="card-bottom">
-        <div class="card-tags">
-          <span class="card-tag">LTV</span>
-          <span class="card-tag">대출상환</span>
-        </div>
-        <div class="card-arrow">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2d7a4a" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/>
-          </svg>
-        </div>
-      </div>
+      <div class="card-bottom"><div class="card-tags"><span class="card-tag">LTV</span><span class="card-tag">대출상환</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2d7a4a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
     </div>
-
-    <!-- 4 -->
-    <div class="tool-card card4" onclick="showPage('invest')">
-      <div class="card-icon-wrap">
-        <svg viewBox="0 0 26 26" fill="none" stroke="#3d6e3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="4,20 9,13 13,16 17,10 22,6"/>
-          <circle cx="9"  cy="13" r="1.4" fill="#3d6e3a"/>
-          <circle cx="13" cy="16" r="1.4" fill="#3d6e3a"/>
-          <circle cx="17" cy="10" r="1.4" fill="#3d6e3a"/>
-          <circle cx="22" cy="6"  r="1.4" fill="#3d6e3a"/>
-          <line x1="4" y1="22" x2="22" y2="22"/>
-        </svg>
-      </div>
-      <div class="card-title-row">
-        <span class="card-title">소비 vs 투자 분석기</span>
-        <span class="card-pill">복리</span>
-      </div>
+    <div class="tool-card card4">
+      <div class="card-icon-wrap"><svg viewBox="0 0 26 26" fill="none" stroke="#3d6e3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,20 9,13 13,16 17,10 22,6"/><line x1="4" y1="22" x2="22" y2="22"/></svg></div>
+      <div class="card-title-row"><span class="card-title">소비 vs 투자 분석기</span><span class="card-pill">복리</span></div>
       <p class="card-desc">지금 소비하는 돈을 투자했을 때 미래 가치를 실시간으로 비교하고 기회비용을 체감합니다.</p>
-      <div class="card-bottom">
-        <div class="card-tags">
-          <span class="card-tag">복리</span>
-          <span class="card-tag">미래가치</span>
-        </div>
-        <div class="card-arrow">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#3d6e3a" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/>
-          </svg>
-        </div>
-      </div>
+      <div class="card-bottom"><div class="card-tags"><span class="card-tag">복리</span><span class="card-tag">미래가치</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#3d6e3a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
     </div>
-
   </div>
 
-  <footer>
+  <footer class="home-footer">
     <div class="footer-logo">자산플로우</div>
     <div class="footer-copy">© 2025 자산플로우 · 모든 계산은 참고용입니다</div>
   </footer>
 </div>
 
 
-<!-- ═══════════════ PAGE 1: 배당금 ═══════════════ -->
-<div id="page-dividend" class="page">
-  <div class="inner-nav">
+<!-- ══════════════════════════════════════
+     DIVIDEND CALCULATOR PAGE
+══════════════════════════════════════ -->
+<div id="page-div" class="page">
+
+  <!-- NAV -->
+  <div class="div-nav">
     <button class="back-btn" onclick="goHome()">
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round">
-        <path d="M10 6.5H3M3 6.5l3.5-3.5M3 6.5L6.5 10"/>
-      </svg>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg>
+      홈으로
     </button>
-    <span class="inner-nav-title">월 배당금 계산기</span>
-    <span class="inner-nav-dot" style="background:#2e8b57;"></span>
+    <span class="div-nav-title">월 배당금 계산기</span>
+    <span class="ai-badge"><span class="ai-dot"></span>AI 실시간 조회</span>
   </div>
-  <div class="inner-body">
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('d','fwd',this)">투자금 → 배당금</button>
-      <button class="tab-btn" onclick="switchTab('d','rev',this)">목표 배당 역산</button>
+
+  <div class="div-layout">
+
+    <!-- ── LEFT: ETF INPUT ── -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Search Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">ETF 검색 &amp; 추가</div>
+          <div class="mkt-tabs" style="margin-bottom:16px;">
+            <button class="mkt-tab active" onclick="setMkt('KR',this)">🇰🇷 국내 ETF</button>
+            <button class="mkt-tab" onclick="setMkt('US',this)">🇺🇸 해외 ETF</button>
+          </div>
+        </div>
+        <div class="search-wrap" style="position:relative;">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8a9aaa" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><path d="M12 12l-2.5-2.5"/></svg>
+          <input class="search-input" id="searchInput" placeholder="티커 또는 ETF명 검색 (예: TIGER, SPY)" autocomplete="off" oninput="onSearch(this.value)" onfocus="showDrop()" onblur="hideDrop()">
+          <div class="search-dropdown" id="searchDrop"></div>
+        </div>
+        <div style="padding:0 24px 12px;font-size:11px;color:var(--muted);">
+          인기: <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('TIGER미국배당다우존스')">TIGER미국배당</span> &nbsp;
+          <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('KODEX고배당')">KODEX고배당</span> &nbsp;
+          <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('SCHD')">SCHD</span> &nbsp;
+          <span style="cursor:pointer;color:var(--g600,#257a47);font-weight:600;" onclick="quickAdd('JEPI')">JEPI</span>
+        </div>
+      </div>
+
+      <!-- ETF List -->
+      <div class="panel">
+        <div class="panel-section-header">
+          <span class="psh-title">내 ETF 목록</span>
+          <span class="psh-sub" id="etfCount">0개</span>
+        </div>
+        <hr class="panel-divider">
+        <div class="etf-list" id="etfList">
+          <div class="empty-list">
+            <div class="e-icon">📭</div>
+            <div>ETF를 검색하여 추가해주세요<br><span style="color:var(--g500);">국내·해외 ETF 모두 지원합니다</span></div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <div id="d-fwd" class="tab-panel active">
-      <div class="field-section">투자 정보 입력</div>
-      <div class="form-grid">
-        <div class="fg"><label>총 투자금액 (원)</label><input id="d-invest" type="number" placeholder="10,000,000"></div>
-        <div class="fg"><label>연 배당수익률 (%)</label><input id="d-yield" type="number" placeholder="5.0" step="0.1"></div>
-        <div class="fg"><label>배당소득세율 (%)</label><input id="d-tax" type="number" value="15.4" step="0.1"></div>
-        <div class="fg"><label>배당 주기</label>
-          <select id="d-freq">
-            <option value="12">월 배당</option>
-            <option value="4">분기 배당</option>
-            <option value="2">반기 배당</option>
-            <option value="1">연 배당</option>
-          </select>
-        </div>
-      </div>
-      <button class="calc-btn" onclick="calcDiv()">계산하기</button>
-      <div class="result-card" id="div-result">
-        <div class="result-header">계산 결과</div>
-        <div class="result-grid">
-          <div class="result-item"><div class="r-label">연 배당금 (세전)</div><div class="r-value" id="d-r-gross" style="color:#1a5c38;">—</div><div class="r-unit">원</div></div>
-          <div class="result-item"><div class="r-label">세후 연 배당금</div><div class="r-value" id="d-r-net">—</div><div class="r-unit">원</div></div>
-          <div class="result-item"><div class="r-label">1회 수령액</div><div class="r-value" id="d-r-once">—</div><div class="r-unit">원/회</div></div>
-          <div class="result-item"><div class="r-label">월 환산 배당금</div><div class="r-value" id="d-r-monthly" style="color:#2e8b57;">—</div><div class="r-unit">원/월</div></div>
-        </div>
-        <div class="info-tip">배당소득세 15.4%는 원천징수됩니다. 실제 배당금은 ETF 운용 결과에 따라 달라질 수 있습니다.</div>
-      </div>
-    </div>
+    <!-- ── RIGHT: RESULTS ── -->
+    <div class="right-col">
 
-    <div id="d-rev" class="tab-panel">
-      <div class="field-section">목표 배당금 역산</div>
-      <div class="form-grid">
-        <div class="fg"><label>목표 월 배당금 (원)</label><input id="dr-monthly" type="number" placeholder="1,000,000"></div>
-        <div class="fg"><label>연 배당수익률 (%)</label><input id="dr-yield" type="number" placeholder="5.0" step="0.1"></div>
-        <div class="fg"><label>배당소득세율 (%)</label><input id="dr-tax" type="number" value="15.4"></div>
-      </div>
-      <button class="calc-btn" onclick="calcRev()">역산하기</button>
-      <div class="result-card" id="rev-result">
-        <div class="result-header">역산 결과</div>
-        <div class="result-grid">
-          <div class="result-item"><div class="r-label">필요 투자금</div><div class="r-value" id="dr-r-invest" style="color:#2e8b57;">—</div><div class="r-unit">원</div></div>
-          <div class="result-item"><div class="r-label">세전 연 배당금</div><div class="r-value" id="dr-r-gross">—</div><div class="r-unit">원</div></div>
+      <!-- Summary -->
+      <div class="summary-grid">
+        <div class="sum-card c-green">
+          <div class="sum-label">총 투자금액</div>
+          <div class="sum-value green" id="s-invest">0</div>
+          <div class="sum-sub">원</div>
+        </div>
+        <div class="sum-card c-teal">
+          <div class="sum-label">월 배당금 (세후)</div>
+          <div class="sum-value teal" id="s-monthly">0</div>
+          <div class="sum-sub">원 / 월</div>
+        </div>
+        <div class="sum-card c-blue">
+          <div class="sum-label">연 배당금 (세후)</div>
+          <div class="sum-value blue" id="s-annual">0</div>
+          <div class="sum-sub">원 / 년</div>
+        </div>
+        <div class="sum-card c-gold">
+          <div class="sum-label">평균 배당수익률</div>
+          <div class="sum-value gold" id="s-yield">0.00%</div>
+          <div class="sum-sub">세후 연 기준</div>
         </div>
       </div>
+
+      <!-- Portfolio Panel -->
+      <div class="panel">
+        <div class="panel-section-header">
+          <span class="psh-title">포트폴리오 구성</span>
+          <div class="filter-tabs">
+            <button class="filter-tab active" onclick="setFilter('all',this)">전체</button>
+            <button class="filter-tab" onclick="setFilter('KR',this)">국내</button>
+            <button class="filter-tab" onclick="setFilter('US',this)">해외</button>
+          </div>
+        </div>
+        <hr class="panel-divider">
+        <div class="port-body">
+          <div class="port-row">
+            <div class="donut-wrap">
+              <div class="donut-canvas">
+                <canvas id="donut" width="180" height="180"></canvas>
+                <div class="donut-center">
+                  <div class="donut-center-val" id="donut-val">0</div>
+                  <div class="donut-center-sub">종목</div>
+                </div>
+              </div>
+              <div class="legend" id="donut-legend"></div>
+            </div>
+            <div>
+              <!-- Investment weight table -->
+              <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;letter-spacing:.5px;text-transform:uppercase;">투자 비중</div>
+              <table class="etf-table" id="weightTable">
+                <thead><tr><th>ETF</th><th>금액</th><th>비중</th></tr></thead>
+                <tbody id="weightBody"></tbody>
+              </table>
+              <div style="margin-top:18px;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;letter-spacing:.5px;text-transform:uppercase;">배당 기여도</div>
+              <table class="etf-table" id="divTable">
+                <thead><tr><th>ETF</th><th>월 배당금</th><th>기여도</th></tr></thead>
+                <tbody id="divBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Simulation Panel -->
+      <div class="panel">
+        <div class="panel-section-header">
+          <span class="psh-title">수량 변동 시뮬레이션</span>
+          <span class="psh-sub">+ 매수 / − 매도</span>
+        </div>
+        <hr class="panel-divider">
+        <div class="sim-body">
+          <div class="sim-note">수량을 변동하면 월 배당금 변화와 추가 비용(수수료 포함)을 실시간으로 확인할 수 있습니다.</div>
+          <div class="sim-items" id="simItems">
+            <div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;">ETF를 추가하면 시뮬레이션이 표시됩니다.</div>
+          </div>
+          <div class="sim-summary" id="simSummary">
+            <div class="sim-sum-title">📊 시뮬레이션 결과</div>
+            <div class="sim-sum-grid">
+              <div class="ssm"><div class="ssm-label">변동 전 월 배당금</div><div class="ssm-value" id="ss-before" style="color:var(--muted);">0원</div></div>
+              <div class="ssm"><div class="ssm-label">변동 후 월 배당금</div><div class="ssm-value" id="ss-after" style="color:var(--g500);">0원</div></div>
+              <div class="ssm"><div class="ssm-label">월 배당금 변화</div><div class="ssm-value" id="ss-delta">—</div></div>
+            </div>
+            <div class="ssm-extra">
+              <div class="ssm"><div class="ssm-label">추가 투자금</div><div class="ssm-value" id="ss-invest" style="color:var(--blue);font-size:15px;">0원</div></div>
+              <div class="ssm"><div class="ssm-label">총 거래 수수료</div><div class="ssm-value" id="ss-fee" style="color:var(--red);font-size:15px;">0원</div></div>
+              <div class="ssm"><div class="ssm-label">변동 후 연 배당금</div><div class="ssm-value" id="ss-annual" style="color:#a855f7;font-size:15px;">0원</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fee Panel -->
+      <div class="panel">
+        <div class="panel-section-header">
+          <span class="psh-title">수수료 · 세금 상세</span>
+          <span class="psh-sub">현재 포트폴리오 기준</span>
+        </div>
+        <hr class="panel-divider">
+        <div class="fee-grid">
+          <div class="fee-card"><div class="fee-label">국내 ETF 거래세</div><div class="fee-value" id="fee-kr-tax">0원</div><div class="fee-sub">매도 시 0.18% (증권거래세)</div></div>
+          <div class="fee-card"><div class="fee-label">해외 ETF 거래세</div><div class="fee-value" id="fee-us-tax">0원</div><div class="fee-sub">양도소득세 22% (250만원 초과분)</div></div>
+          <div class="fee-card"><div class="fee-label">국내 ETF 배당세</div><div class="fee-value" id="fee-kr-div">0원</div><div class="fee-sub">배당소득세 15.4% 원천징수</div></div>
+          <div class="fee-card"><div class="fee-label">해외 ETF 배당세</div><div class="fee-value" id="fee-us-div">0원</div><div class="fee-sub">배당소득세 15% (미국 원천징수)</div></div>
+          <div class="fee-card"><div class="fee-label">증권사 매매수수료 (추정)</div><div class="fee-value" id="fee-brokerage">0원</div><div class="fee-sub">국내 0.015% / 해외 0.25% 기준</div></div>
+          <div class="fee-card" style="background:var(--g50);border-color:var(--g200,#b8dfc8);"><div class="fee-label">연간 실수령 배당금 (세후)</div><div class="fee-value" id="fee-net" style="color:var(--g700);font-size:18px;font-weight:800;">0원</div><div class="fee-sub">모든 세금 공제 후</div></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
-
-
-<!-- ═══════════════ PAGE 2: 세금 ═══════════════ -->
-<div id="page-tax" class="page">
-  <div class="inner-nav">
-    <button class="back-btn" onclick="goHome()">
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round">
-        <path d="M10 6.5H3M3 6.5l3.5-3.5M3 6.5L6.5 10"/>
-      </svg>
-    </button>
-    <span class="inner-nav-title">세금 계산기</span>
-    <span class="inner-nav-dot" style="background:#1a7a6a;"></span>
-  </div>
-  <div class="inner-body">
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('t','re',this)">부동산 세금</button>
-      <button class="tab-btn" onclick="switchTab('t','ye',this)">연말정산</button>
-    </div>
-
-    <div id="t-re" class="tab-panel active">
-      <div class="field-section">부동산 취득 · 양도 정보</div>
-      <div class="form-grid">
-        <div class="fg"><label>취득 가격 (원)</label><input id="t-buy" type="number" placeholder="500,000,000"></div>
-        <div class="fg"><label>양도 가격 (원)</label><input id="t-sell" type="number" placeholder="700,000,000"></div>
-        <div class="fg"><label>보유 기간 (년)</label><input id="t-hold" type="number" placeholder="3" min="0"></div>
-        <div class="fg"><label>주택 구분</label>
-          <select id="t-type">
-            <option value="1">1주택 (일반)</option>
-            <option value="2">2주택 이상</option>
-          </select>
-        </div>
-      </div>
-      <button class="calc-btn" onclick="calcTax()">계산하기</button>
-      <div class="result-card" id="tax-result">
-        <div class="result-header">세금 계산 결과</div>
-        <div class="result-grid">
-          <div class="result-item"><div class="r-label">취득세 (추정)</div><div class="r-value" id="t-r-acq" style="color:#1a7a6a;">—</div><div class="r-unit">원</div></div>
-          <div class="result-item"><div class="r-label">양도 차익</div><div class="r-value" id="t-r-gain">—</div><div class="r-unit">원</div></div>
-          <div class="result-item"><div class="r-label">장기보유특별공제</div><div class="r-value" id="t-r-deduct">—</div><div class="r-unit">원</div></div>
-          <div class="result-item"><div class="r-label">양도소득세 (추정)</div><div class="r-value" id="t-r-cgt" style="color:#1a7a6a;">—</div><div class="r-unit">원</div></div>
-        </div>
-        <div class="info-tip">간이 추정치이며, 조정지역·1세대1주택 비과세 등 실제 상황에 따라 달라집니다. 세무사 상담을 권장합니다.</div>
-      </div>
-    </div>
-
-    <div id="t-ye" class="tab-panel">
-      <div class="field-section">근로소득 연말정산</div>
-      <div class="form-grid">
-        <div class="fg"><label>연간 총급여 (원)</label><input id="y-salary" type="number" placeholder="60,000,000"></div>
-        <div class="fg"><label>기납부 세액 (원)</label><input id="y-paid" type="number" placeholder="3,000,000"></div>
-        <div class="fg"><label>부양가족 수 (본인 포함)</label><input id="y-dep" type="number" placeholder="1" value="1" min="1"></div>
-        <div class="fg"><label>연간 신용카드 사용액 (원)</label><input id="y-card" type="number" placeholder="20,000,000"></div>
-      </div>
-      <button class="calc-btn" onclick="calcYE()">계산하기</button>
-      <div class="result-card" id="ye-result">
-        <div class="result-header">연말정산 추정 결과</div>
-        <div class="result-grid">
-          <div class="result-item"><div class="r-label">과세표준 (추정)</div><div class="r-value" id="y-r-base">—</div><div class="r-unit">원</div></div>
-          <div class="result-item"><div class="r-label">산출 세액</div><div class="r-value" id="y-r-tax" style="color:#1a7a6a;">—</div><div class="r-unit">원</div></div>
-          <div class="result-item"><div class="r-label">환급 / 납부</div><div class="r-value" id="y-r-refund">—</div><div class="r-unit">원</div></div>
-        </div>
-        <div class="info-tip">근로소득공제·기본공제·신용카드공제를 반영한 간이 추정치입니다.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ═══════════════ PAGE 3: 집 구매 ═══════════════ -->
-<div id="page-house" class="page">
-  <div class="inner-nav">
-    <button class="back-btn" onclick="goHome()">
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round">
-        <path d="M10 6.5H3M3 6.5l3.5-3.5M3 6.5L6.5 10"/>
-      </svg>
-    </button>
-    <span class="inner-nav-title">집 구매 가능 시뮬레이터</span>
-    <span class="inner-nav-dot" style="background:#2d7a4a;"></span>
-  </div>
-  <div class="inner-body">
-    <div class="field-section">내 조건 입력</div>
-    <div class="form-grid">
-      <div class="fg"><label>연간 소득 (원)</label><input id="h-income" type="number" placeholder="60,000,000"></div>
-      <div class="fg"><label>보유 자기자본 (원)</label><input id="h-equity" type="number" placeholder="100,000,000"></div>
-      <div class="fg"><label>LTV 한도 (%)</label><input id="h-ltv" type="number" value="70" min="0" max="100"></div>
-      <div class="fg"><label>DTI 한도 (%)</label><input id="h-dti" type="number" value="40" min="0" max="100"></div>
-      <div class="fg"><label>대출 금리 (%)</label><input id="h-rate" type="number" value="4.5" step="0.1"></div>
-      <div class="fg"><label>대출 기간 (년)</label><input id="h-term" type="number" value="30" min="5" max="50"></div>
-    </div>
-    <button class="calc-btn" onclick="calcHouse()">시뮬레이션 실행</button>
-    <div class="result-card" id="house-result">
-      <div class="result-header">시뮬레이션 결과</div>
-      <div class="result-grid">
-        <div class="result-item"><div class="r-label">최대 구매 가능 주택가격</div><div class="r-value" id="h-r-max" style="color:#2d7a4a;">—</div><div class="r-unit">원</div></div>
-        <div class="result-item"><div class="r-label">최대 대출 가능액</div><div class="r-value" id="h-r-loan">—</div><div class="r-unit">원</div></div>
-        <div class="result-item"><div class="r-label">월 상환액</div><div class="r-value" id="h-r-monthly" style="color:#2d7a4a;">—</div><div class="r-unit">원/월</div></div>
-        <div class="result-item"><div class="r-label">총 이자 비용</div><div class="r-value" id="h-r-interest">—</div><div class="r-unit">원</div></div>
-      </div>
-      <div class="info-tip">LTV·DTI 중 더 보수적인 기준이 적용됩니다. 실제 대출 한도는 은행 심사에 따라 달라집니다.</div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ═══════════════ PAGE 4: 소비 vs 투자 ═══════════════ -->
-<div id="page-invest" class="page">
-  <div class="inner-nav">
-    <button class="back-btn" onclick="goHome()">
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round">
-        <path d="M10 6.5H3M3 6.5l3.5-3.5M3 6.5L6.5 10"/>
-      </svg>
-    </button>
-    <span class="inner-nav-title">소비 vs 투자 분석기</span>
-    <span class="inner-nav-dot" style="background:#3d6e3a;"></span>
-  </div>
-  <div class="inner-body">
-    <div class="field-section">투자 조건</div>
-    <div class="form-grid">
-      <div class="fg"><label>월 절약/투자 금액 (원)</label><input id="i-amount" type="number" placeholder="500,000" oninput="calcInvest()"></div>
-      <div class="fg"><label>예상 연 수익률 (%)</label><input id="i-rate" type="number" value="7.0" step="0.5" oninput="calcInvest()"></div>
-      <div class="fg"><label>투자 기간 (년)</label><input id="i-years" type="number" value="10" min="1" max="50" oninput="calcInvest()"></div>
-      <div class="fg"><label>물가상승률 (%)</label><input id="i-inf" type="number" value="2.5" step="0.5" oninput="calcInvest()"></div>
-    </div>
-
-    <div class="result-card show" id="invest-result">
-      <div class="result-header">실시간 분석</div>
-      <div class="result-grid">
-        <div class="result-item"><div class="r-label">총 납입 원금</div><div class="r-value" id="i-r-principal" style="color:var(--muted);">—</div><div class="r-unit">원</div></div>
-        <div class="result-item"><div class="r-label">투자 미래가치</div><div class="r-value" id="i-r-future" style="color:#3d6e3a;">—</div><div class="r-unit">원</div></div>
-        <div class="result-item"><div class="r-label">복리 수익</div><div class="r-value" id="i-r-profit">—</div><div class="r-unit">원</div></div>
-        <div class="result-item"><div class="r-label">실질 구매력</div><div class="r-value" id="i-r-real">—</div><div class="r-unit">원 (물가 조정)</div></div>
-      </div>
-      <div class="bar-chart" id="i-chart"></div>
-      <div class="info-tip" style="margin-top:28px;">복리 적립식 투자 기준 단순 추정치입니다. 세금·수수료 미포함.</div>
-    </div>
-  </div>
-</div>
-
 
 <script>
-/* ── Navigation ── */
-function showPage(id) {
+// ════════════════════════════════════════
+// ETF DATABASE
+// ════════════════════════════════════════
+const ETF_DB = {
+  // 국내
+  'TIGER미국배당다우존스':    {name:'TIGER 미국배당다우존스',    market:'KR', price:11520,  annualYield:5.8,  ter:0.19},
+  'KODEX미국배당프리미엄액티브':{name:'KODEX 미국배당프리미엄액티브',market:'KR', price:10340,  annualYield:8.2,  ter:0.39},
+  'TIGER200':                 {name:'TIGER 코스피200',           market:'KR', price:36200,  annualYield:1.8,  ter:0.05},
+  'KODEX고배당':              {name:'KODEX 배당가치',            market:'KR', price:8120,   annualYield:5.2,  ter:0.30},
+  'TIGER리츠부동산인프라':    {name:'TIGER 리츠부동산인프라',    market:'KR', price:4630,   annualYield:6.1,  ter:0.29},
+  'KODEX200':                 {name:'KODEX 200',                 market:'KR', price:36080,  annualYield:1.7,  ter:0.15},
+  'TIGER나스닥100':           {name:'TIGER 미국나스닥100',       market:'KR', price:102400, annualYield:0.5,  ter:0.07},
+  'KODEX삼성그룹':            {name:'KODEX 삼성그룹',           market:'KR', price:12500,  annualYield:2.3,  ter:0.45},
+  'TIGER미국S&P500':          {name:'TIGER 미국S&P500',         market:'KR', price:16240,  annualYield:1.4,  ter:0.07},
+  'KODEX미국배당커버드콜':    {name:'KODEX 미국배당커버드콜',    market:'KR', price:9870,   annualYield:9.5,  ter:0.39},
+  'TIGER배당성장':            {name:'TIGER 배당성장',           market:'KR', price:13200,  annualYield:3.1,  ter:0.29},
+  'KODEX Korea밸류업':        {name:'KODEX Korea밸류업',        market:'KR', price:10450,  annualYield:3.8,  ter:0.09},
+  // 해외
+  'SCHD': {name:'Schwab US Dividend Equity ETF', market:'US', price:82.4,   annualYield:3.5,  ter:0.06},
+  'JEPI': {name:'JPMorgan Equity Premium Income', market:'US', price:57.2,   annualYield:7.8,  ter:0.35},
+  'JEPQ': {name:'JPMorgan Nasdaq Equity Premium', market:'US', price:54.8,   annualYield:9.2,  ter:0.35},
+  'QYLD': {name:'Global X NASDAQ-100 Covered Call',market:'US', price:17.3,   annualYield:11.4, ter:0.60},
+  'VYM':  {name:'Vanguard High Dividend Yield',   market:'US', price:124.6,  annualYield:2.8,  ter:0.06},
+  'VIG':  {name:'Vanguard Dividend Appreciation', market:'US', price:193.2,  annualYield:1.7,  ter:0.06},
+  'DVY':  {name:'iShares Select Dividend ETF',    market:'US', price:126.8,  annualYield:3.6,  ter:0.38},
+  'DGRO': {name:'iShares Core Dividend Growth',   market:'US', price:58.4,   annualYield:2.4,  ter:0.08},
+  'SPY':  {name:'SPDR S&P 500 ETF Trust',         market:'US', price:538.2,  annualYield:1.3,  ter:0.09},
+  'QQQ':  {name:'Invesco QQQ Trust',              market:'US', price:472.6,  annualYield:0.6,  ter:0.20},
+  'RYLD': {name:'Global X Russell 2000 Covered Call',market:'US',price:17.8,  annualYield:12.1, ter:0.60},
+  'O':    {name:'Realty Income Corp',             market:'US', price:54.2,   annualYield:5.6,  ter:0},
+  'MAIN': {name:'Main Street Capital Corp',       market:'US', price:52.8,   annualYield:6.2,  ter:0},
+};
+
+const USD_KRW = 1385;
+const COLORS   = ['#2e8b57','#3aaf6f','#0d9488','#1a5fa8','#7c3aed','#d4a017','#e05252','#0891b2','#6d28d9','#059669','#dc2626','#2563eb'];
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let portfolio = []; // {id, ticker, meta, qty}
+let currentMkt   = 'KR';
+let currentFilter = 'all';
+let dropTimer;
+
+function uid() { return Math.random().toString(36).slice(2,9); }
+
+// ════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════
+function goDiv()  { show('page-div');  render(); }
+function goHome() { show('page-home'); }
+function show(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
-  if (id === 'invest') calcInvest();
 }
 
-function goHome() {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-home').classList.add('active');
-  window.scrollTo(0,0);
-}
-
-function switchTab(page, tab, btn) {
-  document.querySelectorAll(`#page-${page} .tab-panel`).forEach(p => p.classList.remove('active'));
-  document.querySelectorAll(`#page-${page} .tab-btn`).forEach(b => b.classList.remove('active'));
-  document.getElementById(`${page}-${tab}`).classList.add('active');
+// ════════════════════════════════════════
+// MARKET TAB
+// ════════════════════════════════════════
+function setMkt(mkt, btn) {
+  currentMkt = mkt;
+  document.querySelectorAll('.mkt-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  const ph = mkt === 'KR' ? '티커 또는 ETF명 검색 (예: TIGER, KODEX)' : '티커 검색 (예: SCHD, JEPI, SPY)';
+  document.getElementById('searchInput').placeholder = ph;
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchDrop').classList.remove('open');
 }
 
-/* ── Utils ── */
-const fmt = n => isNaN(n) ? '0' : Math.round(n).toLocaleString('ko-KR');
-function show(id) { document.getElementById(id).classList.add('show'); }
-
-/* ── 1. 배당금 ── */
-function calcDiv() {
-  const inv  = +document.getElementById('d-invest').value;
-  const yld  = +document.getElementById('d-yield').value / 100;
-  const tax  = +document.getElementById('d-tax').value / 100;
-  const freq = +document.getElementById('d-freq').value;
-  if (!inv || !yld) return;
-  const gross   = inv * yld;
-  const net     = gross * (1 - tax);
-  const perTime = net / freq;
-  const monthly = net / 12;
-  document.getElementById('d-r-gross').textContent   = fmt(gross);
-  document.getElementById('d-r-net').textContent     = fmt(net);
-  document.getElementById('d-r-once').textContent    = fmt(perTime);
-  document.getElementById('d-r-monthly').textContent = fmt(monthly);
-  show('div-result');
+// ════════════════════════════════════════
+// SEARCH
+// ════════════════════════════════════════
+function onSearch(val) {
+  clearTimeout(dropTimer);
+  dropTimer = setTimeout(() => renderDrop(val), 120);
 }
 
-function calcRev() {
-  const mo  = +document.getElementById('dr-monthly').value;
-  const yld = +document.getElementById('dr-yield').value / 100;
-  const tax = +document.getElementById('dr-tax').value / 100;
-  if (!mo || !yld) return;
-  const grossYear = mo * 12 / (1 - tax);
-  const invest    = grossYear / yld;
-  document.getElementById('dr-r-invest').textContent = fmt(invest);
-  document.getElementById('dr-r-gross').textContent  = fmt(grossYear);
-  show('rev-result');
-}
+function renderDrop(val) {
+  const drop = document.getElementById('searchDrop');
+  const q = val.trim().toUpperCase();
+  if (!q) { drop.classList.remove('open'); return; }
 
-/* ── 2. 세금 ── */
-function calcTax() {
-  const buy  = +document.getElementById('t-buy').value;
-  const sell = +document.getElementById('t-sell').value;
-  const hold = +document.getElementById('t-hold').value;
-  const type = +document.getElementById('t-type').value;
-  if (!buy || !sell) return;
-  const acqRate = buy >= 9e8 ? 0.03 : buy >= 6e8 ? 0.02 : 0.01;
-  const acq     = buy * acqRate;
-  const gain    = Math.max(0, sell - buy);
-  let deductRate = 0;
-  if (type === 1 && hold >= 3) deductRate = Math.min(0.8, (hold-2)*0.08);
-  const deduct  = gain * deductRate;
-  const taxable = Math.max(0, gain - deduct - 2500000);
-  const rate    = type === 2 ? 0.6 : hold < 1 ? 0.7 : hold < 2 ? 0.6 : 0.38;
-  const cgt     = taxable > 0 ? taxable * rate : 0;
-  document.getElementById('t-r-acq').textContent    = fmt(acq);
-  document.getElementById('t-r-gain').textContent   = fmt(gain);
-  document.getElementById('t-r-deduct').textContent = fmt(deduct);
-  document.getElementById('t-r-cgt').textContent    = fmt(cgt);
-  show('tax-result');
-}
+  const results = Object.entries(ETF_DB)
+    .filter(([k,v]) => v.market === currentMkt && (k.toUpperCase().includes(q) || v.name.toUpperCase().includes(q)))
+    .slice(0, 8);
 
-function calcYE() {
-  const salary = +document.getElementById('y-salary').value;
-  const paid   = +document.getElementById('y-paid').value;
-  const dep    = +document.getElementById('y-dep').value || 1;
-  const card   = +document.getElementById('y-card').value || 0;
-  if (!salary) return;
-  let wd = 0;
-  if (salary <= 5e6) wd = salary*0.7;
-  else if (salary <= 15e6) wd = 3.5e6+(salary-5e6)*0.4;
-  else if (salary <= 45e6) wd = 7.5e6+(salary-15e6)*0.15;
-  else if (salary <= 1e8) wd = 12e6+(salary-45e6)*0.05;
-  else wd = 14.75e6;
-  const basic = dep * 1500000;
-  const cardOver = Math.max(0, card - salary*0.25);
-  const cardD = Math.min(cardOver*0.15, 3000000);
-  const base = Math.max(0, salary - wd - basic - cardD);
-  let tax = 0;
-  if (base <= 14e6) tax = base*0.06;
-  else if (base <= 5e7) tax = 840000+(base-14e6)*0.15;
-  else if (base <= 88e6) tax = 6.24e6+(base-5e7)*0.24;
-  else if (base <= 15e7) tax = 15.36e6+(base-88e6)*0.35;
-  else tax = 37.06e6+(base-15e7)*0.38;
-  const refund = paid - tax;
-  document.getElementById('y-r-base').textContent   = fmt(base);
-  document.getElementById('y-r-tax').textContent    = fmt(tax);
-  const el = document.getElementById('y-r-refund');
-  el.textContent   = (refund >= 0 ? '+' : '') + fmt(refund);
-  el.style.color   = refund >= 0 ? '#2e8b57' : '#c0392b';
-  show('ye-result');
-}
-
-/* ── 3. 집 구매 ── */
-function calcHouse() {
-  const income = +document.getElementById('h-income').value;
-  const equity = +document.getElementById('h-equity').value;
-  const ltv    = +document.getElementById('h-ltv').value / 100;
-  const dti    = +document.getElementById('h-dti').value / 100;
-  const r      = +document.getElementById('h-rate').value / 100 / 12;
-  const n      = +document.getElementById('h-term').value * 12;
-  if (!income || !equity) return;
-  const maxMo     = income / 12 * dti;
-  const loanDTI   = r > 0 ? maxMo * (Math.pow(1+r,n)-1) / (r*Math.pow(1+r,n)) : maxMo * n;
-  const maxByLTV  = equity / (1 - ltv);
-  const loanLTV   = maxByLTV * ltv;
-  const loan      = Math.min(loanDTI, loanLTV);
-  const maxPrice  = equity + loan;
-  const monthly   = r > 0 ? loan * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1) : loan / n;
-  const interest  = monthly * n - loan;
-  document.getElementById('h-r-max').textContent      = fmt(maxPrice);
-  document.getElementById('h-r-loan').textContent     = fmt(loan);
-  document.getElementById('h-r-monthly').textContent  = fmt(monthly);
-  document.getElementById('h-r-interest').textContent = fmt(interest);
-  show('house-result');
-}
-
-/* ── 4. 소비 vs 투자 ── */
-function calcInvest() {
-  const amt  = +document.getElementById('i-amount').value || 0;
-  const rate = (+document.getElementById('i-rate').value || 7) / 100 / 12;
-  const yrs  = +document.getElementById('i-years').value || 10;
-  const inf  = +document.getElementById('i-inf').value || 2.5;
-  const n    = yrs * 12;
-  const fv   = rate > 0 ? amt * (Math.pow(1+rate,n)-1) / rate * (1+rate) : amt * n;
-  const principal = amt * n;
-  const real = fv / Math.pow(1+inf/100, yrs);
-  document.getElementById('i-r-principal').textContent = fmt(principal);
-  document.getElementById('i-r-future').textContent    = fmt(fv);
-  document.getElementById('i-r-profit').textContent    = fmt(fv - principal);
-  document.getElementById('i-r-real').textContent      = fmt(real);
-
-  const chart = document.getElementById('i-chart');
-  chart.innerHTML = '';
-  const steps = Math.min(yrs, 12);
-  const step  = yrs / steps;
-  const vals  = [];
-  let mx = 0;
-  for (let i = 1; i <= steps; i++) {
-    const m = Math.round(i * step) * 12;
-    const v = rate > 0 ? amt * (Math.pow(1+rate,m)-1) / rate * (1+rate) : amt * m;
-    vals.push({ yr: Math.round(i*step), v });
-    if (v > mx) mx = v;
+  if (!results.length) {
+    drop.innerHTML = `<div class="drop-item" style="color:var(--muted);cursor:default;">검색 결과 없음</div>`;
+  } else {
+    drop.innerHTML = results.map(([k,v]) => `
+      <div class="drop-item" onmousedown="addETF('${k}')">
+        <span class="drop-ticker">${k}</span>
+        <span class="drop-name">${v.name}</span>
+        <span class="drop-yield">${v.annualYield}%</span>
+      </div>`).join('');
   }
-  vals.forEach(({ yr, v }, idx) => {
-    const pct   = mx > 0 ? v/mx : 0;
-    const alpha = 0.35 + 0.65 * pct;
-    const wrap  = document.createElement('div');
-    wrap.className = 'bar-wrap';
-    const bar = document.createElement('div');
-    bar.className = 'bar';
-    bar.style.height = (pct * 100) + '%';
-    bar.style.opacity = alpha;
-    const lbl = document.createElement('div');
-    lbl.className = 'bar-yr';
-    lbl.textContent = yr + '년';
-    wrap.appendChild(bar);
-    wrap.appendChild(lbl);
-    chart.appendChild(wrap);
-  });
+  drop.classList.add('open');
 }
 
-calcInvest();
+function showDrop() { if (document.getElementById('searchInput').value) document.getElementById('searchDrop').classList.add('open'); }
+function hideDrop() { setTimeout(() => document.getElementById('searchDrop').classList.remove('open'), 200); }
+
+// ════════════════════════════════════════
+// ADD / REMOVE ETF
+// ════════════════════════════════════════
+function addETF(ticker) {
+  const meta = ETF_DB[ticker];
+  if (!meta) return;
+  if (portfolio.find(p => p.ticker === ticker)) {
+    document.getElementById('searchInput').value = '';
+    return;
+  }
+  portfolio.push({ id: uid(), ticker, meta, qty: 10 });
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchDrop').classList.remove('open');
+  renderAll();
+}
+
+function quickAdd(t) { setMkt(ETF_DB[t]?.market || 'KR', document.querySelectorAll('.mkt-tab')[ETF_DB[t]?.market==='US'?1:0]); addETF(t); }
+
+function removeETF(id) {
+  portfolio = portfolio.filter(p => p.id !== id);
+  renderAll();
+}
+
+function updateQty(id, val) {
+  const p = portfolio.find(x => x.id === id);
+  if (p) { p.qty = Math.max(0, parseInt(val) || 0); renderAll(); }
+}
+
+// ════════════════════════════════════════
+// RENDER ALL
+// ════════════════════════════════════════
+function renderAll() { renderList(); render(); }
+
+function renderList() {
+  const el = document.getElementById('etfList');
+  document.getElementById('etfCount').textContent = portfolio.length + '개';
+  if (!portfolio.length) {
+    el.innerHTML = `<div class="empty-list"><div class="e-icon">📭</div><div>ETF를 검색하여 추가해주세요<br><span style="color:var(--g500);">국내·해외 ETF 모두 지원합니다</span></div></div>`;
+    return;
+  }
+  el.innerHTML = portfolio.map((p, i) => {
+    const priceKRW = p.meta.market === 'US' ? p.meta.price * USD_KRW : p.meta.price;
+    const invest   = priceKRW * p.qty;
+    const priceStr = p.meta.market === 'US' ? `$${p.meta.price.toFixed(2)} (${fmt(priceKRW)}원)` : `${fmt(p.meta.price)}원`;
+    return `
+    <div class="etf-item">
+      <div class="etf-color" style="background:${COLORS[i%COLORS.length]};"></div>
+      <div class="etf-info">
+        <div class="etf-ticker">${p.meta.market==='US'?'🇺🇸':'🇰🇷'} ${p.ticker}</div>
+        <div class="etf-name">${p.meta.name}</div>
+      </div>
+      <div class="etf-price">
+        <div>${priceStr}</div>
+        <div class="etf-price-sub">배당률 ${p.meta.annualYield}%/년</div>
+      </div>
+      <div class="qty-wrap">
+        <button class="qty-btn" onclick="stepQty('${p.id}',-1)">−</button>
+        <input class="qty-input" type="number" value="${p.qty}" min="0" onchange="updateQty('${p.id}',this.value)">
+        <button class="qty-btn" onclick="stepQty('${p.id}',1)">＋</button>
+      </div>
+      <button class="etf-remove" onclick="removeETF('${p.id}')">×</button>
+    </div>`;
+  }).join('');
+}
+
+function stepQty(id, delta) {
+  const p = portfolio.find(x => x.id === id);
+  if (p) { p.qty = Math.max(0, p.qty + delta); renderAll(); }
+}
+
+// ════════════════════════════════════════
+// FILTER
+// ════════════════════════════════════════
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function filtered() {
+  if (currentFilter === 'all') return portfolio;
+  return portfolio.filter(p => p.meta.market === currentFilter);
+}
+
+// ════════════════════════════════════════
+// MAIN RENDER
+// ════════════════════════════════════════
+function render() {
+  const fp = filtered();
+  const totalInvest  = fp.reduce((s,p) => s + toKRW(p) * p.qty, 0);
+  const totalMonthly = fp.reduce((s,p) => s + monthlyNet(p), 0);
+  const totalAnnual  = totalMonthly * 12;
+  const portYield    = totalInvest > 0 ? totalAnnual / totalInvest * 100 : 0;
+
+  document.getElementById('s-invest').textContent  = fmt(totalInvest);
+  document.getElementById('s-monthly').textContent = fmt(Math.round(totalMonthly));
+  document.getElementById('s-annual').textContent  = fmt(Math.round(totalAnnual));
+  document.getElementById('s-yield').textContent   = portYield.toFixed(2) + '%';
+
+  renderDonut(fp, totalInvest);
+  renderWeightTable(fp, totalInvest, totalMonthly);
+  renderSim();
+  renderFees();
+}
+
+function toKRW(p) { return p.meta.market === 'US' ? p.meta.price * USD_KRW : p.meta.price; }
+function monthlyNet(p) {
+  const invest = toKRW(p) * p.qty;
+  const taxRate = p.meta.market === 'US' ? 0.15 : 0.154;
+  return invest * (p.meta.annualYield / 100) / 12 * (1 - taxRate);
+}
+
+// ════════════════════════════════════════
+// DONUT CHART
+// ════════════════════════════════════════
+function renderDonut(fp, total) {
+  const canvas = document.getElementById('donut');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,180,180);
+  document.getElementById('donut-val').textContent = fp.length;
+
+  if (!fp.length || total === 0) { renderLegend(fp, total); return; }
+
+  let angle = -Math.PI/2;
+  fp.forEach((p,i) => {
+    const pct = (toKRW(p) * p.qty) / total;
+    const slice = pct * Math.PI * 2;
+    ctx.beginPath(); ctx.moveTo(90,90);
+    ctx.arc(90,90,84,angle,angle+slice);
+    ctx.closePath();
+    ctx.fillStyle = COLORS[portfolio.indexOf(p) % COLORS.length];
+    ctx.fill();
+    angle += slice;
+  });
+  // hole
+  ctx.beginPath(); ctx.arc(90,90,48,0,Math.PI*2);
+  ctx.fillStyle = '#ffffff'; ctx.fill();
+
+  renderLegend(fp, total);
+}
+
+function renderLegend(fp, total) {
+  const el = document.getElementById('donut-legend');
+  el.innerHTML = fp.map((p,i) => {
+    const pct = total > 0 ? (toKRW(p)*p.qty/total*100).toFixed(1) : '0.0';
+    const c = COLORS[portfolio.indexOf(p)%COLORS.length];
+    return `<div class="legend-item">
+      <span class="legend-dot" style="background:${c};"></span>
+      <span class="legend-name">${p.ticker}</span>
+      <span class="legend-pct" style="color:${c};">${pct}%</span>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════
+// WEIGHT & DIVIDEND TABLE
+// ════════════════════════════════════════
+function renderWeightTable(fp, totalInvest, totalMonthly) {
+  const wb = document.getElementById('weightBody');
+  const db = document.getElementById('divBody');
+  if (!fp.length) { wb.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:20px;font-size:13px;">ETF를 추가해주세요</td></tr>`; db.innerHTML = wb.innerHTML; return; }
+
+  wb.innerHTML = fp.map((p,i) => {
+    const inv  = toKRW(p) * p.qty;
+    const pct  = totalInvest > 0 ? inv/totalInvest*100 : 0;
+    const c    = COLORS[portfolio.indexOf(p)%COLORS.length];
+    return `<tr>
+      <td><span class="t-ticker" style="background:${c}18;color:${c};">${p.ticker}</span></td>
+      <td style="font-size:12px;font-weight:600;">${fmt(inv)}원</td>
+      <td><div class="t-bar-wrap"><div class="t-bar-bg"><div class="t-bar-fill" style="width:${pct.toFixed(1)}%;background:${c};"></div></div><span class="t-pct" style="color:${c};">${pct.toFixed(1)}%</span></div></td>
+    </tr>`;
+  }).join('');
+
+  db.innerHTML = fp.map((p,i) => {
+    const mo  = monthlyNet(p);
+    const pct = totalMonthly > 0 ? mo/totalMonthly*100 : 0;
+    const c   = COLORS[portfolio.indexOf(p)%COLORS.length];
+    return `<tr>
+      <td><span class="t-ticker" style="background:${c}18;color:${c};">${p.ticker}</span></td>
+      <td style="font-size:12px;font-weight:600;color:var(--g700);">${fmt(Math.round(mo))}원</td>
+      <td><div class="t-bar-wrap"><div class="t-bar-bg"><div class="t-bar-fill" style="width:${pct.toFixed(1)}%;background:${c};"></div></div><span class="t-pct" style="color:${c};">${pct.toFixed(1)}%</span></div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════
+// SIMULATION
+// ════════════════════════════════════════
+function renderSim() {
+  const el = document.getElementById('simItems');
+  if (!portfolio.length) {
+    el.innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;">ETF를 추가하면 시뮬레이션이 표시됩니다.</div>`;
+    document.getElementById('simSummary').classList.remove('show');
+    return;
+  }
+  el.innerHTML = portfolio.map((p,i) => {
+    const mo = monthlyNet(p);
+    return `
+    <div class="sim-item">
+      <div class="sim-etf-info">
+        <div class="si-ticker">${p.meta.market==='US'?'🇺🇸':'🇰🇷'} ${p.ticker}</div>
+        <div class="si-current">현재 ${p.qty}주 · 월 ${fmt(Math.round(mo))}원</div>
+      </div>
+      <div class="sim-delta-wrap">
+        <label>수량 변동</label>
+        <input class="sim-delta-input" type="number" id="sdelta-${p.id}" value="0" placeholder="0" oninput="calcSim()">
+      </div>
+      <div class="sim-result-item">
+        <div class="sr-after" id="sr-after-${p.id}">—</div>
+        <div class="sr-delta" id="sr-delta-${p.id}">—</div>
+      </div>
+    </div>`;
+  }).join('');
+  calcSim();
+}
+
+function calcSim() {
+  const beforeTotal = portfolio.reduce((s,p) => s + monthlyNet(p), 0);
+  let afterTotal = 0, extraInvest = 0, totalFee = 0;
+
+  portfolio.forEach(p => {
+    const delta = parseInt(document.getElementById(`sdelta-${p.id}`)?.value) || 0;
+    const newQty = Math.max(0, p.qty + delta);
+    const newMo  = (() => {
+      const invest = toKRW(p) * newQty;
+      const taxRate = p.meta.market === 'US' ? 0.15 : 0.154;
+      return invest * (p.meta.annualYield/100) / 12 * (1-taxRate);
+    })();
+    const oldMo  = monthlyNet(p);
+    const diff   = newMo - oldMo;
+    afterTotal += newMo;
+
+    const cost = toKRW(p) * Math.abs(delta);
+    const feeRate = p.meta.market === 'US' ? 0.0025 : 0.00015;
+    const fee = cost * feeRate;
+    extraInvest += toKRW(p) * delta;
+    totalFee += fee;
+
+    const afterEl = document.getElementById(`sr-after-${p.id}`);
+    const deltaEl = document.getElementById(`sr-delta-${p.id}`);
+    if (afterEl) afterEl.textContent = fmt(Math.round(newMo)) + '원';
+    if (deltaEl) {
+      if (Math.abs(diff) < 1) { deltaEl.textContent = '변동 없음'; deltaEl.className = 'sr-delta'; }
+      else if (diff > 0) { deltaEl.textContent = '+' + fmt(Math.round(diff)) + '원'; deltaEl.className = 'sr-delta pos'; }
+      else { deltaEl.textContent = fmt(Math.round(diff)) + '원'; deltaEl.className = 'sr-delta neg'; }
+    }
+  });
+
+  const diff = afterTotal - beforeTotal;
+  document.getElementById('simSummary').classList.add('show');
+  document.getElementById('ss-before').textContent = fmt(Math.round(beforeTotal)) + '원';
+  document.getElementById('ss-after').textContent  = fmt(Math.round(afterTotal)) + '원';
+
+  const de = document.getElementById('ss-delta');
+  if (Math.abs(diff) < 1) { de.textContent = '변동 없음'; de.style.color = 'var(--muted)'; }
+  else if (diff > 0) { de.textContent = '+' + fmt(Math.round(diff)) + '원'; de.style.color = 'var(--g500)'; }
+  else { de.textContent = fmt(Math.round(diff)) + '원'; de.style.color = 'var(--red)'; }
+
+  document.getElementById('ss-invest').textContent = (extraInvest >= 0 ? '+' : '') + fmt(Math.round(extraInvest)) + '원';
+  document.getElementById('ss-fee').textContent    = fmt(Math.round(totalFee)) + '원';
+  document.getElementById('ss-annual').textContent = fmt(Math.round(afterTotal * 12)) + '원';
+}
+
+// ════════════════════════════════════════
+// FEE PANEL
+// ════════════════════════════════════════
+function renderFees() {
+  const kr = portfolio.filter(p => p.meta.market === 'KR');
+  const us = portfolio.filter(p => p.meta.market === 'US');
+
+  const krInvest = kr.reduce((s,p) => s + p.meta.price * p.qty, 0);
+  const usInvest = us.reduce((s,p) => s + p.meta.price * USD_KRW * p.qty, 0);
+
+  // Annual dividend gross
+  const krDivGross = kr.reduce((s,p) => s + p.meta.price * p.qty * p.meta.annualYield/100, 0);
+  const usDivGross = us.reduce((s,p) => s + p.meta.price * USD_KRW * p.qty * p.meta.annualYield/100, 0);
+
+  const krDivTax = krDivGross * 0.154;
+  const usDivTax = usDivGross * 0.15;
+  const krTradeTax = krInvest * 0.0018; // 매도 시 거래세
+  const brokerKR   = krInvest * 0.00015;
+  const brokerUS   = usInvest * 0.0025;
+  const netAnnual  = (krDivGross - krDivTax) + (usDivGross - usDivTax);
+
+  document.getElementById('fee-kr-tax').textContent  = fmt(Math.round(krTradeTax)) + '원';
+  document.getElementById('fee-us-tax').textContent  = '양도차익 22%';
+  document.getElementById('fee-kr-div').textContent  = fmt(Math.round(krDivTax)) + '원/년';
+  document.getElementById('fee-us-div').textContent  = fmt(Math.round(usDivTax)) + '원/년';
+  document.getElementById('fee-brokerage').textContent = fmt(Math.round(brokerKR + brokerUS)) + '원';
+  document.getElementById('fee-net').textContent     = fmt(Math.round(netAnnual)) + '원/년';
+}
+
+// ════════════════════════════════════════
+// UTIL
+// ════════════════════════════════════════
+function fmt(n) { return isNaN(n) ? '0' : Math.round(n).toLocaleString('ko-KR'); }
 </script>
 </body>
 </html>
