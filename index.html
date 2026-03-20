@@ -91,10 +91,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 /* ── PANEL ── */
 .panel{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
 .panel-header{padding:18px 20px 0}
-.panel-title{font-size:13px;font-weight:800;color:var(--g900);letter-spacing:-.3px;margin-bottom:12px}
+.panel-title{font-size:14px;font-weight:800;color:var(--g900);letter-spacing:-.3px;margin-bottom:12px}
 .panel-divider{border:none;border-top:1px solid var(--border)}
 .panel-section-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;flex-wrap:wrap;gap:8px}
-.psh-title{font-size:13px;font-weight:700;color:var(--g900)}
+.psh-title{font-size:14px;font-weight:700;color:var(--g900)}
 .psh-sub{font-size:11px;color:var(--muted)}
 
 /* ── ACCOUNT SECTION ── */
@@ -147,7 +147,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .c-add-btn:hover{background:var(--g700)}
 
 /* ── PORTFOLIO LIST ── */
-.etf-list{padding:0 20px 20px;display:flex;flex-direction:column;gap:8px;max-height:560px;overflow-y:auto}
+.etf-list{padding:12px 20px 20px;display:flex;flex-direction:column;gap:8px;max-height:640px;overflow-y:auto}
 .empty-list{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7}
 .empty-list .e-icon{font-size:32px;margin-bottom:10px}
 
@@ -160,10 +160,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .etf-flag{font-size:13px;flex-shrink:0}
 .type-badge{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;flex-shrink:0}
 .type-badge.etf{background:var(--g100);color:var(--g700)}.type-badge.stock{background:#dbeafe;color:#1d4ed8}
-.etf-ticker-label{font-size:12px;font-weight:800;color:var(--g900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.etf-ticker-label{font-size:13px;font-weight:800;color:var(--g900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .etf-remove{width:22px;height:22px;border-radius:5px;border:none;background:transparent;cursor:pointer;color:var(--muted);font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;line-height:1}
 .etf-remove:hover{background:#fee2e2;color:var(--red)}
-.etf-card-name{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.etf-card-name{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .etf-card-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .etf-meta-price{font-size:12px;font-weight:700;color:var(--text)}
 .etf-meta-sep{font-size:11px;color:var(--border)}
@@ -173,7 +173,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .price-src.kis{background:#dcfce7;color:#15803d}
 .price-src.yahoo{background:#fef9c3;color:#854d0e}
 .price-src.ref{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
-.etf-card-bottom{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:4px;border-top:1px solid var(--bg)}
+.etf-card-bottom{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding-top:6px;border-top:1px solid var(--bg)}
 .qty-wrap{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .qty-btn{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .15s;font-weight:600;line-height:1}
 .qty-btn:hover{background:var(--g100);border-color:var(--g400);color:var(--g700)}
@@ -181,8 +181,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .qty-input:focus{border-color:var(--g400)}
 .etf-monthly{background:var(--g50);border:1px solid var(--g100);border-radius:7px;padding:3px 8px;white-space:nowrap}
 .etf-monthly-label{font-size:9px;color:var(--muted);display:block}
-.etf-monthly-val{font-size:12px;font-weight:800;color:var(--g700)}
-.etf-invest-text{font-size:10px;color:var(--muted);margin-left:auto;white-space:nowrap}
+.etf-monthly-val{font-size:13px;font-weight:800;color:var(--g700)}
+.etf-invest-text{font-size:10px;color:var(--muted);white-space:nowrap;text-align:right}
 .yield-edit-wrap{display:flex;align-items:center;gap:4px}
 .yield-edit-inp{width:55px;padding:2px 5px;border:1px solid var(--g400);border-radius:5px;font-size:11px;font-weight:600;font-family:var(--sans);color:var(--g700);background:var(--white);outline:none;text-align:center}
 
@@ -194,7 +194,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .sum-card{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:16px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .sum-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
 .sum-card.c-green::after{background:var(--g500)}.sum-card.c-blue::after{background:var(--blue)}.sum-card.c-gold::after{background:var(--gold)}.sum-card.c-teal::after{background:#0d9488}
-.sum-label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.5px;margin-bottom:6px}
+.sum-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px;margin-bottom:6px}
 .sum-value{font-size:20px;font-weight:800;letter-spacing:-1px;line-height:1}
 .sum-value.green{color:var(--g700)}.sum-value.blue{color:var(--blue)}.sum-value.gold{color:var(--gold)}.sum-value.teal{color:#0d9488}
 .sum-sub{font-size:10px;color:var(--muted);margin-top:4px}
@@ -233,7 +233,7 @@ canvas#donut{width:160px;height:160px}
 .sim-note{font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:16px;padding:10px 12px;background:var(--g50);border-radius:9px;border:1px solid var(--g100)}
 .sim-items{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
 .sim-item{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:12px 14px}
-.sim-item-grid{display:grid;grid-template-columns:1fr 110px 110px 120px;gap:10px;align-items:center}
+.sim-item-grid{display:grid;grid-template-columns:1fr 110px 110px 120px;gap:10px;align-items:start}
 @media(max-width:700px){
   .sim-item-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;row-gap:8px}
   .sim-info{grid-column:1}.sim-delta-col{grid-column:2}.sim-invest-col{grid-column:1}.sim-monthly-col{grid-column:2}
@@ -707,7 +707,10 @@ canvas#donut{width:160px;height:160px}
       <div class="panel">
         <div class="panel-section-header">
           <span class="psh-title">내 보유 자산</span>
-          <span class="psh-sub" id="etfCount">0개</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="psh-sub" id="etfCount">0개</span>
+            <button onclick="clearPortfolio()" style="font-size:10px;font-weight:700;color:var(--red);background:transparent;border:1.5px solid #fca5a5;border-radius:6px;padding:3px 9px;cursor:pointer;font-family:var(--sans);transition:all .15s" onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='transparent'">초기화</button>
+          </div>
         </div>
         <hr class="panel-divider">
         <div class="etf-list" id="etfList">
@@ -2380,6 +2383,7 @@ function addCustomItem(){
   saveState();renderAll();
 }
 function removeItem(id){portfolio=portfolio.filter(p=>p.id!==id);saveState();renderAll();}
+function clearPortfolio(){if(!portfolio.length)return;if(!confirm('보유 자산 목록을 전부 초기화할까요?'))return;portfolio=[];saveState();renderAll();}
 function updateQty(id,val){const p=portfolio.find(x=>x.id===id);if(p){p.qty=Math.max(0,rawInt(val));saveState();renderAll();}}
 function stepQty(id,d){const p=portfolio.find(x=>x.id===id);if(p){p.qty=Math.max(0,p.qty+d);saveState();renderAll();}}
 function updateYield(id,val){const p=portfolio.find(x=>x.id===id);if(p){p.meta.annualYield=parseFloat(val)||0;saveState();renderAll();}}
