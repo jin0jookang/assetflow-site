@@ -316,8 +316,8 @@ canvas#donut{width:160px;height:160px}
 .t-tog{padding:5px 13px;border-radius:100px;border:1.5px solid var(--border);background:var(--white);font-family:var(--sans);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .18s}
 .t-tog.active{background:var(--g700);border-color:var(--g700);color:white}
 /* result box */
-.t-result-main{background:linear-gradient(135deg,var(--g50),#fff);border:1.5px solid var(--g100);border-radius:var(--radius);padding:22px;margin-bottom:14px}
-.t-result-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px}
+.t-result-main{background:var(--white);border:2px solid var(--g200);border-radius:var(--radius);padding:22px;margin-bottom:14px;box-shadow:0 2px 12px rgba(26,92,56,.08)}
+.t-result-label{font-size:11px;font-weight:800;color:var(--g700);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
 .t-result-value{font-size:2.2rem;font-weight:800;letter-spacing:-1.5px;line-height:1;color:var(--g900)}
 .t-result-value.red{color:var(--red)}.t-result-value.green{color:var(--g700)}.t-result-value.gold{color:var(--gold)}
 .t-result-sub{font-size:11px;color:var(--text2);margin-top:5px}
@@ -461,6 +461,7 @@ canvas#donut{width:160px;height:160px}
 .r-verdict.ok .r-verdict-reason{color:#166534}
 .r-verdict.fail .r-verdict-reason{color:#991b1b}
 .r-equity-nums{display:grid;grid-template-columns:1fr auto 1fr 1fr;gap:8px;align-items:center;margin-bottom:4px}
+@media(max-width:640px){.r-equity-nums{grid-template-columns:1fr 1fr}.r-equity-sep{display:none}}
 .r-equity-item{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px}
 .r-equity-item.gap{background:var(--g50);border-color:var(--g200)}
 .r-equity-item.gap-neg{background:#fff1f2;border-color:#fecdd3}
@@ -1344,12 +1345,12 @@ canvas#donut{width:160px;height:160px}
           <div class="t-body">
             <div class="t-field">
               <label>현재 자기자산</label>
-              <input class="t-inp" id="r-equity" placeholder="400,000,000" oninput="calcBuy()">
+              <input class="t-inp" id="r-equity" placeholder="400,000,000" oninput="moneyFmt(this);calcBuy()">
               <div class="t-hint">현금, 예금, 전세보증금 회수액, 매각 예정 부동산 포함</div>
             </div>
             <div class="t-field">
               <label>기존 부채</label>
-              <input class="t-inp" id="r-debt" placeholder="50,000,000" oninput="calcBuy()">
+              <input class="t-inp" id="r-debt" placeholder="50,000,000" oninput="moneyFmt(this);calcBuy()">
               <div class="t-hint">기존 대출, 전세자금 대출 등</div>
             </div>
             <div class="t-inline highlight">
@@ -1361,7 +1362,7 @@ canvas#donut{width:160px;height:160px}
               <label>세전 연소득
                 <small class="t-sub-label">DSR 산정 기준 · 세후 금액 자동 계산</small>
               </label>
-              <input class="t-inp" id="r-income" placeholder="80,000,000" oninput="calcBuy()">
+              <input class="t-inp" id="r-income" placeholder="80,000,000" oninput="moneyFmt(this);calcBuy()">
             </div>
             <div class="r-income-est" id="r-income-est" style="display:none">
               <div class="r-income-row"><span>소득세 + 지방소득세 (추정)</span><span id="r-est-tax">—</span></div>
@@ -1377,7 +1378,7 @@ canvas#donut{width:160px;height:160px}
           <div class="t-body">
             <div class="t-field">
               <label>구매 희망 주택가격</label>
-              <input class="t-inp" id="r-price" placeholder="900,000,000" oninput="calcBuy()">
+              <input class="t-inp" id="r-price" placeholder="900,000,000" oninput="moneyFmt(this);calcBuy()">
             </div>
           </div>
         </div>
@@ -1425,7 +1426,14 @@ canvas#donut{width:160px;height:160px}
       <div>
         <!-- 자기자본 과부족 분석 -->
         <div class="t-result-main" id="r-result-main">
-          <div class="t-result-label">자기자본 과부족 분석</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:12px">
+            <div class="t-result-label" style="margin-bottom:0">자기자본 과부족 분석</div>
+            <div id="r-max-price-box" style="display:none;text-align:right;flex-shrink:0">
+              <div style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px">예상 최대 구매가능</div>
+              <div style="font-size:16px;font-weight:900;color:var(--g700);letter-spacing:-.5px" id="r-max-price">—</div>
+              <div style="font-size:9px;color:var(--muted);margin-top:1px" id="r-max-price-sub"></div>
+            </div>
+          </div>
           <div id="r-result-section">
             <div style="color:var(--muted);font-size:13px;padding:8px 0">구매 희망 주택가격을 입력하면 분석됩니다</div>
           </div>
@@ -1438,7 +1446,7 @@ canvas#donut{width:160px;height:160px}
             <div class="r-stat-val" id="r-loan-needed">—</div>
             <div class="r-stat-sub" id="r-ltv-policy-sub">LTV 정책 기준</div>
           </div>
-          <div class="r-stat">
+          <div class="r-stat" id="r-monthly-card">
             <div class="r-stat-label">월 원리금 상환액</div>
             <div class="r-stat-val" id="r-monthly">—</div>
             <div class="r-stat-sub" id="r-monthly-sub">원리금균등상환 기준</div>
@@ -1457,12 +1465,12 @@ canvas#donut{width:160px;height:160px}
 
         <!-- 가격 변동 시나리오 슬라이더 -->
         <div class="r-scenario-panel">
-          <div style="font-size:11px;font-weight:800;color:var(--g900);letter-spacing:.3px;margin-bottom:12px">📈 가격 변동 시나리오 — 드래그로 조정</div>
+          <div style="font-size:11px;font-weight:800;color:var(--g900);letter-spacing:.3px;margin-bottom:12px">📈 수익률을 조정해보세요.</div>
           <div class="r-slider-value" id="r-slider-pct">연 0%</div>
           <div class="r-slider-sub" id="r-slider-monthly-chg">주택가격을 입력하면 계산됩니다</div>
           <div class="r-slider-wrap">
-            <div class="r-slider-label"><span>-30%</span><span>0%</span><span>+50%</span></div>
-            <input class="r-slider" id="r-slider" type="range" min="-30" max="50" value="0" step="1" oninput="updateScenario()">
+            <div class="r-slider-label"><span>-30%</span><span class="zero-lbl">0%</span><span>+50%</span></div>
+            <input class="r-slider" id="r-slider" type="range" min="-30" max="50" value="0" step="0.1" oninput="updateScenario()">
           </div>
           <div class="r-scenario-grid">
             <div class="r-scen-card neutral">
@@ -2438,8 +2446,14 @@ function tV(id){return rawNum(tW(id)?.value);}
 function tFmt(n){
   if(isNaN(n)||n===null)return'—';
   const a=Math.abs(Math.round(n));
-  if(a>=100000000)return(n<0?'-':'')+(a/100000000).toFixed(1)+'억원';
-  if(a>=10000)return(n<0?'-':'')+(a/10000).toFixed(0)+'만원';
+  const sign=n<0?'-':'';
+  if(a>=100000000){
+    const uk=Math.floor(a/100000000);
+    const man=Math.round((a%100000000)/10000);
+    if(man===0)return sign+uk.toLocaleString('ko-KR')+'억원';
+    return sign+uk.toLocaleString('ko-KR')+'억 '+man.toLocaleString('ko-KR')+'만원';
+  }
+  if(a>=10000)return sign+Math.round(a/10000).toLocaleString('ko-KR')+'만원';
   return Math.round(n).toLocaleString('ko-KR')+'원';
 }
 function tFmtFull(n){return Math.round(n).toLocaleString('ko-KR')+'원';}
@@ -3073,12 +3087,15 @@ function calcBuy(){
   // 결과 초기화
   const clearStats=()=>{
     ['r-loan-needed','r-monthly','r-ltv-applied','r-dsr-val'].forEach(id=>document.getElementById(id).textContent='—');
+    document.getElementById('r-monthly-card').className='r-stat';
+    document.getElementById('r-monthly-sub').textContent='원리금균등상환 기준';
     document.getElementById('r-ltv-card').className='r-stat';
     document.getElementById('r-dsr-card').className='r-stat';
   };
 
   if(!price){
     document.getElementById('r-result-section').innerHTML='<div style="color:var(--muted);font-size:13px;padding:8px 0">구매 희망 주택가격을 입력하면 분석됩니다</div>';
+    document.getElementById('r-max-price-box').style.display='none';
     clearStats();
     rBuyState={};
     updateScenario();
@@ -3096,28 +3113,62 @@ function calcBuy(){
   const canBuy=equityOk&&dsrOk;
 
   // 자기자본 과부족 분석 박스
-  const gapCls=equityGap>=0?'s-pos':'s-neg';
-  const gapLabel=equityGap>=0?'여유':'부족';
+  // 예상 최대 구매가능 금액
+  const monthlyRate=rate/100/12;
+  const nMonths=term*12;
+  const factor=monthlyRate>0?(Math.pow(1+monthlyRate,nMonths)-1)/(monthlyRate*Math.pow(1+monthlyRate,nMonths)):nMonths;
+  const maxPriceByEquity=ltvPolicy<1?Math.round(netEquity/(1-ltvPolicy)):0;
+  let maxAffordable=maxPriceByEquity,maxLimitLabel='자기자본 기준';
+  if(grossIncome>0&&factor>0){
+    const maxMonthly=grossIncome*0.4/12;
+    const maxLoanByDSR=Math.round(maxMonthly*factor);
+    const maxPriceByDSR=ltvPolicy>0?Math.round(maxLoanByDSR/ltvPolicy):0;
+    if(maxPriceByDSR<maxPriceByEquity){maxAffordable=maxPriceByDSR;maxLimitLabel='DSR 40% 기준';}
+  }
+  const maxPriceBox=document.getElementById('r-max-price-box');
+  if(netEquity>0||grossIncome>0){
+    maxPriceBox.style.display='block';
+    document.getElementById('r-max-price').textContent=tFmt(maxAffordable);
+    document.getElementById('r-max-price-sub').textContent=maxLimitLabel;
+  } else {
+    maxPriceBox.style.display='none';
+  }
+
+  let verdictTitle,verdictReason,verdictCls;
+  if(canBuy){
+    verdictTitle='✓ 구매 가능';
+    verdictCls='ok';
+    const dsrStr=grossIncome>0?` · DSR ${dsr.toFixed(1)}%`:'';
+    verdictReason=equityGap>0?`자기자본 ${tFmt(equityGap)} 여유${dsrStr}`:`자기자본 충족${dsrStr}`;
+  } else if(!equityOk){
+    verdictTitle='✗ 자기자본 부족';
+    verdictCls='fail';
+    verdictReason=`${tFmt(Math.abs(equityGap))} 추가 필요 (필요 자기자본: ${tFmt(requiredEquity)})`;
+  } else {
+    verdictTitle='✗ DSR 초과';
+    verdictCls='fail';
+    verdictReason=`DSR ${dsr.toFixed(1)}% — 40% 초과로 대출 승인 제한 가능`;
+  }
   document.getElementById('r-result-section').innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
-      <div>
-        <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">내 순 자기자본</div>
-        <div style="font-size:15px;font-weight:800;color:var(--g900)">${tFmt(netEquity)}</div>
-      </div>
-      <div>
-        <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">필요 자기자본</div>
-        <div style="font-size:15px;font-weight:800;color:var(--g900)">${tFmt(requiredEquity)}</div>
-        <div style="font-size:9px;color:var(--muted)">주택가격 × ${Math.round((1-ltvPolicy)*100)}%</div>
-      </div>
-      <div>
-        <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">자기자본 ${gapLabel}</div>
-        <div style="font-size:15px;font-weight:800;color:${equityGap>=0?'var(--g700)':'var(--red)'}">${equityGap>=0?'+':''}${tFmt(equityGap)}</div>
-      </div>
+    <div class="r-verdict ${verdictCls}">
+      <div class="r-verdict-title">${verdictTitle}</div>
+      <div class="r-verdict-reason">${verdictReason}</div>
     </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap">
-      ${canBuy?'<span class="t-badge green">✓ 구매 가능</span>':'<span class="t-badge red">✗ '+(equityOk?'DSR 초과':'자기자본 부족')+'</span>'}
-      ${!equityOk?'<span class="t-badge gold">'+tFmt(Math.abs(equityGap))+' 추가 필요</span>':''}
-      ${!dsrOk&&grossIncome>0?'<span class="t-badge red">DSR '+dsr.toFixed(1)+'% 초과</span>':''}
+    <div class="r-equity-nums">
+      <div class="r-equity-item">
+        <div class="r-equity-label">내 순 자기자본</div>
+        <div class="r-equity-val">${tFmt(netEquity)}</div>
+      </div>
+      <div class="r-equity-sep">vs</div>
+      <div class="r-equity-item">
+        <div class="r-equity-label">필요 자기자본</div>
+        <div class="r-equity-val">${tFmt(requiredEquity)}</div>
+        <div class="r-equity-hint">주택가격 × ${Math.round((1-ltvPolicy)*100)}%</div>
+      </div>
+      <div class="r-equity-item ${equityGap>=0?'gap':'gap-neg'}">
+        <div class="r-equity-label">${equityGap>=0?'여유 금액':'부족 금액'}</div>
+        <div class="r-equity-gap ${equityGap>=0?'pos':'neg'}">${equityGap>=0?'+':''}${tFmt(equityGap)}</div>
+      </div>
     </div>`;
 
   // Stat cards
@@ -3125,7 +3176,19 @@ function calcBuy(){
   document.getElementById('r-loan-needed').textContent=tFmt(ltvLoan);
   document.getElementById('r-ltv-policy-sub').textContent=`주택가격 × ${Math.round(ltvPolicy*100)}%`;
   document.getElementById('r-monthly').textContent=tFmt(Math.round(monthly));
-  document.getElementById('r-monthly-sub').textContent=`연 ${rate}% · ${term}년`;
+  // 월 원리금 상환 부담률 색상
+  const nc2=grossIncome>0?calcNetIncome(grossIncome):null;
+  const netMonInc=nc2?nc2.net/12:0;
+  let monthlyCardCls='r-stat',monthlySub=`연 ${rate}% · ${term}년`;
+  if(netMonInc>0){
+    const br=monthly/netMonInc*100;
+    if(br<=10){monthlyCardCls='r-stat monthly-safe';monthlySub=`소득 대비 ${br.toFixed(1)}% · 안정적`;}
+    else if(br<=25){monthlyCardCls='r-stat monthly-ok';monthlySub=`소득 대비 ${br.toFixed(1)}% · 적정`;}
+    else if(br<=35){monthlyCardCls='r-stat monthly-warn';monthlySub=`소득 대비 ${br.toFixed(1)}% · 부담`;}
+    else{monthlyCardCls='r-stat monthly-bad';monthlySub=`소득 대비 ${br.toFixed(1)}% · 추천안함`;}
+  }
+  document.getElementById('r-monthly-card').className=monthlyCardCls;
+  document.getElementById('r-monthly-sub').textContent=monthlySub;
   document.getElementById('r-ltv-applied').textContent=Math.round(ltvPolicy*100)+'%';
   document.getElementById('r-ltv-sub').textContent=prodLabels[product]||'';
   document.getElementById('r-ltv-card').className='r-stat'+(equityOk?' good':' bad');
@@ -3139,10 +3202,10 @@ function calcBuy(){
 
 function updateScenario(){
   const sliderEl=document.getElementById('r-slider');
-  const pct=parseInt(sliderEl.value)||0;
+  const pct=parseFloat(sliderEl.value)||0;
   const {price,ltvLoan,netEquity,monthly,grossIncome}=rBuyState;
 
-  document.getElementById('r-slider-pct').textContent=`연 ${pct>=0?'+':''}${pct}%`;
+  document.getElementById('r-slider-pct').textContent=`연 ${pct>=0?'+':''}${pct.toFixed(1)}%`;
 
   if(!price){
     document.getElementById('r-slider-monthly-chg').textContent='주택가격을 입력하면 계산됩니다';
