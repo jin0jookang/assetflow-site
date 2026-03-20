@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>자산플로우 — 월 배당금 계산기</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -122,7 +123,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .search-input{width:100%;padding:10px 14px 10px 38px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;font-family:var(--sans);font-size:13px;color:var(--text);outline:none;transition:border-color .18s,box-shadow .18s}
 .search-input:focus{border-color:var(--g400);box-shadow:0 0 0 3px rgba(58,175,111,.12);background:var(--white)}
 .search-icon{position:absolute;left:32px;top:50%;transform:translateY(-50%);pointer-events:none}
-.search-dropdown{position:absolute;top:calc(100% - 6px);left:20px;right:20px;background:var(--white);border:1.5px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);z-index:300;max-height:280px;overflow-y:auto;display:none}
+.search-dropdown{position:fixed;background:var(--white);border:1.5px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);z-index:9999;max-height:320px;overflow-y:auto;display:none}
 .search-dropdown.open{display:block}
 .drop-item{padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .15s;border-bottom:1px solid var(--border)}
 .drop-item:last-child{border-bottom:none}
@@ -285,6 +286,108 @@ canvas#donut{width:160px;height:160px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* ── TAX PAGE ── */
+.tax-nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;min-height:56px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:200}
+.tax-main-tabs{display:flex;gap:4px;background:var(--bg);border-radius:10px;padding:3px;flex-wrap:wrap}
+.tax-tab{padding:7px 16px;border:none;background:transparent;border-radius:7px;font-family:var(--sans);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .18s;white-space:nowrap}
+.tax-tab.active{background:var(--white);color:var(--g700);box-shadow:0 1px 6px rgba(0,0,0,.09)}
+.tax-layout{display:grid;grid-template-columns:390px 1fr;gap:20px;padding:20px 24px;max-width:1480px;margin:0 auto}
+@media(max-width:1080px){.tax-layout{grid-template-columns:1fr}}
+@media(max-width:640px){.tax-layout{padding:12px;gap:12px}}
+.tax-section{display:none}.tax-section.active{display:block}
+/* tax panel reuse */
+.t-panel{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.t-panel-title{font-size:11px;font-weight:800;color:var(--g900);letter-spacing:.3px;padding:14px 18px 10px;border-bottom:1px solid var(--border)}
+.t-body{padding:16px 18px}
+.t-field{margin-bottom:12px}
+.t-field label{display:block;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px}
+.t-inp{width:100%;padding:9px 11px;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:13px;color:var(--text);outline:none;transition:border-color .18s}
+.t-inp:focus{border-color:var(--g400);background:var(--white)}
+.t-inp::placeholder{color:var(--muted)}
+.t-sel{width:100%;padding:9px 11px;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:13px;color:var(--text);outline:none;cursor:pointer}
+.t-sel:focus{border-color:var(--g400)}
+.t-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.t-hint{font-size:10px;color:var(--muted);margin-top:3px}
+.t-divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+.t-section-label{font-size:10px;font-weight:800;color:var(--g700);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
+/* toggle */
+.t-tog-row{display:flex;gap:5px;flex-wrap:wrap}
+.t-tog{padding:5px 13px;border-radius:100px;border:1.5px solid var(--border);background:var(--white);font-family:var(--sans);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .18s}
+.t-tog.active{background:var(--g700);border-color:var(--g700);color:white}
+/* result box */
+.t-result-main{background:linear-gradient(135deg,var(--g50),#fff);border:1.5px solid var(--g100);border-radius:var(--radius);padding:22px;margin-bottom:14px}
+.t-result-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px}
+.t-result-value{font-size:2.2rem;font-weight:800;letter-spacing:-1.5px;line-height:1;color:var(--g900)}
+.t-result-value.red{color:var(--red)}.t-result-value.green{color:var(--g700)}.t-result-value.gold{color:var(--gold)}
+.t-result-sub{font-size:11px;color:var(--text2);margin-top:5px}
+.t-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700;margin-top:8px}
+.t-badge.green{background:var(--g100);color:var(--g700)}.t-badge.red{background:#fee2e2;color:var(--red)}.t-badge.gold{background:#fef9c3;color:#b45309}
+/* summary 3-grid */
+.t-sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+@media(max-width:640px){.t-sum-grid{grid-template-columns:1fr 1fr}}
+.t-sum-card{background:var(--white);border:1px solid var(--border);border-radius:11px;padding:11px 13px;box-shadow:var(--shadow)}
+.t-sum-label{font-size:9px;font-weight:700;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.3px}
+.t-sum-val{font-size:13px;font-weight:800;color:var(--g900)}
+/* step table */
+.t-step-table{width:100%;border-collapse:collapse;font-size:12px}
+.t-step-table tr:not(:last-child) td{border-bottom:1px solid var(--border)}
+.t-step-table td{padding:9px 14px;vertical-align:middle}
+.t-step-table td:last-child{text-align:right;font-weight:700}
+.t-step-key{color:var(--text2)}.t-step-val{}
+.t-step-val.pos{color:var(--g700)}.t-step-val.neg{color:var(--red)}.t-step-val.gold{color:var(--gold)}.t-step-val.hl{color:var(--g700);font-size:13px;font-weight:800}
+/* tip box */
+.t-tip-box{background:var(--g50);border:1px solid var(--g100);border-radius:11px;padding:13px 15px;margin-top:12px}
+.t-tip-title{font-size:10px;font-weight:800;color:var(--g700);margin-bottom:7px}
+.t-tip-item{font-size:11px;color:var(--text2);line-height:1.75}
+/* chart */
+.t-chart-wrap{position:relative;height:220px;margin-top:14px}
+/* inline input row */
+.t-inline{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(226,236,230,.6);gap:8px}
+.t-inline:last-child{border-bottom:none}
+.t-inline-label{font-size:12px;color:var(--text2);flex:1;line-height:1.4}
+.t-inline-inp{width:120px;padding:5px 7px;background:var(--bg);border:1.5px solid var(--border);border-radius:7px;font-family:var(--sans);font-size:12px;color:var(--text);text-align:right;outline:none;flex-shrink:0}
+.t-inline-inp:focus{border-color:var(--g400);background:var(--white)}
+.t-inline-unit{font-size:10px;color:var(--muted);white-space:nowrap}
+/* counter */
+.t-counter{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.t-cnt-btn{width:24px;height:24px;border-radius:6px;border:1.5px solid var(--border);background:var(--bg);color:var(--text2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;font-family:var(--sans)}
+.t-cnt-btn:hover{border-color:var(--g400);color:var(--g700)}
+.t-cnt-val{font-size:13px;font-weight:700;min-width:22px;text-align:center;color:var(--text)}
+/* yr step nav */
+.yr-step-nav{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.yr-step-pill{padding:5px 13px;border-radius:100px;border:1.5px solid var(--border);font-family:var(--sans);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .18s;background:var(--white)}
+.yr-step-pill.done{border-color:var(--g500);color:var(--g700);background:var(--g50)}
+.yr-step-pill.current{border-color:var(--g700);color:var(--g700);background:var(--g100)}
+.yr-step-pill.locked{opacity:.4;cursor:default}
+.yr-step-content{display:none}.yr-step-content.active{display:block}
+/* next/prev btn */
+.t-next-btn{width:100%;padding:10px;border:none;border-radius:9px;background:var(--g500);color:white;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:background .18s;margin-top:14px}
+.t-next-btn:hover{background:var(--g700)}
+.t-prev-btn{width:100%;padding:10px;border:1.5px solid var(--border);border-radius:9px;background:var(--white);color:var(--text2);font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;margin-top:8px}
+.t-prev-btn:hover{background:var(--bg)}
+/* inline highlight row */
+.t-inline.highlight{background:var(--g50);border-radius:8px;padding:9px 10px;margin-top:6px;border:1px solid var(--g100)}
+.t-inline.highlight .t-inline-label{font-weight:700;color:var(--g700)}
+.tax-disclaimer{padding:0 24px 28px;max-width:1480px;margin:0 auto;font-size:10px;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);padding-top:14px;margin-top:4px}
+/* 연말정산 공제결과 표시 */
+.t-deduct-row{text-align:right;font-size:10px;font-weight:700;color:var(--text2);padding:1px 0 8px;border-bottom:1px solid rgba(226,236,230,.4);line-height:1}
+.t-deduct-row span.amt{color:var(--g700);font-size:11px}
+.t-deduct-row span.zero{color:var(--muted)}
+.t-notice-box{background:var(--g50);border:1px solid var(--g100);border-radius:8px;padding:9px 12px;margin:6px 0 10px;font-size:11px;color:var(--text2);line-height:1.65}
+.t-notice-box.warn{background:#fef9c3;border-color:#fde68a;color:#92400e}
+.t-notice-box.info{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
+.t-standard-box{border:1.5px dashed var(--g400);border-radius:9px;padding:11px 13px;margin-top:12px;background:var(--g50)}
+.t-standard-title{font-size:10px;font-weight:800;color:var(--g700);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.t-standard-body{font-size:12px;color:var(--text2);line-height:1.65}
+.t-sub-label{display:block;font-size:10px;color:var(--muted);font-weight:400;margin-top:2px;line-height:1.3}
+.yr-mortgage-row{border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-bottom:7px;background:var(--g50)}
+.yr-mortgage-row-head{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.yr-mortgage-row-head .t-sel{flex:1;font-size:11px;padding:5px 8px;height:auto}
+.t-rm-btn{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0;transition:color .15s}
+.t-rm-btn:hover{color:var(--red)}
+.t-add-btn{background:none;border:1.5px dashed var(--border);border-radius:8px;color:var(--text2);font-size:12px;font-weight:600;padding:7px 14px;cursor:pointer;width:100%;margin-top:2px;font-family:var(--sans);transition:all .15s}
+.t-add-btn:hover{border-color:var(--g400);color:var(--g700);background:var(--g50)}
 </style>
 </head>
 <body>
@@ -309,11 +412,11 @@ canvas#donut{width:160px;height:160px}
       <p class="card-desc">국내·해외 ETF/주식 실시간 주가 반영, 계좌별 포트폴리오 관리, 수량 변동 시뮬레이션.</p>
       <div class="card-bottom"><div class="card-tags"><span class="card-tag">실시간</span><span class="card-tag">개별주식</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
     </div>
-    <div class="tool-card card2">
+    <div class="tool-card card2" onclick="goTax()">
       <div class="card-icon-wrap"><svg viewBox="0 0 26 26" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="16" height="20" rx="2"/><path d="M9 8h8M9 12h8M9 16h5"/></svg></div>
       <div class="card-title-row"><span class="card-title">세금 계산기</span><span class="card-pill">부동산·연말</span></div>
       <p class="card-desc">부동산 양도소득세·취득세와 근로소득 연말정산 환급액을 간편하게 추정합니다.</p>
-      <div class="card-bottom"><div class="card-tags"><span class="card-tag">양도세</span><span class="card-tag">연말정산</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
+      <div class="card-bottom"><div class="card-tags"><span class="card-tag">양도세</span><span class="card-tag">취득세</span><span class="card-tag">연말정산</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
     </div>
     <div class="tool-card card3">
       <div class="card-icon-wrap"><svg viewBox="0 0 26 26" fill="none" stroke="#2d7a4a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L13 3l10 9v11H17v-6h-4v6H3V12z"/></svg></div>
@@ -390,7 +493,7 @@ canvas#donut{width:160px;height:160px}
         <div class="custom-entry" id="customEntry">
           <div class="custom-entry-title">직접 입력 (미등록 종목)</div>
           <div class="c-row"><input class="c-inp" id="c-name" placeholder="종목명 *"><input class="c-inp" id="c-ticker" placeholder="티커/코드 (선택)"></div>
-          <div class="c-row"><input class="c-inp" id="c-price" placeholder="현재가 (원/$) *" type="number"><input class="c-inp" id="c-yield" placeholder="연 배당수익률 (%) *" type="number" step="0.1"></div>
+          <div class="c-row"><input class="c-inp" id="c-price" placeholder="현재가 (원/$) *" type="text" inputmode="numeric"><input class="c-inp" id="c-yield" placeholder="연 배당수익률 (%) *" type="number" step="0.1"></div>
           <div class="c-row">
             <select class="c-sel" id="c-freq"><option value="monthly">월 배당</option><option value="quarterly">분기 배당</option><option value="semi-annual">반기 배당</option><option value="annual" selected>연 1회 배당</option></select>
             <select class="c-sel" id="c-acct"><option value="">계좌 선택</option></select>
@@ -480,6 +583,622 @@ canvas#donut{width:160px;height:160px}
         <div style="padding:0 18px 14px;font-size:10px;color:var(--muted);line-height:1.6">⚠ 배당수익률은 참고값입니다. 실제 배당금은 기업 실적에 따라 변동됩니다. 이 계산기는 참고용이며 실제 투자 결정은 전문가와 상담하세요.</div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- TAX PAGE -->
+<div id="page-tax" class="page">
+  <div class="tax-nav">
+    <button class="back-btn" onclick="goHome()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 홈</button>
+    <span class="div-nav-title">세금 계산기</span>
+    <div class="nav-spacer"></div>
+    <div class="tax-main-tabs">
+      <button class="tax-tab active" id="ttab1" onclick="switchTax('cgt',this)">🏠 양도소득세</button>
+      <button class="tax-tab" id="ttab2" onclick="switchTax('acq',this)">📋 취득세</button>
+      <button class="tax-tab" id="ttab3" onclick="switchTax('yr',this)">💼 연말정산</button>
+    </div>
+  </div>
+
+  <!-- ════ 양도소득세 ════ -->
+  <div id="tax-cgt" class="tax-section active">
+    <div class="tax-layout">
+      <div>
+        <div class="t-panel">
+          <div class="t-panel-title">양도 정보 입력</div>
+          <div class="t-body">
+            <div class="t-field">
+              <label>양도 자산 종류</label>
+              <select class="t-sel" id="cgt-assetType" onchange="calcCgt()">
+                <option value="house1">주택 — 1세대 1주택</option>
+                <option value="house2">주택 — 2주택자</option>
+                <option value="house3">주택 — 3주택 이상</option>
+                <option value="land">토지</option>
+                <option value="building">건물 (주거용 외)</option>
+                <option value="other">기타 부동산</option>
+              </select>
+            </div>
+            <div class="t-field" id="cgt-adjWrap">
+              <label>조정대상지역 여부</label>
+              <div class="t-tog-row">
+                <button class="t-tog active" onclick="tTog('cgt-adj','Y',this);calcCgt()">해당</button>
+                <button class="t-tog" onclick="tTog('cgt-adj','N',this);calcCgt()">비해당</button>
+              </div>
+              <input type="hidden" id="cgt-adj" value="Y">
+            </div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>취득가액 (원)</label>
+                <input class="t-inp" id="cgt-buy" type="text" inputmode="numeric" placeholder="취득가액" oninput="calcCgt()">
+              </div>
+              <div class="t-field">
+                <label>양도가액 (원)</label>
+                <input class="t-inp" id="cgt-sell" type="text" inputmode="numeric" placeholder="양도가액" oninput="calcCgt()">
+              </div>
+            </div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>취득일</label>
+                <input class="t-inp" id="cgt-buyDate" type="date" oninput="calcCgt()">
+              </div>
+              <div class="t-field">
+                <label>양도일</label>
+                <input class="t-inp" id="cgt-sellDate" type="date" oninput="calcCgt()">
+              </div>
+            </div>
+            <div class="t-field" id="cgt-resideWrap">
+              <label>실거주 기간 (년) — 1주택 장특공 거주분 적용</label>
+              <input class="t-inp" id="cgt-reside" type="number" placeholder="거주 연수 입력" min="0" oninput="calcCgt()">
+            </div>
+            <hr class="t-divider">
+            <div class="t-section-label">필요경비 (직접 입력)</div>
+            <div class="t-inline">
+              <span class="t-inline-label">취득세 · 등록세</span>
+              <input class="t-inline-inp" id="e1" type="text" inputmode="numeric" placeholder="0" oninput="calcCgt()">
+              <span class="t-inline-unit">원</span>
+            </div>
+            <div class="t-inline">
+              <span class="t-inline-label">법무사 · 공증 비용</span>
+              <input class="t-inline-inp" id="e2" type="text" inputmode="numeric" placeholder="0" oninput="calcCgt()">
+              <span class="t-inline-unit">원</span>
+            </div>
+            <div class="t-inline">
+              <span class="t-inline-label">중개수수료 (취득 시)</span>
+              <input class="t-inline-inp" id="e3" type="text" inputmode="numeric" placeholder="0" oninput="calcCgt()">
+              <span class="t-inline-unit">원</span>
+            </div>
+            <div class="t-inline">
+              <span class="t-inline-label">중개수수료 (양도 시)</span>
+              <input class="t-inline-inp" id="e4" type="text" inputmode="numeric" placeholder="0" oninput="calcCgt()">
+              <span class="t-inline-unit">원</span>
+            </div>
+            <div class="t-inline">
+              <span class="t-inline-label">자본적 지출 (리모델링 등)</span>
+              <input class="t-inline-inp" id="e5" type="text" inputmode="numeric" placeholder="0" oninput="calcCgt()">
+              <span class="t-inline-unit">원</span>
+            </div>
+            <div class="t-inline">
+              <span class="t-inline-label">기타 필요경비</span>
+              <input class="t-inline-inp" id="e6" type="text" inputmode="numeric" placeholder="0" oninput="calcCgt()">
+              <span class="t-inline-unit">원</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="t-result-main">
+          <div class="t-result-label">최종 납부 세액 (양도세 + 지방소득세)</div>
+          <div class="t-result-value red" id="cgt-total">0원</div>
+          <div class="t-result-sub" id="cgt-sub">양도 정보를 입력해주세요</div>
+          <div id="cgt-badges"></div>
+        </div>
+        <div class="t-sum-grid">
+          <div class="t-sum-card"><div class="t-sum-label">양도차익</div><div class="t-sum-val" id="cgt-gain">—</div></div>
+          <div class="t-sum-card"><div class="t-sum-label">과세표준</div><div class="t-sum-val" id="cgt-taxbase">—</div></div>
+          <div class="t-sum-card"><div class="t-sum-label">보유기간</div><div class="t-sum-val" id="cgt-period" style="color:var(--blue)">—</div></div>
+        </div>
+        <div class="t-panel">
+          <div class="t-panel-title">단계별 계산 내역</div>
+          <table class="t-step-table"><tbody id="cgt-steps"><tr><td colspan="2" style="text-align:center;color:var(--muted);padding:20px;font-size:12px">취득·양도가액을 입력하세요</td></tr></tbody></table>
+        </div>
+        <div class="t-panel" style="margin-top:14px">
+          <div class="t-panel-title">보유기간별 세금 시뮬레이션 (현재 양도가액 기준)</div>
+          <div class="t-body"><div class="t-chart-wrap"><canvas id="cgt-chart"></canvas></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="tax-disclaimer">⚠ 이 계산기는 참고용입니다. 실제 세금은 세무사와 상담하세요. 세법은 매년 변경될 수 있습니다. (2024년 세법 기준)</div>
+  </div>
+
+  <!-- ════ 취득세 ════ -->
+  <div id="tax-acq" class="tax-section">
+    <div class="tax-layout">
+      <div>
+        <div class="t-panel">
+          <div class="t-panel-title">취득 정보 입력</div>
+          <div class="t-body">
+            <div class="t-field">
+              <label>취득 구분</label>
+              <select class="t-sel" id="acq-type" onchange="calcAcq()">
+                <option value="buy">매매</option>
+                <option value="gift">증여</option>
+                <option value="inherit">상속</option>
+              </select>
+            </div>
+            <div class="t-field">
+              <label>부동산 종류</label>
+              <select class="t-sel" id="acq-asset" onchange="calcAcq()">
+                <option value="house">주택 (아파트 · 연립 · 다세대)</option>
+                <option value="house_single">단독 · 다가구주택</option>
+                <option value="land">토지</option>
+                <option value="commercial">상가 · 오피스</option>
+                <option value="other">기타 건물</option>
+              </select>
+            </div>
+            <div class="t-field" id="acq-countWrap">
+              <label>취득 후 보유 주택 수 (이 주택 포함)</label>
+              <select class="t-sel" id="acq-count" onchange="calcAcq()">
+                <option value="1">1주택</option>
+                <option value="2">2주택</option>
+                <option value="3">3주택 이상</option>
+              </select>
+            </div>
+            <div class="t-field" id="acq-adjWrap2">
+              <label>조정대상지역 여부</label>
+              <div class="t-tog-row">
+                <button class="t-tog active" onclick="tTog('acq-adj','Y',this);calcAcq()">해당</button>
+                <button class="t-tog" onclick="tTog('acq-adj','N',this);calcAcq()">비해당</button>
+              </div>
+              <input type="hidden" id="acq-adj" value="Y">
+            </div>
+            <div class="t-field">
+              <label>취득가액 (원)</label>
+              <input class="t-inp" id="acq-price" type="text" inputmode="numeric" placeholder="실거래가 또는 시가표준액" oninput="calcAcq()">
+            </div>
+            <div class="t-field" id="acq-areaWrap">
+              <label>전용면적 (㎡) — 농어촌특별세 판단</label>
+              <input class="t-inp" id="acq-area" type="number" placeholder="예: 84" oninput="calcAcq()">
+              <div class="t-hint">85㎡ 이하 농어촌특별세 면제 (주택)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="t-result-main">
+          <div class="t-result-label">총 취득 관련 세금 합계</div>
+          <div class="t-result-value gold" id="acq-total">0원</div>
+          <div class="t-result-sub" id="acq-sub">취득 정보를 입력해주세요</div>
+        </div>
+        <div class="t-sum-grid">
+          <div class="t-sum-card"><div class="t-sum-label">취득세</div><div class="t-sum-val" id="acq-s1" style="color:var(--gold)">—</div></div>
+          <div class="t-sum-card"><div class="t-sum-label">지방교육세</div><div class="t-sum-val" id="acq-s2">—</div></div>
+          <div class="t-sum-card"><div class="t-sum-label">농어촌특별세</div><div class="t-sum-val" id="acq-s3">—</div></div>
+        </div>
+        <div class="t-panel">
+          <div class="t-panel-title">세율 및 계산 내역</div>
+          <table class="t-step-table"><tbody id="acq-steps"><tr><td colspan="2" style="text-align:center;color:var(--muted);padding:20px;font-size:12px">취득가액을 입력하세요</td></tr></tbody></table>
+        </div>
+        <div class="t-tip-box" id="acq-tip">
+          <div class="t-tip-title">💡 취득세 안내</div>
+          <div class="t-tip-item" id="acq-tip-text">취득 정보를 입력하면 세율 안내가 표시됩니다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tax-disclaimer">⚠ 이 계산기는 참고용입니다. 실제 세금은 세무사와 상담하세요. 세법은 매년 변경될 수 있습니다. (2024년 세법 기준)</div>
+  </div>
+
+  <!-- ════ 연말정산 ════ -->
+  <div id="tax-yr" class="tax-section">
+    <div class="tax-layout">
+      <div>
+        <div class="t-panel">
+          <div class="t-panel-title">연말정산 단계 입력</div>
+          <div class="t-body">
+            <div class="yr-step-nav">
+              <button class="yr-step-pill current" id="ysp1" onclick="goYrStep(1)">① 급여</button>
+              <button class="yr-step-pill locked" id="ysp2" onclick="goYrStep(2)">② 인적공제</button>
+              <button class="yr-step-pill locked" id="ysp3" onclick="goYrStep(3)">③ 소득공제</button>
+              <button class="yr-step-pill locked" id="ysp4" onclick="goYrStep(4)">④ 세액공제</button>
+            </div>
+
+            <!-- STEP 1 -->
+            <div class="yr-step-content active" id="yrstep1">
+              <div class="t-section-label">과세 급여</div>
+              <div class="t-inline">
+                <span class="t-inline-label">연간 기본급</span>
+                <input class="t-inline-inp" id="yr-salary" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">상여금 (성과급 포함)</span>
+                <input class="t-inline-inp" id="yr-bonus" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">기타 과세수당 (시간외·직책수당 등)</span>
+                <input class="t-inline-inp" id="yr-other" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <hr class="t-divider">
+              <div class="t-section-label">비과세 항목 (총급여에서 제외)</div>
+              <div class="t-inline">
+                <span class="t-inline-label">식대 <small style="color:var(--muted)">(연 240만원 한도)</small></span>
+                <input class="t-inline-inp" id="yr-meal" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-meal-r">한도 적용 비과세 <span class="zero">0원</span></div>
+              <div class="t-inline">
+                <span class="t-inline-label">자가운전보조금 <small style="color:var(--muted)">(연 240만원 한도)</small></span>
+                <input class="t-inline-inp" id="yr-car" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-car-r">한도 적용 비과세 <span class="zero">0원</span></div>
+              <div class="t-inline">
+                <span class="t-inline-label">기타 비과세 (연구비·출산장려금 등)</span>
+                <input class="t-inline-inp" id="yr-nontax" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline highlight" style="margin-top:8px">
+                <span class="t-inline-label">과세 총급여 (근로소득공제 기준)</span>
+                <span style="font-size:14px;font-weight:800;color:var(--g700)" id="yr-totalSalary">0원</span>
+              </div>
+              <hr class="t-divider">
+
+              <!-- 현 직장 원천징수 (자동추정) -->
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+                <div class="t-section-label" style="margin:0">현 직장 원천징수세액</div>
+                <button onclick="resetPrepaidAuto()" style="font-size:10px;font-weight:700;color:var(--g700);background:var(--g50);border:1px solid var(--g100);border-radius:6px;padding:3px 9px;cursor:pointer;font-family:var(--sans)">↺ 재계산</button>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:6px">급여 입력값 기준으로 자동 추정합니다. 실제 원천징수영수증과 다를 경우 직접 수정하세요.</div>
+              <div class="t-inline">
+                <span class="t-inline-label">소득세 원천징수 합계
+                  <small class="t-sub-label">자동 추정 · 수정 가능</small>
+                </span>
+                <input class="t-inline-inp" id="yr-prepaid" type="text" inputmode="numeric" placeholder="0" data-auto="true" oninput="this.dataset.auto='false';yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">지방소득세 원천징수 합계
+                  <small class="t-sub-label">소득세의 10% · 수정 가능</small>
+                </span>
+                <input class="t-inline-inp" id="yr-prepaidLocal" type="text" inputmode="numeric" placeholder="0" data-auto="true" oninput="this.dataset.auto='false';yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+
+              <hr class="t-divider">
+
+              <!-- 이직자 전 직장 세액 -->
+              <div class="t-section-label">올해 이직한 경우 (해당자만 입력)</div>
+              <div class="t-inline">
+                <span class="t-inline-label">전 직장 납부 소득세
+                  <small class="t-sub-label">원천징수영수증 → '결정세액' 항목</small>
+                </span>
+                <input class="t-inline-inp" id="yr-prevPaid" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">전 직장 납부 지방소득세
+                  <small class="t-sub-label">원천징수영수증 → '지방소득세 결정세액'</small>
+                </span>
+                <input class="t-inline-inp" id="yr-prevPaidLocal" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-notice-box info" style="margin-top:6px">
+                📋 <strong>이직자란?</strong> 올해 안에 다른 회사에서도 근무한 경우입니다.<br><br>
+                전 직장을 나올 때 회사가 <strong>중도퇴사 세금 정산</strong>을 해줍니다. 이 정산을 통해 세금을 돌려받거나 더 냈을 수 있어요. 정산 후 최종 납부세액이 <strong>근로소득 원천징수영수증</strong>의 <strong>'결정세액'</strong>으로 기재됩니다. 해당 없으면 비워두세요.
+              </div>
+
+              <button class="t-next-btn" onclick="goYrStep(2)">다음: 인적공제 →</button>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="yr-step-content" id="yrstep2">
+              <div class="t-section-label">기본공제 대상자</div>
+              <div class="t-inline">
+                <span class="t-inline-label">본인 (자동 적용)</span>
+                <span style="font-size:11px;font-weight:700;color:var(--g700)">150만원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">배우자 (연소득 100만원 이하)</span>
+                <div class="t-tog-row">
+                  <button class="t-tog" onclick="tTog('yr-spouse','1',this);yrCalc()">있음</button>
+                  <button class="t-tog active" onclick="tTog('yr-spouse','0',this);yrCalc()">없음</button>
+                </div>
+                <input type="hidden" id="yr-spouse" value="0">
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">부양가족 (20세 이하 자녀 등)</span>
+                <div class="t-counter">
+                  <button class="t-cnt-btn" onclick="tAdj('yr-dep',-1)">−</button>
+                  <span class="t-cnt-val" id="yr-dep-v">0</span>
+                  <button class="t-cnt-btn" onclick="tAdj('yr-dep',1)">＋</button>
+                </div>
+                <input type="hidden" id="yr-dep" value="0">
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">경로우대 (70세 이상) 인원</span>
+                <div class="t-counter">
+                  <button class="t-cnt-btn" onclick="tAdj('yr-senior',-1)">−</button>
+                  <span class="t-cnt-val" id="yr-senior-v">0</span>
+                  <button class="t-cnt-btn" onclick="tAdj('yr-senior',1)">＋</button>
+                </div>
+                <input type="hidden" id="yr-senior" value="0">
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">장애인 인원</span>
+                <div class="t-counter">
+                  <button class="t-cnt-btn" onclick="tAdj('yr-disabled',-1)">−</button>
+                  <span class="t-cnt-val" id="yr-disabled-v">0</span>
+                  <button class="t-cnt-btn" onclick="tAdj('yr-disabled',1)">＋</button>
+                </div>
+                <input type="hidden" id="yr-disabled" value="0">
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">부녀자 공제 (여성 세대주·배우자 있는 여성)</span>
+                <div class="t-tog-row">
+                  <button class="t-tog" onclick="tTog('yr-woman','1',this);yrCalc()">해당</button>
+                  <button class="t-tog active" onclick="tTog('yr-woman','0',this);yrCalc()">미해당</button>
+                </div>
+                <input type="hidden" id="yr-woman" value="0">
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">한부모 공제</span>
+                <div class="t-tog-row">
+                  <button class="t-tog" onclick="tTog('yr-single','1',this);yrCalc()">해당</button>
+                  <button class="t-tog active" onclick="tTog('yr-single','0',this);yrCalc()">미해당</button>
+                </div>
+                <input type="hidden" id="yr-single" value="0">
+              </div>
+              <div class="t-inline highlight">
+                <span class="t-inline-label">인적공제 합계</span>
+                <span style="font-size:14px;font-weight:800;color:var(--g700)" id="yr-personalTotal">—</span>
+              </div>
+              <button class="t-next-btn" onclick="goYrStep(3)">다음: 소득공제 →</button>
+              <button class="t-prev-btn" onclick="goYrStep(1)">← 이전</button>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="yr-step-content" id="yrstep3">
+              <div class="t-section-label">4대보험 (자동 추정 / 수정 가능)</div>
+              <div class="t-inline">
+                <span class="t-inline-label">국민연금 (총급여의 4.5%)</span>
+                <input class="t-inline-inp" id="yr-pension" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">건강보험료 (총급여의 3.545%)</span>
+                <input class="t-inline-inp" id="yr-health" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">고용보험료 (총급여의 0.9%)</span>
+                <input class="t-inline-inp" id="yr-employ" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-ins4-r">4대보험 공제합계 <span class="zero">0원</span></div>
+
+              <hr class="t-divider">
+              <div class="t-section-label">신용카드 등 소득공제</div>
+              <div class="t-notice-box info" style="margin-bottom:6px">
+                💳 <strong>공제 구조</strong><br>
+                총 사용액이 <strong>총급여의 25%</strong>를 넘는 금액부터 공제 시작<br>
+                초과분 공제율: 신용카드 <strong>15%</strong> · 체크카드·현금영수증 <strong>30%</strong> · 전통시장 <strong>40%</strong><br>
+                공제 한도: 총급여 7천만↓ <strong>300만원</strong> / 7천만~1.2억 <strong>250만원</strong> / 1.2억↑ <strong>200만원</strong>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">신용카드 사용액 <small class="t-sub-label">초과분의 15% 공제</small></span>
+                <input class="t-inline-inp" id="yr-credit" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">체크카드 + 현금영수증 <small class="t-sub-label">초과분의 30% 공제</small></span>
+                <input class="t-inline-inp" id="yr-debit" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">전통시장 사용액 <small class="t-sub-label">초과분의 40% 공제</small></span>
+                <input class="t-inline-inp" id="yr-market" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-card-r">카드 공제액 <span class="zero">0원</span> <small style="font-weight:400;color:var(--muted)" id="yr-card-note"></small></div>
+
+              <hr class="t-divider">
+              <div class="t-section-label">주택 소득공제</div>
+              <div class="t-inline">
+                <span class="t-inline-label">주택청약 납입액
+                  <small class="t-sub-label">무주택 세대주 · 총급여 7,000만원 이하만 적용</small>
+                </span>
+                <input class="t-inline-inp" id="yr-cheongyak" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-cheongyak-r">공제액 (납입액 40%, 한도 96만원) <span class="zero">0원</span></div>
+              <div class="t-notice-box warn" style="margin-top:2px">🏠 주택청약 소득공제는 <strong>무주택 세대주</strong>에 한하며, 총급여 7,000만원 이하인 경우에만 적용됩니다. 이미 주택을 보유한 경우 공제 불가합니다.</div>
+              <div class="t-section-label" style="margin-top:10px">장기주택저당차입금 이자상환 소득공제</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:6px">주택담보대출 이자 · 대출이 여러 건이면 모두 추가하세요</div>
+              <div id="yr-mortgage-list">
+                <div class="yr-mortgage-row">
+                  <div class="yr-mortgage-row-head">
+                    <select class="t-sel yr-mortgage-type" onchange="yrCalc()">
+                      <option value="1800">고정금리 + 비거치식 (한도 1,800만원)</option>
+                      <option value="1500" selected>고정금리 또는 비거치식 (한도 1,500만원)</option>
+                      <option value="500">기타 (한도 500만원)</option>
+                    </select>
+                    <button class="t-rm-btn" onclick="removeMortgageRow(this)" title="삭제">✕</button>
+                  </div>
+                  <div class="t-inline" style="border:none;padding:0">
+                    <span class="t-inline-label" style="font-size:11px">연간 이자상환액</span>
+                    <input class="t-inline-inp yr-mortgage-amt" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                    <span class="t-inline-unit">원</span>
+                  </div>
+                </div>
+              </div>
+              <button class="t-add-btn" onclick="addMortgageRow()">＋ 대출 추가</button>
+              <div class="t-deduct-row" id="yr-mortgage-r" style="margin-top:6px">이자상환 공제액 합계 <span class="zero">0원</span></div>
+
+              <div class="t-inline highlight" style="margin-top:10px">
+                <span class="t-inline-label">소득공제 합계</span>
+                <span style="font-size:14px;font-weight:800;color:var(--g700)" id="yr-deductTotal">—</span>
+              </div>
+              <button class="t-next-btn" onclick="goYrStep(4)">다음: 세액공제 →</button>
+              <button class="t-prev-btn" onclick="goYrStep(2)">← 이전</button>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="yr-step-content" id="yrstep4">
+              <div class="t-section-label">보험료 세액공제</div>
+              <div class="t-inline">
+                <span class="t-inline-label">일반 보험료 납입액
+                  <small class="t-sub-label">공제율 12% · 한도 100만원</small>
+                </span>
+                <input class="t-inline-inp" id="yr-insure" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-insure-r">세액공제액 <span class="zero">0원</span></div>
+              <div class="t-inline">
+                <span class="t-inline-label">장애인전용 보험료
+                  <small class="t-sub-label">공제율 15% · 한도 100만원</small>
+                </span>
+                <input class="t-inline-inp" id="yr-insureD" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-insureD-r">세액공제액 <span class="zero">0원</span></div>
+
+              <hr class="t-divider">
+              <div class="t-section-label">의료비 세액공제</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:6px">공제율 15% · 총급여의 3%를 초과한 금액부터 공제</div>
+              <div class="t-inline">
+                <span class="t-inline-label">본인 · 65세 이상 · 장애인 의료비
+                  <small class="t-sub-label">한도 없음</small>
+                </span>
+                <input class="t-inline-inp" id="yr-med1" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">일반 의료비
+                  <small class="t-sub-label">700만원 한도</small>
+                </span>
+                <input class="t-inline-inp" id="yr-med2" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-med-r">의료비 세액공제액 <span class="zero">0원</span> <small style="font-weight:400;color:var(--muted)" id="yr-med-note"></small></div>
+
+              <hr class="t-divider">
+              <div class="t-section-label">교육비 세액공제</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:6px">공제율 15%</div>
+              <div class="t-inline">
+                <span class="t-inline-label">취학전 · 초중고 자녀
+                  <small class="t-sub-label">1인당 300만원 한도</small>
+                </span>
+                <input class="t-inline-inp" id="yr-edu1" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">대학생 자녀
+                  <small class="t-sub-label">1인당 900만원 한도</small>
+                </span>
+                <input class="t-inline-inp" id="yr-edu2" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">본인 교육비
+                  <small class="t-sub-label">한도 없음</small>
+                </span>
+                <input class="t-inline-inp" id="yr-edu3" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-edu-r">교육비 세액공제액 <span class="zero">0원</span></div>
+
+              <hr class="t-divider">
+              <div class="t-section-label">연금저축 · IRP 세액공제</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:6px">총급여 5,500만원 이하 15% · 초과 13% · 합산 한도 900만원</div>
+              <div class="t-inline">
+                <span class="t-inline-label">연금저축 납입액
+                  <small class="t-sub-label">400만원 한도</small>
+                </span>
+                <input class="t-inline-inp" id="yr-pension2" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">IRP 추가납입
+                  <small class="t-sub-label">연금저축과 합산 900만원 한도</small>
+                </span>
+                <input class="t-inline-inp" id="yr-irp" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-pension-r">연금저축·IRP 세액공제액 <span class="zero">0원</span> <small style="font-weight:400;color:var(--muted)" id="yr-pension-rate"></small></div>
+
+              <hr class="t-divider">
+              <div class="t-section-label">월세 세액공제</div>
+              <div class="t-inline">
+                <span class="t-inline-label">연간 월세 납입액
+                  <small class="t-sub-label">무주택 세대주 · 총급여 7천만원 이하 · 한도 1천만원</small>
+                </span>
+                <input class="t-inline-inp" id="yr-rent" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-rent-r">월세 세액공제액 <span class="zero">0원</span> <small style="font-weight:400;color:var(--muted)" id="yr-rent-rate"></small></div>
+              <div class="t-notice-box warn">🏠 월세 세액공제는 <strong>무주택 세대주</strong>에 한합니다. 총급여 5,500만원 이하 17%, 7,000만원 이하 15% 적용. 주택 보유자는 공제 불가합니다.</div>
+
+              <hr class="t-divider">
+              <div class="t-section-label">기부금 세액공제</div>
+              <div class="t-inline">
+                <span class="t-inline-label">법정기부금
+                  <small class="t-sub-label">공제율 15% (국가·지자체·사회복지 등)</small>
+                </span>
+                <input class="t-inline-inp" id="yr-donate1" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">지정기부금
+                  <small class="t-sub-label">1천만원 이하 15% · 초과분 30%</small>
+                </span>
+                <input class="t-inline-inp" id="yr-donate2" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-inline">
+                <span class="t-inline-label">고향사랑기부금
+                  <small class="t-sub-label">10만원 이하 전액공제 · 초과분 16.5% · 연 한도 2천만원</small>
+                </span>
+                <input class="t-inline-inp" id="yr-donate3" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-donate-r">기부금 세액공제액 합계 <span class="zero">0원</span></div>
+
+              <div class="t-inline highlight" style="margin-top:10px">
+                <span class="t-inline-label">개별 세액공제 합계</span>
+                <span style="font-size:14px;font-weight:800;color:var(--g700)" id="yr-taxCreditTotal">—</span>
+              </div>
+
+              <!-- 표준세액공제 비교 -->
+              <div class="t-standard-box" id="yr-standard-box">
+                <div class="t-standard-title">📊 표준세액공제 비교</div>
+                <div class="t-standard-body" id="yr-standard-body">계산 중...</div>
+              </div>
+
+              <button class="t-prev-btn" onclick="goYrStep(3)">← 이전</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: 실시간 결과 -->
+      <div>
+        <div class="t-result-main" id="yr-result-box">
+          <div class="t-result-label" id="yr-result-label">환급 / 추가납부 예상액</div>
+          <div class="t-result-value" id="yr-result-value" style="color:var(--muted)">—</div>
+          <div class="t-result-sub" id="yr-result-sub">급여를 입력하면 실시간으로 계산됩니다</div>
+          <div id="yr-result-badge"></div>
+        </div>
+        <div class="t-panel">
+          <div class="t-panel-title">연말정산 계산 흐름</div>
+          <table class="t-step-table"><tbody id="yr-steps"><tr><td colspan="2" style="text-align:center;color:var(--muted);padding:20px;font-size:12px">급여를 입력해주세요</td></tr></tbody></table>
+        </div>
+        <div class="t-tip-box" style="margin-top:14px">
+          <div class="t-tip-title">💡 절세 팁</div>
+          <div class="t-tip-item" id="yr-tip-text">급여 정보를 입력하면 개인화된 절세 팁이 표시됩니다.</div>
+        </div>
+      </div>
+    </div>
+    <div class="tax-disclaimer">⚠ 이 계산기는 참고용입니다. 실제 세금은 세무사와 상담하세요. 세법은 매년 변경될 수 있습니다. (2024년 세법 기준)</div>
   </div>
 </div>
 
@@ -748,7 +1467,14 @@ function saveState() {
   try {
     localStorage.setItem('af_portfolio',JSON.stringify(portfolio.map(p=>({
       id:p.id,ticker:p.ticker,qty:p.qty,accountId:p.accountId||'',
-      customMeta:p.meta.isCustom?p.meta:null
+      customMeta:p.meta.isCustom?p.meta:null,
+      // 실시간 갱신된 가격 저장 — 재접속 시 복원
+      livePrice:(!p.meta.isCustom&&p.meta.priceSource)?{
+        price:p.meta.price,
+        annualYield:p.meta.annualYield,
+        priceSource:p.meta.priceSource,
+        priceAt:p.meta.priceAt
+      }:null
     }))));
     localStorage.setItem('af_accounts',JSON.stringify(accounts));
   } catch(e){}
@@ -762,7 +1488,18 @@ function loadState() {
     if(sp){
       portfolio=JSON.parse(sp).map(item=>{
         let meta=item.customMeta||(ASSET_DB[item.ticker]?{...ASSET_DB[item.ticker]}:null);
-        if(!meta) return null;
+        if(!meta){
+          // ASSET_DB에 없는 종목(Yahoo·KIS로 추가된 것) — livePrice로 복원
+          if(item.livePrice) meta={name:item.ticker,market:'KR',type:'STOCK',price:item.livePrice.price,annualYield:item.livePrice.annualYield||0,ter:0,freq:'quarterly',yahooSym:null,krxCode:null};
+          else return null;
+        }
+        // 실시간 갱신 가격 복원
+        if(item.livePrice&&!item.customMeta){
+          meta.price=item.livePrice.price;
+          if(item.livePrice.annualYield!=null) meta.annualYield=item.livePrice.annualYield;
+          meta.priceSource=item.livePrice.priceSource;
+          meta.priceAt=item.livePrice.priceAt;
+        }
         return{id:item.id,ticker:item.ticker,meta,qty:item.qty||0,accountId:item.accountId||''};
       }).filter(Boolean);
     }
@@ -813,10 +1550,10 @@ function setMkt(mkt,type,btn){
   currentMkt=mkt;currentType=type;
   document.querySelectorAll('.mkt-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const isStock=type==='STOCK';
-  document.getElementById('customEntry').classList.toggle('show',isStock);
-  document.getElementById('quickBar').style.display=isStock?'none':'block';
-  const ph={'KR-ETF':'ETF명 검색 (예: TIGER, KODEX)','US-ETF':'티커 검색 (예: SCHD, JEPI)','KR-STOCK':'종목명 또는 6자리 코드 검색','US-STOCK':'티커 또는 종목명 (예: AAPL)'};
+  // 모든 탭에서 직접입력 폼 노출, 인기 퀵바는 ETF에서만
+  document.getElementById('customEntry').classList.add('show');
+  document.getElementById('quickBar').style.display=type==='STOCK'?'none':'block';
+  const ph={'KR-ETF':'ETF명·6자리코드 검색','US-ETF':'티커 직접 입력 (예: SCHD, QQQ, VOO)','KR-STOCK':'종목명 또는 6자리 코드','US-STOCK':'티커 입력 (예: AAPL, NVDA, MSFT)'};
   document.getElementById('searchInput').placeholder=ph[mkt+'-'+type]||'검색...';
   document.getElementById('searchInput').value='';
   document.getElementById('searchDrop').classList.remove('open');
@@ -825,23 +1562,73 @@ function setMkt(mkt,type,btn){
 // ════════════════════════════════════════
 // SEARCH
 // ════════════════════════════════════════
+function positionDrop(){
+  const inp=document.getElementById('searchInput');
+  const drop=document.getElementById('searchDrop');
+  if(!inp||!drop) return;
+  const r=inp.getBoundingClientRect();
+  const spaceBelow=window.innerHeight-r.bottom-8;
+  const spaceAbove=r.top-8;
+  drop.style.left=r.left+'px';
+  drop.style.width=r.width+'px';
+  if(spaceBelow>=120||spaceBelow>=spaceAbove){
+    drop.style.top=(r.bottom+4)+'px';
+    drop.style.bottom='auto';
+    drop.style.maxHeight=Math.min(320,spaceBelow)+'px';
+  } else {
+    drop.style.bottom=(window.innerHeight-r.top+4)+'px';
+    drop.style.top='auto';
+    drop.style.maxHeight=Math.min(320,spaceAbove)+'px';
+  }
+}
+
 function onSearch(val){
   clearTimeout(dropTimer);clearTimeout(searchTimer);
-  dropTimer=setTimeout(()=>renderDrop(val),120);
-  // KIS live search for 6-digit KR codes
-  if(/^\d{6}$/.test(val.trim())&&currentMkt==='KR'&&kisKey){
+  dropTimer=setTimeout(()=>{renderDrop(val);positionDrop();},120);
+  const q=val.trim();
+  if(!q) return;
+
+  // KR: KIS 실시간 조회 (6자리 코드)
+  if(/^\d{6}$/.test(q)&&currentMkt==='KR'&&kisKey){
     searchTimer=setTimeout(async()=>{
-      const res=await liveKisSearch(val.trim());
+      const res=await liveKisSearch(q);
       if(res&&res.price){
         const drop=document.getElementById('searchDrop');
-        const code=val.trim();
-        const existing=`<div class="drop-item" onmousedown="addKisItem('${code}','${(res.name||code).replace(/'/g,"\\'")}',${res.price})">
-          <span class="drop-ticker">${code}</span>
-          <span class="drop-name">${res.name||code}</span>
-          <span class="drop-src">KIS 실시간</span>
+        drop.innerHTML=`<div class="drop-item" onmousedown="addKisItem('${q}','${(res.name||q).replace(/'/g,"\\'")}',${res.price})">
+          <span class="drop-ticker">${q}</span>
+          <span class="drop-name">${res.name||q}</span>
+          <span class="drop-src kis">KIS 실시간</span>
           <span class="drop-yield">${fmt(res.price)}원</span>
         </div>`;
-        drop.innerHTML=existing;drop.classList.add('open');
+        drop.classList.add('open');positionDrop();
+      }
+    },400);
+    return;
+  }
+
+  // 영문 티커 — 시장·종류 구분 없이 Yahoo 즉시 조회 (US ETF/STOCK 전부 커버)
+  if(/^[A-Za-z]/.test(q)){
+    searchTimer=setTimeout(async()=>{
+      const sym=q.toUpperCase();
+      // US 시장은 raw 티커, KR 시장은 .KS 시도
+      const yahoSym=currentMkt==='KR'?sym+'.KS':sym;
+      const yr=await fetchYahooPrice(yahoSym);
+      if(yr&&yr.price){
+        const drop=document.getElementById('searchDrop');
+        const isUS=currentMkt==='US';
+        const ps=isUS?'$'+yr.price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):fmt(yr.price)+'원';
+        const yldStr=yr.yld?`배당 ${yr.yld}%`:'배당률 직접입력 필요';
+        const addSym=currentMkt==='KR'?sym:sym; // keep raw sym for portfolio key
+        const addPrice=yr.price;
+        const liveHtml=`<div class="drop-item" onmousedown="addYahooItem('${addSym}',${addPrice},${yr.yld||0})">
+          <span class="drop-ticker">${sym}</span>
+          <span class="drop-name">실시간 조회</span>
+          <span class="drop-src yahoo">Yahoo</span>
+          <span class="drop-yield">${ps} · ${yldStr}</span>
+        </div>`;
+        const prev=drop.innerHTML;
+        drop.innerHTML=liveHtml+(prev.includes('검색 결과 없음')||prev.includes('직접 입력')?'':prev);
+        drop.classList.add('open');positionDrop();
       }
     },500);
   }
@@ -854,7 +1641,11 @@ function renderDrop(val){
   const results=Object.entries(ASSET_DB)
     .filter(([k,v])=>v.market===currentMkt&&v.type===currentType&&(k.toUpperCase().includes(q)||v.name.toUpperCase().includes(q)))
     .slice(0,8);
-  if(!results.length){drop.innerHTML=`<div class="drop-item" style="color:var(--muted);cursor:default;font-size:12px">검색 결과 없음 — 아래 직접 입력을 사용하세요</div>`;drop.classList.add('open');return;}
+  if(!results.length){
+    const krHint=currentMkt==='KR'?'6자리 코드 입력 시 KIS 실시간 조회':'영문 티커 입력 시 Yahoo 실시간 조회';
+    drop.innerHTML=`<div class="drop-item" style="color:var(--muted);cursor:default;font-size:12px">등록 종목에 없음 — ${krHint} 또는 아래 직접입력 사용</div>`;
+    drop.classList.add('open');return;
+  }
   drop.innerHTML=results.map(([k,v])=>{
     const ps=v.market==='US'?`$${v.price.toLocaleString()}`:fmt(v.price)+'원';
     const fl=FREQ_MAP[v.freq]||'';
@@ -870,14 +1661,24 @@ function renderDrop(val){
 
 function addKisItem(code,name,price){
   if(portfolio.find(p=>p.ticker===code)){document.getElementById('searchInput').value='';return;}
-  const meta={name,market:currentMkt,type:currentType,price,annualYield:0,ter:0,freq:'annual',yahooSym:code+'.KS',krxCode:code,priceSource:'KIS',needsYield:true};
+  const meta={name,market:currentMkt,type:currentType,price,annualYield:0,ter:0,freq:'annual',yahooSym:code+'.KS',krxCode:code,priceSource:'KIS',priceAt:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}),needsYield:true};
   portfolio.push({id:uid(),ticker:code,meta,qty:10,accountId:''});
   document.getElementById('searchInput').value='';document.getElementById('searchDrop').classList.remove('open');
   saveState();renderAll();
 }
 
-function showDrop(){if(document.getElementById('searchInput').value)document.getElementById('searchDrop').classList.add('open');}
+function addYahooItem(sym,price,yld){
+  if(portfolio.find(p=>p.ticker===sym)){document.getElementById('searchInput').value='';return;}
+  const meta={name:sym,market:currentMkt,type:currentType,price,annualYield:yld||0,ter:0,freq:'quarterly',yahooSym:sym,krxCode:null,isCustom:false,priceSource:'Yahoo',priceAt:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}),needsYield:!yld};
+  portfolio.push({id:uid(),ticker:sym,meta,qty:10,accountId:''});
+  document.getElementById('searchInput').value='';document.getElementById('searchDrop').classList.remove('open');
+  saveState();renderAll();
+}
+
+function showDrop(){if(document.getElementById('searchInput').value){positionDrop();document.getElementById('searchDrop').classList.add('open');}}
 function hideDrop(){setTimeout(()=>document.getElementById('searchDrop').classList.remove('open'),200);}
+window.addEventListener('scroll',()=>{if(document.getElementById('searchDrop').classList.contains('open'))positionDrop();},true);
+window.addEventListener('resize',()=>{if(document.getElementById('searchDrop').classList.contains('open'))positionDrop();});
 
 // ════════════════════════════════════════
 // ADD / REMOVE
@@ -898,7 +1699,7 @@ function quickAdd(t){
 function addCustomItem(){
   const name=document.getElementById('c-name').value.trim();
   const ticker=document.getElementById('c-ticker').value.trim()||('CUSTOM_'+uid());
-  const price=parseFloat(document.getElementById('c-price').value);
+  const price=rawNum(document.getElementById('c-price').value);
   const yld=parseFloat(document.getElementById('c-yield').value);
   const freq=document.getElementById('c-freq').value;
   const acctId=document.getElementById('c-acct').value;
@@ -910,7 +1711,7 @@ function addCustomItem(){
   saveState();renderAll();
 }
 function removeItem(id){portfolio=portfolio.filter(p=>p.id!==id);saveState();renderAll();}
-function updateQty(id,val){const p=portfolio.find(x=>x.id===id);if(p){p.qty=Math.max(0,parseInt(val)||0);saveState();renderAll();}}
+function updateQty(id,val){const p=portfolio.find(x=>x.id===id);if(p){p.qty=Math.max(0,rawInt(val));saveState();renderAll();}}
 function stepQty(id,d){const p=portfolio.find(x=>x.id===id);if(p){p.qty=Math.max(0,p.qty+d);saveState();renderAll();}}
 function updateYield(id,val){const p=portfolio.find(x=>x.id===id);if(p){p.meta.annualYield=parseFloat(val)||0;saveState();renderAll();}}
 
@@ -973,7 +1774,7 @@ function renderList(){
         <div class="etf-card-bottom">
           <div class="qty-wrap">
             <button class="qty-btn" onclick="stepQty('${p.id}',-1)">−</button>
-            <input class="qty-input" type="number" value="${p.qty}" min="0" onchange="updateQty('${p.id}',this.value)">
+            <input class="qty-input" type="text" inputmode="numeric" value="${p.qty.toLocaleString('ko-KR')}" onchange="updateQty('${p.id}',this.value)">
             <button class="qty-btn" onclick="stepQty('${p.id}',1)">＋</button>
           </div>
           <div class="etf-monthly"><span class="etf-monthly-label">월 배당</span><span class="etf-monthly-val">${fmt(Math.round(mo))}원</span></div>
@@ -1073,7 +1874,7 @@ function renderSim(){
         </div>
         <div class="sim-delta-col">
           <div class="sim-col-label">수량 변동</div>
-          <input class="sim-delta-input" type="number" id="sdelta-${p.id}" value="0" placeholder="0" oninput="calcSim()">
+          <input class="sim-delta-input" type="text" inputmode="numeric" id="sdelta-${p.id}" value="0" placeholder="0" oninput="calcSim()">
         </div>
         <div class="sim-invest-col">
           <div class="sim-col-label">추가 투자금</div>
@@ -1095,7 +1896,7 @@ function calcSim(){
   const beforeTotal=portfolio.reduce((s,p)=>s+monthlyNet(p),0);
   let afterTotal=0;
   portfolio.forEach(p=>{
-    const delta=parseInt(document.getElementById(`sdelta-${p.id}`)?.value)||0;
+    const delta=rawInt(document.getElementById(`sdelta-${p.id}`)?.value);
     const newQty=Math.max(0,p.qty+delta);
     const invest=toKRW(p)*newQty,tax=p.meta.market==='US'?0.15:0.154;
     const newMo=invest*(p.meta.annualYield/100)/12*(1-tax);
@@ -1149,6 +1950,612 @@ function renderFees(){
 }
 
 function fmt(n){return isNaN(n)?'0':Math.round(n).toLocaleString('ko-KR');}
+
+// ════════════════════════════════════════
+// 콤마 입력 포매터
+// ════════════════════════════════════════
+function moneyFmt(el){
+  const raw=el.value.replace(/[^0-9]/g,'');
+  const cur=el.selectionStart,oldLen=el.value.length;
+  el.value=raw?parseInt(raw,10).toLocaleString('ko-KR'):'';
+  const diff=el.value.length-oldLen;
+  try{el.setSelectionRange(cur+diff,cur+diff);}catch(e){}
+}
+// 숫자값 읽기 (콤마 제거)
+function rawNum(v){return parseFloat(String(v||'').replace(/,/g,''))||0;}
+function rawInt(v){return parseInt(String(v||'').replace(/,/g,''))||0;}
+
+// 캡처 페이즈 — oninput 핸들러보다 먼저 실행되어 이미 포맷된 값으로 계산
+document.addEventListener('input',function(e){
+  const el=e.target;
+  const isMoneyEl=
+    el.classList.contains('t-inline-inp')||
+    el.classList.contains('qty-input')||
+    el.classList.contains('sim-delta-input')||
+    ['cgt-buy','cgt-sell','acq-price','c-price'].includes(el.id);
+  if(isMoneyEl) moneyFmt(el);
+},true);
+
+// ════════════════════════════════════════
+// TAX PAGE
+// ════════════════════════════════════════
+function goTax(){show('page-tax');taxInit();}
+
+function taxInit(){
+  calcAcq();
+  updateMortgageRemoveBtns();
+}
+
+function switchTax(tab,btn){
+  document.querySelectorAll('.tax-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tax-'+tab).classList.add('active');
+  document.querySelectorAll('.tax-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── HELPERS ──
+function tW(id){return document.getElementById(id);}
+function tV(id){return rawNum(tW(id)?.value);}
+function tFmt(n){
+  if(isNaN(n)||n===null)return'—';
+  const a=Math.abs(Math.round(n));
+  if(a>=100000000)return(n<0?'-':'')+(a/100000000).toFixed(1)+'억원';
+  if(a>=10000)return(n<0?'-':'')+(a/10000).toFixed(0)+'만원';
+  return Math.round(n).toLocaleString('ko-KR')+'원';
+}
+function tFmtFull(n){return Math.round(n).toLocaleString('ko-KR')+'원';}
+function tTog(id,val,btn){
+  tW(id).value=val;
+  btn.closest('.t-tog-row').querySelectorAll('.t-tog').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function tAdj(id,d){
+  const el=tW(id);
+  const v=Math.max(0,(parseInt(el.value)||0)+d);
+  el.value=v;
+  const dv=tW(id+'-v');
+  if(dv)dv.textContent=v;
+  yrCalc();
+}
+
+// ── 소득세 세율표 ──
+const TX=[
+  {limit:14000000,rate:.06,deduct:0},
+  {limit:50000000,rate:.15,deduct:1260000},
+  {limit:88000000,rate:.24,deduct:5760000},
+  {limit:150000000,rate:.35,deduct:15440000},
+  {limit:300000000,rate:.38,deduct:19940000},
+  {limit:500000000,rate:.40,deduct:25940000},
+  {limit:1000000000,rate:.42,deduct:35940000},
+  {limit:Infinity,rate:.45,deduct:65940000},
+];
+function txBracket(base){
+  if(base<=0)return 0;
+  const b=TX.find(b=>base<=b.limit);
+  return base*b.rate-b.deduct;
+}
+
+// ── 장기보유특별공제 ──
+function ltcRate(type,years,residYears){
+  if(years<3)return 0;
+  if(type==='house1'){
+    const holdPct=Math.min(years,10)*4/100;
+    const residPct=Math.min(residYears||0,10)*4/100;
+    return Math.min(holdPct+residPct,.80);
+  }
+  const r=[0,0,0,6,8,10,12,14,16,18,20,22,24,26,28,30];
+  return (r[Math.min(years,15)]||30)/100;
+}
+
+// ════ 양도소득세 ════
+let cgtChart=null;
+function calcCgt(){
+  const at=tW('cgt-assetType').value;
+  const adj=tW('cgt-adj').value==='Y';
+  const buy=tV('cgt-buy'),sell=tV('cgt-sell');
+  const bd=tW('cgt-buyDate').value,sd=tW('cgt-sellDate').value;
+  const expense=[1,2,3,4,5,6].reduce((s,i)=>s+tV('e'+i),0);
+  const reside=tV('cgt-reside');
+  const resideWrap=tW('cgt-resideWrap');
+  if(resideWrap)resideWrap.style.display=at==='house1'?'block':'none';
+
+  let years=0,months=0;
+  if(bd&&sd){
+    const diff=(new Date(sd)-new Date(bd))/(1000*60*60*24*30.44);
+    months=Math.max(0,Math.floor(diff));
+    years=Math.floor(months/12);
+  }
+  tW('cgt-period').textContent=years>0?`${years}년 ${months%12}개월`:(months>0?`${months}개월`:'—');
+
+  const gain=sell-buy-expense;
+  tW('cgt-gain').textContent=sell&&buy?tFmt(gain):'—';
+  tW('cgt-gain').style.color=gain>=0?'var(--g700)':'var(--red)';
+
+  const tbody=tW('cgt-steps');
+  if(!sell||!buy){
+    tbody.innerHTML='<tr><td colspan="2" style="text-align:center;color:var(--muted);padding:20px;font-size:12px">취득·양도가액을 입력하세요</td></tr>';
+    tW('cgt-total').textContent='0원';tW('cgt-sub').textContent='';tW('cgt-taxbase').textContent='—';tW('cgt-badges').innerHTML='';
+    return;
+  }
+
+  let rows=[];
+  rows.push(['양도가액',tFmtFull(sell),'']);
+  rows.push(['(-) 취득가액',tFmtFull(buy),'neg']);
+  rows.push(['(-) 필요경비',tFmtFull(expense),'neg']);
+  rows.push(['= 양도차익',tFmtFull(gain),gain>=0?'pos':'neg']);
+
+  let taxableGain=gain,badges='';
+
+  // 1주택 비과세
+  if(at==='house1'&&years>=2){
+    if(sell<=1200000000){
+      tW('cgt-total').textContent='0원';tW('cgt-total').className='t-result-value green';
+      tW('cgt-sub').textContent='1세대 1주택 비과세 — 납부세액 없음';tW('cgt-taxbase').textContent='비과세';
+      tW('cgt-badges').innerHTML='<span class="t-badge green">✓ 전액 비과세</span>';
+      rows.push(['1세대 1주택 비과세','전액 면제','pos']);
+      tbody.innerHTML=rows.map(([k,v,c])=>`<tr><td class="t-step-key">${k}</td><td class="t-step-val ${c}">${v}</td></tr>`).join('');
+      drawCgtChart(buy,expense,at,adj,reside,sell);return;
+    } else {
+      taxableGain=gain*(sell-1200000000)/sell;
+      rows.push(['12억 초과 과세대상 차익',tFmtFull(taxableGain),'gold']);
+      badges+='<span class="t-badge gold">⚠ 12억 초과 일부과세</span>';
+    }
+  }
+
+  // 단기보유 세율
+  let shortRate=null;
+  if(months<12)shortRate=at.startsWith('house')?0.70:0.50;
+  else if(months<24&&at.startsWith('house'))shortRate=0.60;
+
+  // 장특공
+  let ltcDeduct=0;
+  if(shortRate===null&&at!=='house3'){
+    const noLtc=at==='house2'&&adj;
+    if(!noLtc){
+      const rate=ltcRate(at,years,reside);
+      ltcDeduct=taxableGain*rate;
+      if(ltcDeduct>0)rows.push([`(-) 장기보유특별공제 (${(rate*100).toFixed(0)}%)`,tFmtFull(ltcDeduct),'neg']);
+    } else rows.push(['장기보유특별공제','중과세 대상 — 미적용','neg']);
+  } else if(shortRate!==null)rows.push(['단기보유','장특공 미적용','neg']);
+
+  const taxBase=Math.max(0,taxableGain-ltcDeduct-2500000);
+  rows.push(['(-) 기본공제',tFmtFull(2500000),'neg']);
+  rows.push(['= 과세표준',tFmtFull(taxBase),'hl']);
+  tW('cgt-taxbase').textContent=tFmt(taxBase);
+
+  let tax=0;
+  if(shortRate!==null){
+    tax=taxBase*shortRate;
+    rows.push([`단기보유세율 (${(shortRate*100).toFixed(0)}%)`,tFmtFull(tax),'gold']);
+    badges+='<span class="t-badge red">⚠ 단기보유 중과</span>';
+  } else {
+    let surcharge=0;
+    if(at==='house2'&&adj){surcharge=0.20;badges+='<span class="t-badge red">⚠ 2주택 조정 중과</span>';}
+    if(at==='house3'&&adj){surcharge=0.30;badges+='<span class="t-badge red">⚠ 3주택 최고 중과</span>';}
+    const baseT=txBracket(taxBase);
+    const surT=taxBase*surcharge;
+    tax=baseT+surT;
+    rows.push(['산출세액',tFmtFull(baseT),'']);
+    if(surcharge>0)rows.push([`중과세 (+${surcharge*100}%p)`,tFmtFull(surT),'neg']);
+  }
+
+  const local=tax*0.10;
+  const total=tax+local;
+  rows.push(['(+) 지방소득세 (10%)',tFmtFull(local),'neg']);
+  rows.push(['최종 납부세액',tFmtFull(total),'hl']);
+
+  tW('cgt-total').textContent=tFmtFull(total);
+  tW('cgt-total').className='t-result-value red';
+  tW('cgt-sub').textContent=`양도세 ${tFmtFull(tax)} + 지방소득세 ${tFmtFull(local)}`;
+  tW('cgt-badges').innerHTML=badges;
+  tbody.innerHTML=rows.map(([k,v,c])=>`<tr><td class="t-step-key">${k}</td><td class="t-step-val ${c}">${v}</td></tr>`).join('');
+  drawCgtChart(buy,expense,at,adj,reside,sell);
+}
+
+function drawCgtChart(buy,expense,type,adj,reside,currentSell){
+  const ctx=tW('cgt-chart')?.getContext('2d');
+  if(!ctx)return;
+  if(cgtChart)cgtChart.destroy();
+  const labels=[],taxes=[];
+  const sell=currentSell||buy*1.5;
+  for(let y=1;y<=15;y++){
+    labels.push(y+'년');
+    const g=Math.max(0,sell-buy-expense);
+    let tg=g;
+    if(type==='house1'&&y>=2&&sell<=1200000000){taxes.push(0);continue;}
+    if(type==='house1'&&y>=2&&sell>1200000000)tg=g*(sell-1200000000)/sell;
+    let sr=null;
+    if(y<1)sr=type.startsWith('house')?0.70:0.50;
+    else if(y<2&&type.startsWith('house'))sr=0.60;
+    const noLtc=(type==='house2'&&adj)||type==='house3';
+    let ltc=0;
+    if(sr===null&&!noLtc)ltc=tg*ltcRate(type,y,Math.min(reside,y));
+    const base=Math.max(0,tg-ltc-2500000);
+    let tx=sr!==null?base*sr:txBracket(base);
+    if(type==='house2'&&adj)tx+=base*0.20;
+    if(type==='house3'&&adj)tx+=base*0.30;
+    taxes.push(Math.round((tx+tx*0.10)/10000));
+  }
+  cgtChart=new Chart(ctx,{type:'bar',
+    data:{labels,datasets:[{label:'납부세액(만원)',data:taxes,backgroundColor:'rgba(224,82,82,.75)',borderRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:'rgba(0,0,0,.04)'},ticks:{color:'#8a9aaa',font:{size:10}}},
+              y:{grid:{color:'rgba(0,0,0,.04)'},ticks:{color:'#8a9aaa',font:{size:10},callback:v=>v.toLocaleString()+'만'}}}}
+  });
+}
+
+// ════ 취득세 ════
+function calcAcq(){
+  const type=tW('acq-type')?.value;
+  const asset=tW('acq-asset')?.value;
+  const price=tV('acq-price');
+  const count=parseInt(tW('acq-count')?.value)||1;
+  const adj=tW('acq-adj')?.value==='Y';
+  const area=tV('acq-area');
+  const isHouse=asset?.startsWith('house');
+  if(tW('acq-countWrap'))tW('acq-countWrap').style.display=isHouse?'block':'none';
+  if(tW('acq-adjWrap2'))tW('acq-adjWrap2').style.display=isHouse?'block':'none';
+  if(tW('acq-areaWrap'))tW('acq-areaWrap').style.display=isHouse?'block':'none';
+  if(!price){
+    if(tW('acq-total'))tW('acq-total').textContent='0원';
+    return;
+  }
+  let rate=0,tipText='';
+  if(type==='inherit'){rate=0.028;tipText='상속 취득세 2.8% (농특세 별도)';}
+  else if(type==='gift'){
+    rate=isHouse?(adj&&count>=2?0.056:0.035):0.035;
+    tipText=`증여 취득세 ${(rate*100).toFixed(1)}% 적용`;
+  } else if(isHouse){
+    if(count===1){
+      if(price<=600000000){rate=0.01;tipText='6억 이하 주택 — 취득세율 1%';}
+      else if(price<=900000000){rate=Math.max(0.01,(price*2/300000000-3)/100);tipText='6억~9억 구간 — 취득세율 단계적 적용 (1~3%)';}
+      else{rate=0.03;tipText='9억 초과 주택 — 취득세율 3%';}
+    } else if(count===2){
+      rate=adj?0.08:0.01;tipText=adj?'조정지역 2주택 중과 8%':'비조정지역 2주택 일반세율';
+    } else {
+      rate=adj?0.12:0.08;tipText=adj?'조정지역 3주택 이상 최고세율 12%':'비조정지역 3주택 8%';
+    }
+  } else{rate=0.04;tipText='토지·상가·건물 기본 취득세율 4%';}
+
+  const acqTax=price*rate;
+  const eduTax=Math.round(acqTax*0.10);
+  const needAgri=isHouse&&(area===0||area>85)&&type==='buy'&&rate<=0.03;
+  const agriTax=needAgri?Math.round(price*0.002):(rate>0.03?Math.round(acqTax*0.10):0);
+  const total=acqTax+eduTax+agriTax;
+
+  tW('acq-s1').textContent=tFmt(acqTax);tW('acq-s2').textContent=tFmt(eduTax);
+  tW('acq-s3').textContent=needAgri?tFmt(agriTax):(rate>0.03?tFmt(agriTax):'면제');
+  tW('acq-total').textContent=tFmtFull(total);
+  tW('acq-sub').textContent=`취득세율 ${(rate*100).toFixed(2)}% 기준`;
+  if(tW('acq-tip-text'))tW('acq-tip-text').textContent=tipText;
+
+  const rows=[
+    ['취득가액',tFmtFull(price),''],
+    ['취득세율',`${(rate*100).toFixed(2)}%`,''],
+    ['취득세',tFmtFull(acqTax),'gold'],
+    ['지방교육세 (10%)',tFmtFull(eduTax),''],
+    ['농어촌특별세',needAgri?tFmtFull(agriTax):(rate>0.03?tFmtFull(agriTax):'면제 (85㎡ 이하)'),''],
+    ['총합계',tFmtFull(total),'hl'],
+  ];
+  tW('acq-steps').innerHTML=rows.map(([k,v,c])=>`<tr><td class="t-step-key">${k}</td><td class="t-step-val ${c}">${v}</td></tr>`).join('');
+}
+
+// ════ 연말정산 ════
+let yrCurStep=1;
+function calcEstWithholding(salary){
+  // 간이세액표 근사: 근로소득공제 + 본인 기본공제만 적용한 추정 산출세액
+  let ed=0;
+  if(salary<=5000000)ed=salary*0.70;
+  else if(salary<=15000000)ed=3500000+(salary-5000000)*0.40;
+  else if(salary<=45000000)ed=7500000+(salary-15000000)*0.15;
+  else if(salary<=100000000)ed=12000000+(salary-45000000)*0.05;
+  else ed=14750000;
+  ed=Math.round(ed);
+  const base=Math.max(0,salary-ed-1500000);
+  const computed=txBracket(base);
+  let earnC=0;
+  if(computed<=1300000)earnC=computed*0.55;
+  else earnC=715000+(computed-1300000)*0.30;
+  const earnCLimit=salary<=33000000?740000:salary<=70000000?660000:500000;
+  earnC=Math.min(Math.round(earnC),earnCLimit);
+  return Math.max(0,computed-earnC);
+}
+function resetPrepaidAuto(){
+  const p=tW('yr-prepaid'),pl=tW('yr-prepaidLocal');
+  if(p)p.dataset.auto='true';
+  if(pl)pl.dataset.auto='true';
+  yrCalc();
+}
+
+function addMortgageRow(){
+  const tpl=`<div class="yr-mortgage-row">
+    <div class="yr-mortgage-row-head">
+      <select class="t-sel yr-mortgage-type" onchange="yrCalc()">
+        <option value="1800">고정금리 + 비거치식 (한도 1,800만원)</option>
+        <option value="1500" selected>고정금리 또는 비거치식 (한도 1,500만원)</option>
+        <option value="500">기타 (한도 500만원)</option>
+      </select>
+      <button class="t-rm-btn" onclick="removeMortgageRow(this)" title="삭제">✕</button>
+    </div>
+    <div class="t-inline" style="border:none;padding:0">
+      <span class="t-inline-label" style="font-size:11px">연간 이자상환액</span>
+      <input class="t-inline-inp yr-mortgage-amt" type="text" inputmode="numeric" placeholder="0" oninput="yrCalc()">
+      <span class="t-inline-unit">원</span>
+    </div>
+  </div>`;
+  const list=document.getElementById('yr-mortgage-list');
+  list.insertAdjacentHTML('beforeend',tpl);
+  updateMortgageRemoveBtns();
+  yrCalc();
+}
+function removeMortgageRow(btn){
+  const row=btn.closest('.yr-mortgage-row');
+  const list=document.getElementById('yr-mortgage-list');
+  if(list.querySelectorAll('.yr-mortgage-row').length<=1)return;
+  row.remove();
+  updateMortgageRemoveBtns();
+  yrCalc();
+}
+function updateMortgageRemoveBtns(){
+  const list=document.getElementById('yr-mortgage-list');
+  if(!list)return;
+  const rows=list.querySelectorAll('.yr-mortgage-row');
+  rows.forEach(r=>{
+    const btn=r.querySelector('.t-rm-btn');
+    if(btn)btn.style.visibility=rows.length===1?'hidden':'visible';
+  });
+}
+
+function setDRow(id,amount){
+  const el=tW(id);if(!el)return;
+  const sp=el.querySelector('span');if(!sp)return;
+  sp.textContent=tFmtFull(amount);
+  sp.className=amount?'amt':'zero';
+}
+
+function goYrStep(n){
+  yrCurStep=n;
+  for(let i=1;i<=4;i++){
+    const sc=tW('yrstep'+i),sp=tW('ysp'+i);
+    if(!sc||!sp)continue;
+    sc.classList.toggle('active',i===n);
+    sp.classList.remove('current','done','locked');
+    if(i<n)sp.classList.add('done');
+    else if(i===n)sp.classList.add('current');
+    else sp.classList.add('locked');
+  }
+  if(n===3){
+    // 4대보험 자동추정 (과세 총급여 기준)
+    const gross=tV('yr-salary')+tV('yr-bonus')+tV('yr-other');
+    const nontax=Math.min(tV('yr-meal'),2400000)+Math.min(tV('yr-car'),2400000)+tV('yr-nontax');
+    const s=Math.max(0,gross-nontax);
+    if(!tW('yr-pension').value)tW('yr-pension').value=Math.round(s*0.045).toLocaleString('ko-KR');
+    if(!tW('yr-health').value)tW('yr-health').value=Math.round(s*0.03545).toLocaleString('ko-KR');
+    if(!tW('yr-employ').value)tW('yr-employ').value=Math.round(s*0.009).toLocaleString('ko-KR');
+  }
+  yrCalc();
+}
+
+function yrCalc(){
+  // ── 총급여 & 비과세 ──
+  const grossSalary=tV('yr-salary')+tV('yr-bonus')+tV('yr-other');
+  const mealNontax=Math.min(tV('yr-meal'),2400000);
+  const carNontax=Math.min(tV('yr-car'),2400000);
+  const otherNontax=tV('yr-nontax');
+  const totalNontax=mealNontax+carNontax+otherNontax;
+  const salary=Math.max(0,grossSalary-totalNontax);
+
+  setDRow('yr-meal-r',mealNontax);
+  setDRow('yr-car-r',carNontax);
+  if(tW('yr-totalSalary'))tW('yr-totalSalary').textContent=salary?tFmtFull(salary):'0원';
+
+  // 현 직장 원천징수 자동 추정
+  const prepaidEl=tW('yr-prepaid'),prepaidLocalEl=tW('yr-prepaidLocal');
+  if(salary&&prepaidEl?.dataset.auto!=='false'){
+    const est=calcEstWithholding(salary);
+    const estL=Math.round(est*0.10);
+    if(prepaidEl)prepaidEl.value=est?est.toLocaleString('ko-KR'):'';
+    if(prepaidLocalEl)prepaidLocalEl.value=estL?estL.toLocaleString('ko-KR'):'';
+  }
+
+  if(!salary){
+    if(tW('yr-result-value')){tW('yr-result-value').textContent='—';tW('yr-result-value').style.color='var(--muted)';}
+    if(tW('yr-result-sub'))tW('yr-result-sub').textContent='급여를 입력하면 실시간으로 계산됩니다';
+    if(tW('yr-steps'))tW('yr-steps').innerHTML='<tr><td colspan="2" style="text-align:center;color:var(--muted);padding:20px;font-size:12px">급여를 입력해주세요</td></tr>';
+    return;
+  }
+
+  // ── 근로소득공제 ──
+  let ed=0;
+  if(salary<=5000000)ed=salary*0.70;
+  else if(salary<=15000000)ed=3500000+(salary-5000000)*0.40;
+  else if(salary<=45000000)ed=7500000+(salary-15000000)*0.15;
+  else if(salary<=100000000)ed=12000000+(salary-45000000)*0.05;
+  else ed=14750000;
+  ed=Math.round(ed);
+  const earnIncome=salary-ed;
+
+  // ── 인적공제 ──
+  const spouse=parseInt(tW('yr-spouse')?.value||0);
+  const dep=parseInt(tW('yr-dep')?.value||0);
+  const senior=parseInt(tW('yr-senior')?.value||0);
+  const disabled=parseInt(tW('yr-disabled')?.value||0);
+  const woman=parseInt(tW('yr-woman')?.value||0);
+  const single=parseInt(tW('yr-single')?.value||0);
+  const personalDeduct=1500000+spouse*1500000+dep*1500000+senior*1000000+disabled*2000000+woman*500000+single*1000000;
+  if(tW('yr-personalTotal'))tW('yr-personalTotal').textContent=tFmtFull(personalDeduct);
+
+  // ── 4대보험 ──
+  const pension4=tV('yr-pension'),health=tV('yr-health'),employ=tV('yr-employ');
+  const ins4Total=pension4+health+employ;
+  setDRow('yr-ins4-r',ins4Total);
+
+  // ── 카드 소득공제 ──
+  const credit=tV('yr-credit'),debit=tV('yr-debit'),market=tV('yr-market');
+  let cardD=0;
+  const totalCard=credit+debit+market;
+  const cardThresh=salary*0.25;
+  if(totalCard>cardThresh){
+    let rem=totalCard-cardThresh;
+    const cOver=Math.min(rem,credit);rem-=cOver;
+    const dOver=Math.min(rem,debit);rem-=dOver;
+    const mOver=Math.min(rem,market);
+    cardD=cOver*0.15+dOver*0.30+mOver*0.40;
+  }
+  const cardLimit=salary<=70000000?3000000:salary<=120000000?2500000:2000000;
+  cardD=Math.min(Math.round(cardD),cardLimit);
+  setDRow('yr-card-r',cardD);
+  const cardLimitLabel=salary<=70000000?'총급여 7천만↓ → 한도 300만원':salary<=120000000?'총급여 1.2억↓ → 한도 250만원':'총급여 1.2억↑ → 한도 200만원';
+  if(tW('yr-card-note'))tW('yr-card-note').textContent='('+cardLimitLabel+')';
+
+  // ── 주택청약 소득공제 ──
+  const cheongyak=tV('yr-cheongyak');
+  const cheongyakD=salary<=70000000?Math.min(Math.round(cheongyak*0.40),960000):0;
+  setDRow('yr-cheongyak-r',cheongyakD);
+
+  // ── 장기주택저당차입금 이자상환 소득공제 (복수 대출) ──
+  let mortgageTotalInt=0,mortgageMaxLim=0;
+  document.querySelectorAll('#yr-mortgage-list .yr-mortgage-row').forEach(row=>{
+    const amt=rawNum(row.querySelector('.yr-mortgage-amt')?.value);
+    const lim=parseInt(row.querySelector('.yr-mortgage-type')?.value||1500)*10000;
+    mortgageTotalInt+=amt;
+    mortgageMaxLim=Math.max(mortgageMaxLim,lim);
+  });
+  if(!mortgageMaxLim)mortgageMaxLim=15000000;
+  const mortgageD=Math.min(mortgageTotalInt,mortgageMaxLim);
+  setDRow('yr-mortgage-r',mortgageD);
+
+  // ── 소득공제 합계 ──
+  const totalSoDeduct=ins4Total+cardD+cheongyakD+mortgageD;
+  if(tW('yr-deductTotal'))tW('yr-deductTotal').textContent=tFmtFull(totalSoDeduct);
+
+  // ── 과세표준 & 산출세액 ──
+  const taxBase=Math.max(0,earnIncome-personalDeduct-totalSoDeduct);
+  const computed=txBracket(taxBase);
+
+  // ── 근로소득세액공제 ──
+  let earnC=0;
+  if(computed<=1300000)earnC=computed*0.55;
+  else earnC=715000+(computed-1300000)*0.30;
+  const earnCLimit=salary<=33000000?740000:salary<=70000000?660000:500000;
+  earnC=Math.min(Math.round(earnC),earnCLimit);
+
+  // ── 보험료 세액공제 ──
+  const ins=tV('yr-insure'),insD=tV('yr-insureD');
+  const insC=Math.round(Math.min(ins,1000000)*0.12);
+  const insDC=Math.round(Math.min(insD,1000000)*0.15);
+  setDRow('yr-insure-r',insC);
+  setDRow('yr-insureD-r',insDC);
+
+  // ── 의료비 세액공제 ──
+  const med1=tV('yr-med1'),med2=tV('yr-med2');
+  const medUsed=med1+Math.min(med2,7000000);
+  const medC=Math.round(Math.max(0,medUsed-salary*0.03)*0.15);
+  setDRow('yr-med-r',medC);
+  if(tW('yr-med-note'))tW('yr-med-note').textContent='(3% 기준선: '+tFmt(Math.round(salary*0.03))+')';
+
+  // ── 교육비 세액공제 ──
+  const edu1=tV('yr-edu1'),edu2=tV('yr-edu2'),edu3=tV('yr-edu3');
+  const eduC=Math.round((Math.min(edu1,3000000)+Math.min(edu2,9000000)+edu3)*0.15);
+  setDRow('yr-edu-r',eduC);
+
+  // ── 연금저축·IRP 세액공제 ──
+  const p2=tV('yr-pension2'),irp=tV('yr-irp');
+  const p2cap=Math.min(p2,4000000);
+  const irpCap=Math.min(p2cap+irp,9000000)-p2cap;
+  const pRate=salary<=55000000?0.15:0.13;
+  const pensionC=Math.round((p2cap+irpCap)*pRate);
+  setDRow('yr-pension-r',pensionC);
+  if(tW('yr-pension-rate'))tW('yr-pension-rate').textContent='(공제율 '+(pRate*100)+'%)';
+
+  // ── 월세 세액공제 ──
+  const rent=tV('yr-rent');
+  let rentC=0,rentRate=0;
+  if(salary<=55000000)rentRate=0.17;
+  else if(salary<=70000000)rentRate=0.15;
+  if(rentRate>0)rentC=Math.round(Math.min(rent,10000000)*rentRate);
+  setDRow('yr-rent-r',rentC);
+  if(tW('yr-rent-rate'))tW('yr-rent-rate').textContent=rentRate?'(공제율 '+(rentRate*100)+'%)':'(총급여 7천만원 초과 — 공제 불가)';
+
+  // ── 기부금 세액공제 ──
+  const don1=tV('yr-donate1'),don2=tV('yr-donate2'),don3=Math.min(tV('yr-donate3'),20000000);
+  const hometownC=Math.min(don3,100000)+Math.max(0,don3-100000)*0.165;
+  const donC=Math.round(don1*0.15+Math.min(don2,10000000)*0.15+Math.max(0,don2-10000000)*0.30+hometownC);
+  setDRow('yr-donate-r',donC);
+
+  // ── 세액공제 합계 & 표준세액공제 비교 ──
+  // 특별세액공제(표준대상): 보험료·의료비·교육비·기부금
+  const specialC=Math.round(insC+insDC+medC+eduC+donC);
+  // 항상 유지되는 공제: 연금저축·IRP, 월세
+  const alwaysC=pensionC+rentC;
+  const individualTotal=specialC+alwaysC;
+  if(tW('yr-taxCreditTotal'))tW('yr-taxCreditTotal').textContent=tFmtFull(individualTotal);
+
+  const standardC=130000;
+  const stdBody=tW('yr-standard-body');
+  if(stdBody){
+    if(specialC<standardC){
+      stdBody.innerHTML='⚠ 특별세액공제 합계('+tFmtFull(specialC)+')가 표준세액공제('+tFmtFull(standardC)+')보다 적습니다.<br><strong>표준세액공제 13만원 적용이 더 유리합니다.</strong> (자동 적용됨)';
+      stdBody.style.color='#b45309';
+    }else{
+      stdBody.innerHTML='✓ 특별세액공제 합계('+tFmtFull(specialC)+')가 표준세액공제('+tFmtFull(standardC)+')보다 큽니다.<br>개별 세액공제 적용이 유리합니다.';
+      stdBody.style.color='#1a5c38';
+    }
+  }
+
+  // ── 결정세액 (표준세액공제 자동 선택) ──
+  const appliedSpecialC=Math.max(specialC,standardC);
+  const totalC=Math.round(earnC+appliedSpecialC+alwaysC);
+  const finalTax=Math.max(0,computed-totalC);
+  const finalLocal=Math.round(finalTax*0.10);
+  const prepaid=tV('yr-prepaid')+tV('yr-prevPaid');
+  const prepaidLocal=tV('yr-prepaidLocal')+tV('yr-prevPaidLocal');
+  const refund=(prepaid+prepaidLocal)-(finalTax+finalLocal);
+
+  // ── 결과 표시 ──
+  const rv=tW('yr-result-value');
+  if(rv){
+    if(refund>=0){rv.textContent='+'+tFmtFull(refund);rv.style.color='var(--g700)';}
+    else{rv.textContent=tFmtFull(-refund);rv.style.color='var(--red)';}
+  }
+  if(tW('yr-result-label'))tW('yr-result-label').textContent=refund>=0?'환급 예상액':'추가납부 예상액';
+  if(tW('yr-result-sub'))tW('yr-result-sub').textContent=refund>=0?'기납부세액 > 결정세액 — 환급':'결정세액 > 기납부세액 — 추가납부';
+  if(tW('yr-result-badge'))tW('yr-result-badge').innerHTML=refund>=0?'<span class="t-badge green">✓ 환급</span>':'<span class="t-badge red">⚠ 추가납부</span>';
+
+  // ── 흐름 테이블 ──
+  const specialLabel=appliedSpecialC===standardC&&specialC<standardC?'(-) 특별세액공제 (표준 13만원 적용)':'(-) 특별세액공제';
+  const steps=[
+    ['총 급여액 (과세+비과세)',tFmtFull(grossSalary),''],
+    ['(-) 비과세 항목',tFmtFull(totalNontax),'neg'],
+    ['= 과세 총급여',tFmtFull(salary),'pos'],
+    ['(-) 근로소득공제',tFmtFull(ed),'neg'],
+    ['= 근로소득금액',tFmtFull(earnIncome),'pos'],
+    ['(-) 인적공제',tFmtFull(personalDeduct),'neg'],
+    ['(-) 소득공제 합계',tFmtFull(totalSoDeduct),'neg'],
+    ['= 과세표준',tFmtFull(taxBase),'hl'],
+    ['산출세액',tFmtFull(computed),'gold'],
+    ['(-) 근로소득세액공제',tFmtFull(earnC),'neg'],
+    [specialLabel,tFmtFull(appliedSpecialC),'neg'],
+    ['(-) 연금·월세 세액공제',tFmtFull(alwaysC),'neg'],
+    ['= 결정세액 (소득세)',tFmtFull(finalTax),'hl'],
+    ['지방소득세 (10%)',tFmtFull(finalLocal),''],
+    ['기납부세액 (현 직장)',tFmtFull(tV('yr-prepaid')+tV('yr-prepaidLocal')),'pos'],
+    ...(tV('yr-prevPaid')||tV('yr-prevPaidLocal')?[['기납부세액 (전 직장)',tFmtFull(tV('yr-prevPaid')+tV('yr-prevPaidLocal')),'pos']]:[]),
+    ['기납부세액 합계',tFmtFull(prepaid+prepaidLocal),'pos'],
+    [refund>=0?'★ 환급액':'★ 추가납부',refund>=0?'+'+tFmtFull(refund):tFmtFull(-refund),refund>=0?'pos':'neg'],
+  ];
+  if(tW('yr-steps'))tW('yr-steps').innerHTML=steps.map(([k,v,c])=>`<tr><td class="t-step-key">${k}</td><td class="t-step-val ${c}">${v}</td></tr>`).join('');
+
+  // ── 절세 팁 ──
+  const tips=[];
+  const irpRoom=9000000-p2cap-irpCap;
+  if(irpRoom>0&&irpRoom<9000000)tips.push(`IRP 여유 한도 ${tFmt(irpRoom)} 추가 시 세액공제 ${tFmt(Math.round(irpRoom*pRate))} 절감 가능`);
+  if(p2<4000000)tips.push(`연금저축 잔여 한도 ${tFmt(4000000-p2)} — 납입 확대 권장`);
+  if(specialC<standardC)tips.push('표준세액공제(13만원) 자동 적용 중 — 보험료·의료비·교육비·기부금 지출이 늘면 개별 공제로 전환됩니다');
+  if(!tips.length)tips.push('연금저축·IRP 한도 활용 시 절세 효과가 큽니다.');
+  if(tW('yr-tip-text'))tW('yr-tip-text').innerHTML=tips.map(t=>`• ${t}`).join('<br>');
+}
 </script>
 </body>
 </html>
