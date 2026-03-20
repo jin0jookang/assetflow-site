@@ -518,7 +518,7 @@ canvas#donut{width:160px;height:160px}
 .pl-layout{display:grid;grid-template-columns:400px 1fr;gap:20px;padding:20px 24px;max-width:1480px;margin:0 auto;align-items:start}
 @media(max-width:1100px){.pl-layout{grid-template-columns:1fr}}
 .pl-section-label{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
-.pl-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(226,236,230,.4)}
+.pl-row{display:flex;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid rgba(226,236,230,.4)}
 .pl-row:last-child{border-bottom:none}
 .pl-row-label{font-size:12px;color:var(--text2);flex:1}
 .pl-row-inp{width:110px;text-align:right}
@@ -567,6 +567,25 @@ canvas#donut{width:160px;height:160px}
 .pl-tip.good .pl-tip-title{color:#15803d}
 .pl-tip.tip .pl-tip-title{color:#1d4ed8}
 .pl-tip-body{font-size:11px;color:var(--text2);line-height:1.6;margin-left:22px}
+.pl-label-inp{border:none;background:transparent;font-size:12px;color:var(--text2);flex:1;padding:0;outline:none;min-width:60px}
+.pl-label-inp:focus{color:var(--g900);background:var(--g50);padding:2px 5px;border-radius:4px}
+.pl-del-btn{width:20px;height:20px;border-radius:50%;border:1.5px solid #f87171;background:transparent;color:#f87171;cursor:pointer;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;padding:0;font-size:16px;line-height:1;font-weight:300;opacity:0;pointer-events:none;transition:opacity .15s}
+.pl-del-btn:hover{background:#fee2e2}
+.pl-row:hover .pl-del-btn,.pl-row:focus-within .pl-del-btn{opacity:1;pointer-events:auto}
+.pl-add-row-btn{display:block;width:100%;padding:7px;margin:6px 0 4px;border:1.5px dashed var(--border);background:transparent;border-radius:8px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center}
+.pl-add-row-btn:hover{border-color:var(--g300);color:var(--g700);background:var(--g50)}
+.pl-chart-controls{display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:8px}
+.pl-chart-filters{display:flex;gap:5px;flex-wrap:wrap}
+.pl-filter-btn{padding:4px 11px;border-radius:100px;border:1.5px solid var(--border);background:transparent;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s}
+.pl-filter-btn[data-key="inc"].active{background:#dcfce7;border-color:#86efac;color:#15803d}
+.pl-filter-btn[data-key="liv"].active{background:#fee2e2;border-color:#fca5a5;color:#dc2626}
+.pl-filter-btn[data-key="mgt"].active{background:#fff7ed;border-color:#fdba74;color:#c2410c}
+.pl-filter-btn[data-key="fin"].active{background:#eff6ff;border-color:#93c5fd;color:#1d4ed8}
+.pl-filter-btn[data-key="sur"].active{background:var(--g50);border-color:var(--g300);color:var(--g700)}
+.pl-filter-btn.all-btn{border-style:dashed}
+.pl-chart-type{display:flex;gap:3px;background:var(--bg);padding:3px;border-radius:8px;border:1px solid var(--border)}
+.pl-type-btn{padding:4px 12px;border-radius:6px;border:none;background:transparent;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer}
+.pl-type-btn.active{background:var(--white);color:var(--g700);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .rc-factor-score.pos{color:var(--g700)}.rc-factor-score.neg{color:var(--red)}.rc-factor-score.neu{color:var(--muted)}
 .rc-factor-bar-bg{height:5px;border-radius:3px;background:var(--border);overflow:hidden}
 .rc-factor-bar{height:100%;border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1)}
@@ -1386,10 +1405,11 @@ canvas#donut{width:160px;height:160px}
 
 <!-- PLANNER PAGE -->
 <div id="page-planner" class="page">
-  <div class="t-header">
-    <button class="t-back" onclick="show('home')">← 홈</button>
-    <div class="t-title">📊 개인 자산 플래너</div>
-    <div class="t-subtitle">월별 자금흐름 손익계산서</div>
+  <div class="tax-nav">
+    <button class="back-btn" onclick="goHome()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 홈</button>
+    <span class="div-nav-title">📊 개인 자산 플래너</span>
+    <div class="nav-spacer"></div>
+    <span style="font-size:11px;color:var(--muted);font-weight:600">월별 자금흐름 손익계산서</span>
   </div>
 
   <!-- 월 선택 바 -->
@@ -1402,55 +1422,37 @@ canvas#donut{width:160px;height:160px}
   </div>
 
   <div class="pl-layout">
-    <!-- LEFT: 입력 -->
+    <!-- LEFT: 입력 (동적 렌더링) -->
     <div>
-      <!-- 수익 -->
       <div class="t-panel">
         <div class="t-panel-title" style="color:var(--g700)">💰 수익</div>
         <div class="t-body">
-          <div class="pl-row"><span class="pl-row-label">월 실수령액</span><input class="t-inp pl-row-inp" id="pl-netSalary" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">월 상여액</span><input class="t-inp pl-row-inp" id="pl-bonus" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">기타 수익 <small style="color:var(--muted)">부업·임대·이자</small></span><input class="t-inp pl-row-inp" id="pl-otherIncome" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
+          <div id="pl-rows-inc"></div>
+          <button class="pl-add-row-btn" onclick="plAddRow('inc')">＋ 항목 추가</button>
           <div class="pl-subtotal-row"><span class="pl-subtotal-label">수익 합계</span><span class="pl-subtotal-val" id="pl-sub-income">—</span></div>
         </div>
       </div>
-
-      <!-- 생활비 -->
       <div class="t-panel">
         <div class="t-panel-title">🛒 생활비</div>
         <div class="t-body">
-          <div class="pl-row"><span class="pl-row-label">통신비</span><input class="t-inp pl-row-inp" id="pl-telecom" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">교통비</span><input class="t-inp pl-row-inp" id="pl-transport" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">개인 용돈</span><input class="t-inp pl-row-inp" id="pl-allowance" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">식비</span><input class="t-inp pl-row-inp" id="pl-food" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">기타 생활비</span><input class="t-inp pl-row-inp" id="pl-otherLiving" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
+          <div id="pl-rows-liv"></div>
+          <button class="pl-add-row-btn" onclick="plAddRow('liv')">＋ 항목 추가</button>
           <div class="pl-subtotal-row"><span class="pl-subtotal-label">생활비 소계</span><span class="pl-subtotal-val" id="pl-sub-living">—</span></div>
         </div>
       </div>
-
-      <!-- 관리비 -->
       <div class="t-panel">
         <div class="t-panel-title">🏢 관리비</div>
         <div class="t-body">
-          <div class="pl-row"><span class="pl-row-label">보험료</span><input class="t-inp pl-row-inp" id="pl-insurance" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">아파트 관리비</span><input class="t-inp pl-row-inp" id="pl-aptMaint" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">모임비</span><input class="t-inp pl-row-inp" id="pl-socialClub" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">세금 및 공과금</span><input class="t-inp pl-row-inp" id="pl-taxUtil" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">기타 관리비</span><input class="t-inp pl-row-inp" id="pl-otherMgmt" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
+          <div id="pl-rows-mgt"></div>
+          <button class="pl-add-row-btn" onclick="plAddRow('mgt')">＋ 항목 추가</button>
           <div class="pl-subtotal-row"><span class="pl-subtotal-label">관리비 소계</span><span class="pl-subtotal-val" id="pl-sub-mgmt">—</span></div>
         </div>
       </div>
-
-      <!-- 금융 -->
       <div class="t-panel">
         <div class="t-panel-title">📈 금융</div>
         <div class="t-body">
-          <div class="pl-row"><span class="pl-row-label">이자비용 <small style="color:var(--muted)">대출 이자</small></span><input class="t-inp pl-row-inp" id="pl-interest" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">주식 투자</span><input class="t-inp pl-row-inp" id="pl-stocks" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">IRP · 연금저축</span><input class="t-inp pl-row-inp" id="pl-pension" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">펀드</span><input class="t-inp pl-row-inp" id="pl-fund" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">주택청약</span><input class="t-inp pl-row-inp" id="pl-housing" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
-          <div class="pl-row"><span class="pl-row-label">기타 금융</span><input class="t-inp pl-row-inp" id="pl-otherFin" placeholder="0" oninput="moneyFmt(this);plUpdate()"></div>
+          <div id="pl-rows-fin"></div>
+          <button class="pl-add-row-btn" onclick="plAddRow('fin')">＋ 항목 추가</button>
           <div class="pl-subtotal-row"><span class="pl-subtotal-label">금융 소계</span><span class="pl-subtotal-val" id="pl-sub-fin">—</span></div>
         </div>
       </div>
@@ -1458,7 +1460,6 @@ canvas#donut{width:160px;height:160px}
 
     <!-- RIGHT: 요약 + 컨설팅 -->
     <div>
-      <!-- 이번 달 요약 -->
       <div class="t-result-main" style="margin-bottom:14px">
         <div class="t-result-label" id="pl-summary-month-label">이번 달 요약</div>
         <div class="pl-surplus-box" id="pl-surplus-box" style="margin-bottom:14px">
@@ -1499,10 +1500,10 @@ canvas#donut{width:160px;height:160px}
     </div>
   </div>
 
-  <!-- 12개월 현황 테이블 (전폭) -->
+  <!-- 12개월 현황 (전폭) -->
   <div style="padding:0 24px 20px;max-width:1480px;margin:0 auto">
     <div class="t-panel">
-      <div class="t-panel-title">📅 12개월 자금흐름 현황</div>
+      <div class="t-panel-title">📅 12M Cash Flow</div>
       <div class="t-body">
         <div class="pl-table-wrap">
           <table class="pl-table">
@@ -1520,8 +1521,22 @@ canvas#donut{width:160px;height:160px}
             <tbody id="pl-table-body"></tbody>
           </table>
         </div>
-        <!-- 차트 -->
-        <div style="height:220px;margin-top:16px">
+        <!-- 차트 컨트롤 -->
+        <div class="pl-chart-controls">
+          <div class="pl-chart-filters">
+            <button class="pl-filter-btn active" data-key="inc" onclick="plToggleFilter('inc',this)">수익</button>
+            <button class="pl-filter-btn active" data-key="liv" onclick="plToggleFilter('liv',this)">생활비</button>
+            <button class="pl-filter-btn active" data-key="mgt" onclick="plToggleFilter('mgt',this)">관리비</button>
+            <button class="pl-filter-btn active" data-key="fin" onclick="plToggleFilter('fin',this)">금융</button>
+            <button class="pl-filter-btn active" data-key="sur" onclick="plToggleFilter('sur',this)">잉여금</button>
+            <button class="pl-filter-btn all-btn" onclick="plFilterAll()">전체 토글</button>
+          </div>
+          <div class="pl-chart-type">
+            <button class="pl-type-btn active" onclick="plSetChartType('bar',this)">막대</button>
+            <button class="pl-type-btn" onclick="plSetChartType('line',this)">선형</button>
+          </div>
+        </div>
+        <div style="height:240px;margin-top:10px">
           <canvas id="pl-chart"></canvas>
         </div>
       </div>
@@ -3708,23 +3723,103 @@ function calcReco(){
 // 개인 자산 플래너
 // ════════════════════════════════════════
 const PL_MONTHS=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-const PL_INC=['pl-netSalary','pl-bonus','pl-otherIncome'];
-const PL_LIV=['pl-telecom','pl-transport','pl-allowance','pl-food','pl-otherLiving'];
-const PL_MGT=['pl-insurance','pl-aptMaint','pl-socialClub','pl-taxUtil','pl-otherMgmt'];
-const PL_FIN=['pl-interest','pl-stocks','pl-pension','pl-fund','pl-housing','pl-otherFin'];
-const PL_ALL=[...PL_INC,...PL_LIV,...PL_MGT,...PL_FIN];
 
-let plannerData=Array(12).fill(null).map(()=>{const o={};PL_ALL.forEach(k=>o[k]=0);return o;});
+// 행 정의 (전체 월 공유) — label 수정 가능, 삭제 가능
+let plannerRows={
+  inc:[
+    {id:'pr_netSalary',label:'월 실수령액'},
+    {id:'pr_bonus',label:'월 상여액'},
+    {id:'pr_otherIncome',label:'기타 수익'},
+  ],
+  liv:[
+    {id:'pr_telecom',label:'통신비'},
+    {id:'pr_transport',label:'교통비'},
+    {id:'pr_allowance',label:'개인 용돈'},
+    {id:'pr_food',label:'식비'},
+    {id:'pr_otherLiving',label:'기타 생활비'},
+  ],
+  mgt:[
+    {id:'pr_insurance',label:'보험료'},
+    {id:'pr_aptMaint',label:'아파트 관리비'},
+    {id:'pr_socialClub',label:'모임비'},
+    {id:'pr_taxUtil',label:'세금 및 공과금'},
+    {id:'pr_otherMgmt',label:'기타 관리비'},
+  ],
+  fin:[
+    {id:'pr_interest',label:'이자비용'},
+    {id:'pr_stocks',label:'주식 투자'},
+    {id:'pr_pension',label:'IRP · 연금저축'},
+    {id:'pr_fund',label:'펀드'},
+    {id:'pr_housing',label:'주택청약'},
+    {id:'pr_otherFin',label:'기타 금융'},
+  ],
+};
+
+// 값: plannerData[month][rowId] = number
+let plannerData=Array(12).fill(null).map(()=>({}));
 let plannerMonth=0;
 let plChart=null;
+let plChartType='bar';
+let plChartFilters={inc:true,liv:true,mgt:true,fin:true,sur:true};
+let plRowCounter=0;
+
+function plNewId(){return'pr_c'+(++plRowCounter);}
 
 function goPlanner(){show('page-planner');plInit();}
 
 function plInit(){
   const tabs=document.getElementById('pl-month-tabs');
   tabs.innerHTML=PL_MONTHS.map((n,i)=>`<button class="pl-month-tab${i===0?' active':''}" id="pl-tab-${i}" onclick="plSelectMonth(${i})">${n}</button>`).join('');
+  plRenderForm();
   plWriteForm(0);
   plUpdate();
+}
+
+// 카테고리별 행 렌더링
+function plRenderFormCat(cat){
+  const container=document.getElementById('pl-rows-'+cat);
+  if(!container)return;
+  container.innerHTML=plannerRows[cat].map(r=>`
+    <div class="pl-row" id="pl-rowdiv-${r.id}">
+      <button class="pl-del-btn" onclick="plDeleteRow('${cat}','${r.id}')" title="행 삭제">−</button>
+      <input class="pl-label-inp" value="${r.label}" placeholder="항목명" oninput="plUpdateLabel('${cat}','${r.id}',this.value)">
+      <input class="t-inp pl-row-inp" id="${r.id}" placeholder="0" oninput="moneyFmt(this);plUpdate()">
+    </div>`).join('');
+  // 저장된 값 복원
+  const d=plannerData[plannerMonth];
+  plannerRows[cat].forEach(r=>{
+    const el=document.getElementById(r.id);
+    if(el)el.value=d[r.id]?d[r.id].toLocaleString('ko-KR'):'';
+  });
+}
+
+function plRenderForm(){
+  ['inc','liv','mgt','fin'].forEach(cat=>plRenderFormCat(cat));
+}
+
+function plAddRow(cat){
+  plSaveForm();
+  const id=plNewId();
+  plannerRows[cat].push({id,label:'새 항목'});
+  plannerData.forEach(d=>d[id]=0);
+  plRenderFormCat(cat);
+  // 새 행의 라벨 인풋 포커스
+  const newDiv=document.getElementById('pl-rowdiv-'+id);
+  if(newDiv){const li=newDiv.querySelector('.pl-label-inp');if(li){li.focus();li.select();}}
+  plUpdate();
+}
+
+function plDeleteRow(cat,id){
+  plSaveForm();
+  plannerRows[cat]=plannerRows[cat].filter(r=>r.id!==id);
+  plannerData.forEach(d=>delete d[id]);
+  plRenderFormCat(cat);
+  plUpdate();
+}
+
+function plUpdateLabel(cat,id,label){
+  const row=plannerRows[cat].find(r=>r.id===id);
+  if(row)row.label=label;
 }
 
 function plSelectMonth(m){
@@ -3738,20 +3833,30 @@ function plSelectMonth(m){
 
 function plSaveForm(){
   const d=plannerData[plannerMonth];
-  PL_ALL.forEach(id=>{const el=document.getElementById(id);if(el)d[id]=rawNum(el.value);});
+  ['inc','liv','mgt','fin'].forEach(cat=>{
+    plannerRows[cat].forEach(r=>{
+      const el=document.getElementById(r.id);
+      if(el)d[r.id]=rawNum(el.value);
+    });
+  });
 }
 
 function plWriteForm(m){
   const d=plannerData[m];
-  PL_ALL.forEach(id=>{const el=document.getElementById(id);if(el)el.value=d[id]?d[id].toLocaleString('ko-KR'):'';});
+  ['inc','liv','mgt','fin'].forEach(cat=>{
+    plannerRows[cat].forEach(r=>{
+      const el=document.getElementById(r.id);
+      if(el)el.value=d[r.id]?d[r.id].toLocaleString('ko-KR'):'';
+    });
+  });
 }
 
 function plCalc(m){
   const d=plannerData[m];
-  const income=PL_INC.reduce((s,k)=>s+(d[k]||0),0);
-  const living=PL_LIV.reduce((s,k)=>s+(d[k]||0),0);
-  const mgmt=PL_MGT.reduce((s,k)=>s+(d[k]||0),0);
-  const fin=PL_FIN.reduce((s,k)=>s+(d[k]||0),0);
+  const income=plannerRows.inc.reduce((s,r)=>s+(d[r.id]||0),0);
+  const living=plannerRows.liv.reduce((s,r)=>s+(d[r.id]||0),0);
+  const mgmt=plannerRows.mgt.reduce((s,r)=>s+(d[r.id]||0),0);
+  const fin=plannerRows.fin.reduce((s,r)=>s+(d[r.id]||0),0);
   const expense=living+mgmt+fin;
   return{income,living,mgmt,fin,expense,surplus:income-expense,d};
 }
@@ -3795,7 +3900,8 @@ function plUpdateTabDots(){
   PL_MONTHS.forEach((_,i)=>{
     const tab=document.getElementById('pl-tab-'+i);
     if(!tab)return;
-    const hasData=PL_ALL.some(k=>(plannerData[i][k]||0)>0);
+    const d=plannerData[i];
+    const hasData=['inc','liv','mgt','fin'].some(cat=>plannerRows[cat].some(r=>(d[r.id]||0)>0));
     tab.classList.toggle('has-data',hasData);
   });
 }
@@ -3805,15 +3911,13 @@ function plApplyAll(btn){
   const src={...plannerData[plannerMonth]};
   plannerData.forEach((_,i)=>{if(i!==plannerMonth)Object.assign(plannerData[i],src);});
   plUpdate();
-  const orig=btn.textContent;
-  btn.textContent='✓ 적용 완료';
+  const orig=btn.textContent;btn.textContent='✓ 적용 완료';
   setTimeout(()=>btn.textContent=orig,1600);
 }
 
 function plResetMonth(){
   if(!confirm(PL_MONTHS[plannerMonth]+' 데이터를 초기화할까요?'))return;
-  const o={};PL_ALL.forEach(k=>o[k]=0);
-  plannerData[plannerMonth]=o;
+  plannerData[plannerMonth]={};
   plWriteForm(plannerMonth);
   plUpdate();
 }
@@ -3847,36 +3951,121 @@ function plRenderTable(){
   tbody.innerHTML=html;
 }
 
+function plToggleFilter(key,btn){
+  plChartFilters[key]=!plChartFilters[key];
+  btn.classList.toggle('active',plChartFilters[key]);
+  plRenderChart();
+}
+
+function plFilterAll(){
+  const allOn=Object.values(plChartFilters).every(v=>v);
+  const next=!allOn;
+  Object.keys(plChartFilters).forEach(k=>plChartFilters[k]=next);
+  document.querySelectorAll('.pl-filter-btn[data-key]').forEach(b=>b.classList.toggle('active',next));
+  plRenderChart();
+}
+
+function plSetChartType(type,btn){
+  plChartType=type;
+  document.querySelectorAll('.pl-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  plRenderChart();
+}
+
+let plActiveDs=null; // 클릭으로 강조된 데이터셋 인덱스
+function plHighlightDs(idx){
+  if(!plChart)return;
+  plActiveDs=idx;
+  plChart.data.datasets.forEach((ds,i)=>{
+    const base=ds._baseColor;
+    if(idx===null){
+      ds.borderColor=base.replace('1)','.45)');
+      ds.pointRadius=2;
+    } else if(i===idx){
+      ds.borderColor=base;
+      ds.borderWidth=3;
+      ds.pointRadius=4;
+    } else {
+      ds.borderColor=base.replace('1)','.15)');
+      ds.pointRadius=0;
+    }
+  });
+  plChart.update('none');
+}
+function plResetHighlight(){
+  if(!plChart)return;
+  plActiveDs=null;
+  plChart.data.datasets.forEach(ds=>{
+    ds.borderColor=ds._baseColor.replace('1)','.45)');
+    ds.borderWidth=2;
+    ds.pointRadius=2;
+  });
+  plChart.update('none');
+}
 function plRenderChart(){
   const canvas=document.getElementById('pl-chart');
   if(!canvas||typeof Chart==='undefined')return;
   const toMan=v=>Math.round(v/10000);
-  const inc=PL_MONTHS.map((_,i)=>toMan(plCalc(i).income));
-  const liv=PL_MONTHS.map((_,i)=>toMan(plCalc(i).living));
-  const mgt=PL_MONTHS.map((_,i)=>toMan(plCalc(i).mgmt));
-  const fin=PL_MONTHS.map((_,i)=>toMan(plCalc(i).fin));
-  const sur=PL_MONTHS.map((_,i)=>toMan(plCalc(i).surplus));
+  const iBar=plChartType==='bar';
+  const RAW=[
+    {label:'수익',   key:'inc', color:'rgba(34,197,94,1)',  data:PL_MONTHS.map((_,i)=>toMan(plCalc(i).income))},
+    {label:'생활비', key:'liv', color:'rgba(239,68,68,1)',  data:PL_MONTHS.map((_,i)=>toMan(plCalc(i).living))},
+    {label:'관리비', key:'mgt', color:'rgba(249,115,22,1)', data:PL_MONTHS.map((_,i)=>toMan(plCalc(i).mgmt))},
+    {label:'금융',   key:'fin', color:'rgba(59,130,246,1)', data:PL_MONTHS.map((_,i)=>toMan(plCalc(i).fin))},
+    {label:'잉여금', key:'sur', color:'rgba(26,92,56,1)',   data:PL_MONTHS.map((_,i)=>toMan(plCalc(i).surplus))},
+  ].filter(r=>plChartFilters[r.key]);
+  const datasets=RAW.map(r=>{
+    if(iBar) return{
+      label:r.label, data:r.data, type:'bar',
+      _baseColor:r.color,
+      backgroundColor:r.color.replace('1)','.75)'),
+      hoverBackgroundColor:r.color,
+      borderColor:'transparent', borderWidth:0,
+      borderRadius:4,
+    };
+    return{
+      label:r.label, data:r.data, type:'line',
+      _baseColor:r.color,
+      borderColor:r.color.replace('1)','.45)'),
+      hoverBorderColor:r.color,
+      backgroundColor:'transparent',
+      borderWidth:2,
+      pointRadius:2,
+      pointHoverRadius:6,
+      pointBackgroundColor:r.color.replace('1)','.45)'),
+      pointHoverBackgroundColor:r.color,
+      pointHoverBorderColor:'#fff', pointHoverBorderWidth:2,
+      tension:.35, fill:false,
+    };
+  });
   if(plChart)plChart.destroy();
+  plActiveDs=null;
   plChart=new Chart(canvas,{
-    data:{
-      labels:PL_MONTHS,
-      datasets:[
-        {type:'bar',label:'수익',data:inc,backgroundColor:'rgba(74,179,74,.7)',borderRadius:3,order:2},
-        {type:'bar',label:'생활비',data:liv,backgroundColor:'rgba(239,68,68,.6)',borderRadius:3,order:2},
-        {type:'bar',label:'관리비',data:mgt,backgroundColor:'rgba(249,115,22,.55)',borderRadius:3,order:2},
-        {type:'bar',label:'금융',data:fin,backgroundColor:'rgba(59,130,246,.6)',borderRadius:3,order:2},
-        {type:'line',label:'잉여금',data:sur,borderColor:'#1a5c38',backgroundColor:'transparent',pointBackgroundColor:'#1a5c38',tension:.35,borderWidth:2,pointRadius:4,order:1},
-      ]
-    },
+    type:iBar?'bar':'line',
+    data:{labels:PL_MONTHS,datasets},
     options:{
       responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{font:{size:11},color:'#4a5568',boxWidth:12}},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y.toLocaleString()}만원`}}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{font:{size:11},color:'#4a5568',boxWidth:12}},
+        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y.toLocaleString()}만원`}},
+      },
       scales:{
         x:{grid:{display:false},ticks:{color:'#8a9aaa',font:{size:11}}},
-        y:{grid:{color:'rgba(0,0,0,.04)'},ticks:{color:'#8a9aaa',font:{size:10},callback:v=>v+'만'}}
-      }
-    }
+        y:{grid:{color:'rgba(0,0,0,.04)'},ticks:{color:'#8a9aaa',font:{size:10},callback:v=>v.toLocaleString('ko-KR')+'만'}},
+      },
+      onClick(e){
+        if(iBar)return;
+        const pts=plChart.getElementsAtEventForMode(e,'nearest',{intersect:false},true);
+        if(!pts.length){plResetHighlight();return;}
+        const idx=pts[0].datasetIndex;
+        if(plActiveDs===idx)plResetHighlight();
+        else plHighlightDs(idx);
+      },
+    },
   });
+  // 마우스 이탈 시 강조 초기화 (PC)
+  canvas.onmouseleave=()=>{if(!iBar&&plActiveDs===null)plResetHighlight();};
 }
 
 function plRenderConsult(){
@@ -3886,41 +4075,32 @@ function plRenderConsult(){
   const d=r.d;
   const hasData=r.income>0||r.expense>0;
   if(!hasData){el.innerHTML='<div style="color:var(--muted);font-size:13px">데이터를 입력하면 개인화된 컨설팅이 표시됩니다.</div>';return;}
-
   const tips=[];
   if(r.surplus>0){
     tips.push({t:'good',icon:'💰',title:`월 잉여금 ${tFmt(r.surplus)}`,body:'잉여금이 발생했습니다. 아래 순서로 재테크를 추천합니다.'});
-    const pension=d['pl-pension']||0;
+    const pensionRow=plannerRows.fin.find(row=>row.label.includes('연금')||row.label.includes('IRP'));
+    const pensionAmt=pensionRow?(d[pensionRow.id]||0):0;
     const maxPension=Math.round(9000000/12);
-    if(pension<maxPension){
-      const room=maxPension-pension;
-      tips.push({t:'tip',icon:'🏦',title:'연금저축 · IRP 세액공제 여력 있음',body:`현재 월 ${tFmt(pension)} 납입 중입니다. 월 ${tFmt(room)} 추가 납입 시 연 최대 148만5천원 세액공제(13~15%) 혜택을 받을 수 있습니다. <strong>연금저축 → IRP</strong> 순으로 납입하세요.`});
+    if(pensionAmt<maxPension){
+      const room=maxPension-pensionAmt;
+      tips.push({t:'tip',icon:'🏦',title:'연금저축 · IRP 세액공제 여력 있음',body:`현재 월 ${tFmt(pensionAmt)} 납입 중. 월 ${tFmt(room)} 추가 납입 시 세액공제(13~15%) 최대화. <strong>연금저축 → IRP</strong> 순으로 납입하세요.`});
     }
-    if(!(d['pl-stocks']||0)&&!(d['pl-fund']||0)&&r.surplus>200000){
-      tips.push({t:'tip',icon:'📈',title:'주식 · ETF 분산투자 고려',body:'잉여금 일부를 국내외 ETF나 인덱스 펀드에 분산투자하면 장기 복리 효과를 기대할 수 있습니다.'});
-    }
-    if(!(d['pl-housing']||0)){
-      tips.push({t:'tip',icon:'🏠',title:'주택청약 납입 확인',body:'주택청약종합저축 미납입 시 월 2~50만원 납입으로 청약 자격을 유지하세요.'});
+    const stockRow=plannerRows.fin.find(row=>row.label.includes('주식')||row.label.includes('ETF'));
+    const fundRow=plannerRows.fin.find(row=>row.label.includes('펀드'));
+    if(!(stockRow&&(d[stockRow.id]||0))&&!(fundRow&&(d[fundRow.id]||0))&&r.surplus>200000){
+      tips.push({t:'tip',icon:'📈',title:'주식 · ETF 분산투자 고려',body:'잉여금 일부를 국내외 ETF에 분산투자하면 장기 복리 효과를 기대할 수 있습니다.'});
     }
   } else {
     tips.push({t:'bad',icon:'⚠️',title:`월 적자 ${tFmt(Math.abs(r.surplus))}`,body:'지출이 수익을 초과합니다. 아래 항목을 점검하세요.'});
-    const cats=[
-      {label:'통신비',val:d['pl-telecom']||0},
-      {label:'교통비',val:d['pl-transport']||0},
-      {label:'개인 용돈',val:d['pl-allowance']||0},
-      {label:'식비',val:d['pl-food']||0},
-      {label:'기타 생활비',val:d['pl-otherLiving']||0},
-      {label:'보험료',val:d['pl-insurance']||0},
-      {label:'아파트 관리비',val:d['pl-aptMaint']||0},
-      {label:'모임비',val:d['pl-socialClub']||0},
-      {label:'세금·공과금',val:d['pl-taxUtil']||0},
-      {label:'이자비용',val:d['pl-interest']||0},
+    const allExpense=[
+      ...plannerRows.liv.map(row=>({label:row.label,val:d[row.id]||0})),
+      ...plannerRows.mgt.map(row=>({label:row.label,val:d[row.id]||0})),
     ].filter(c=>c.val>0).sort((a,b)=>b.val-a.val);
-    cats.slice(0,2).forEach((c,idx)=>{
-      tips.push({t:'warn',icon:'✂️',title:`${c.label} ${tFmt(c.val)} — ${idx===0?'가장 큰':'두 번째로 큰'} 지출 항목`,body:`10% 절감 시 월 ${tFmt(Math.round(c.val*0.1))} 절약 가능합니다.`});
+    allExpense.slice(0,2).forEach((c,idx)=>{
+      tips.push({t:'warn',icon:'✂️',title:`${c.label} ${tFmt(c.val)} — ${idx===0?'가장 큰':'두 번째로 큰'} 지출`,body:`10% 절감 시 월 ${tFmt(Math.round(c.val*0.1))} 절약 가능합니다.`});
     });
-    if(r.fin>0&&r.income>0&&r.fin>r.income*0.4){
-      tips.push({t:'warn',icon:'📊',title:`금융 비중 과다 (수익의 ${Math.round(r.fin/r.income*100)}%)`,body:`금융 항목이 수익 대비 40%를 초과합니다. 일부 투자 금액 조정을 검토하세요.`});
+    if(r.income>0&&r.fin>r.income*0.4){
+      tips.push({t:'warn',icon:'📊',title:`금융 비중 ${Math.round(r.fin/r.income*100)}% — 과다`,body:'금융 항목이 수익 대비 40%를 초과합니다. 일부 투자 금액 조정을 검토하세요.'});
     }
   }
   if(r.income>0&&r.living/r.income>0.5){
