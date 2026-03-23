@@ -38,6 +38,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:0 32px 64px;max-width:1280px;margin:0 auto}
 @media(max-width:900px){.card-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){.card-grid{grid-template-columns:1fr}.hero{padding:40px 16px 24px}.section-row{padding:0 16px}.card-grid{padding:0 16px 48px}}
+@media(max-width:700px){.tax-hub-grid{grid-template-columns:1fr!important}}
 .tool-card{background:var(--white);border-radius:var(--radius);padding:28px 24px 24px;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s;box-shadow:var(--shadow);border:1px solid var(--border);display:flex;flex-direction:column;position:relative;overflow:hidden;animation:cardUp .5s ease both}
 .tool-card:nth-child(1){animation-delay:.04s}.tool-card:nth-child(2){animation-delay:.10s}.tool-card:nth-child(3){animation-delay:.16s}.tool-card:nth-child(4){animation-delay:.22s}
 @keyframes cardUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
@@ -280,6 +281,21 @@ canvas#donut{width:160px;height:160px}
 .modal-err{font-size:12px;color:var(--red);margin-top:8px;display:none}
 .modal-err.show{display:block}
 .pin-hint{font-size:11px;color:var(--muted);margin-top:6px}
+.save-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:8px;border:1.5px solid var(--g400);background:var(--white);color:var(--g700);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .15s}
+.save-btn:hover{background:var(--g50)}
+.save-btn:disabled{opacity:.4;cursor:not-allowed}
+.import-section{margin-bottom:18px}
+.import-section-title{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px}
+.import-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:all .15s}
+.import-card:hover{border-color:var(--g300);background:var(--g50)}
+.import-card.selected{border-color:var(--g700);background:var(--g50)}
+.import-card input[type=radio]{accent-color:var(--g700);flex-shrink:0}
+.import-card-info{flex:1;min-width:0}
+.import-card-name{font-size:12px;font-weight:700;color:var(--g900)}
+.import-card-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.import-card-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 5px;border-radius:4px}
+.import-card-del:hover{color:var(--red);background:#fee2e2}
+.import-empty{font-size:12px;color:var(--muted);padding:8px 0;text-align:center}
 
 /* ── MISC ── */
 .spin{display:inline-block;width:11px;height:11px;border:2px solid var(--g100);border-top-color:var(--g500);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
@@ -600,6 +616,82 @@ canvas#donut{width:160px;height:160px}
 .rc-factor-score.pos{color:var(--g700)}.rc-factor-score.neg{color:var(--red)}.rc-factor-score.neu{color:var(--muted)}
 .rc-factor-bar-bg{height:5px;border-radius:3px;background:var(--border);overflow:hidden}
 .rc-factor-bar{height:100%;border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* ── STOCK SCORE PANEL ── */
+.sa-score-main{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:14px;box-shadow:0 2px 12px rgba(26,92,56,.08)}
+.sa-score-value{font-size:52px;font-weight:900;letter-spacing:-2px;line-height:1;margin:8px 0 4px}
+.sa-score-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px}
+.sa-score-signal{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;font-size:13px;font-weight:800;margin-top:10px}
+.sa-score-signal.buy{background:#dcfce7;color:#15803d}
+.sa-score-signal.watch{background:#fef9c3;color:#854d0e}
+.sa-score-signal.caution{background:#fee2e2;color:#dc2626}
+/* ── 합산 스코어 ── */
+.sa-score-sum{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:18px 14px 16px;margin-bottom:14px;display:flex;align-items:stretch;gap:6px;box-shadow:0 2px 12px rgba(26,92,56,.08);flex-wrap:wrap}
+.sa-sum-item{flex:1;min-width:68px;text-align:center;background:var(--bg);border-radius:10px;padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:0}
+.sa-sum-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.2px;margin-bottom:3px;white-space:nowrap}
+.sa-sum-weight{font-size:9px;color:var(--muted);background:var(--border);border-radius:3px;padding:1px 5px;margin-bottom:8px;font-weight:600}
+.sa-sum-v{font-size:30px;font-weight:900;letter-spacing:-1px;line-height:1;margin-bottom:2px}
+.sa-sum-mx{font-size:10px;color:var(--muted);font-weight:500;margin-bottom:8px}
+.sa-sum-seg-bar{width:100%;height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden}
+.sa-sum-seg-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.sa-sum-op{flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#cbd5e1;padding:0 2px;align-self:center}
+.sa-sum-total{flex:1.3;min-width:80px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px}
+.sa-sum-total-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.4px;margin-bottom:6px}
+.sa-sum-big{font-size:52px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:4px}
+.sa-sum-denom{font-size:18px;font-weight:600;color:var(--muted);vertical-align:super;font-size:14px}
+.sa-sum-signal-row{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:100px;font-size:12px;font-weight:800;margin-top:6px}
+.sa-sum-signal-row.buy{background:#dcfce7;color:#15803d}
+.sa-sum-signal-row.watch{background:#fef9c3;color:#854d0e}
+.sa-sum-signal-row.caution{background:#fee2e2;color:#dc2626}
+.sa-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px}
+.sa-badge.good{background:#dcfce7;color:#15803d}
+.sa-badge.ok{background:#fef9c3;color:#854d0e}
+.sa-badge.bad{background:#fee2e2;color:#dc2626}
+/* ── 항목별 상세 점수 (redesign) ── */
+.sa-det-wrap{padding:12px 14px 16px;display:flex;flex-direction:column;gap:14px}
+.sa-det-group{display:flex;flex-direction:column;gap:6px}
+.sa-det-group-hd{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.sa-det-group-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sa-det-group-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.8px;text-transform:uppercase}
+.sa-det-item{background:var(--bg);border-radius:9px;padding:9px 11px;border:1px solid var(--border)}
+.sa-det-item-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.sa-det-item-name{font-size:12px;font-weight:600;color:var(--text);flex:1;min-width:0}
+.sa-det-pts{font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;line-height:1}
+.sa-det-max{font-size:10px;font-weight:500;color:var(--muted)}
+.sa-det-bar{height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden}
+.sa-det-bar-fill{height:100%;border-radius:3px;transition:width .4s ease}
+.sa-det-empty{padding:28px 16px;text-align:center;color:var(--muted);font-size:12px;line-height:1.6}
+/* ── 자동 계산 필드 ── */
+.t-inp-auto{background:#edfdf4!important;border-color:var(--g400)!important;color:var(--g700)!important;padding-right:42px!important}
+.t-field-auto-wrap{position:relative}
+.t-auto-badge{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;color:var(--g700);background:var(--g100);padding:2px 6px;border-radius:3px;pointer-events:none;display:none;white-space:nowrap}
+.t-field-auto-wrap .t-inp-auto~.t-auto-badge{display:block}
+.sa-radar-wrap{height:220px;margin-bottom:14px}
+.sa-theme-check{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;font-size:12px;font-weight:600;color:var(--text2);background:var(--white)}
+.sa-theme-check:hover{border-color:var(--g300);background:var(--g50)}
+.sa-theme-check.active{border-color:var(--g700);background:var(--g50);color:var(--g700)}
+.sa-12day{background:linear-gradient(135deg,var(--g900),#1a5fa8);border-radius:14px;padding:18px;color:#fff;margin-bottom:14px}
+.sa-12day-title{font-size:10px;font-weight:700;letter-spacing:1px;opacity:.7;margin-bottom:8px}
+.sa-12day-signal{font-size:20px;font-weight:900;margin-bottom:6px}
+.sa-12day-bars{display:flex;gap:3px;align-items:flex-end;height:36px;margin-top:10px}
+.sa-12day-bar{flex:1;border-radius:3px 3px 0 0;transition:height .3s ease}
+/* ── NEWS CHECK (악재 빨간색) ── */
+.sa-theme-check.sa-news-neg{border-color:#fca5a5;color:#dc2626}
+.sa-theme-check.sa-news-neg:hover{border-color:#f87171;background:#fff1f2}
+.sa-theme-check.sa-news-neg.active{border-color:#dc2626;background:#fee2e2;color:#dc2626}
+/* ── VALUATION PANEL ── */
+.val-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(226,236,230,.5)}
+.val-row:last-child{border-bottom:none}
+.val-method{font-size:12px;font-weight:600;color:var(--text2)}
+.val-note{font-size:10px;color:var(--muted);margin-top:1px}
+.val-price{font-size:15px;font-weight:800;color:var(--g900);text-align:right}
+.val-diff-pos{font-size:10px;font-weight:700;color:var(--g700);text-align:right}
+.val-diff-neg{font-size:10px;font-weight:700;color:var(--red);text-align:right}
+.val-consensus{background:linear-gradient(135deg,var(--g50),#f0fdf8);border:1.5px solid var(--g100);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.val-consensus-price{font-size:24px;font-weight:900;color:var(--g900);letter-spacing:-1px;line-height:1}
+.val-consensus-label{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.val-upside-pos{font-size:11px;font-weight:800;color:var(--g700);margin-top:3px}
+.val-upside-neg{font-size:11px;font-weight:800;color:var(--red);margin-top:3px}
 </style>
 </head>
 <body>
@@ -618,13 +710,13 @@ canvas#donut{width:160px;height:160px}
   </section>
   <div class="section-row"><span class="section-title">계산기 도구</span><span style="font-size:11px;color:var(--muted)">총 4개</span></div>
   <div class="card-grid">
-    <div class="tool-card card1" onclick="goDiv()">
-      <div class="card-icon-wrap"><svg viewBox="0 0 26 26" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="10"/><path d="M13 7v1.5M13 17.5V19M9.5 11c0-1.4 1.6-2 3.5-2s3.5.6 3.5 2-1.6 2-3.5 2-3.5.6-3.5 2 1.6 2 3.5 2 3.5-.6 3.5-2"/></svg></div>
-      <div class="card-title-row"><span class="card-title">월 배당금 계산기</span><span class="card-pill">ETF·주식</span></div>
-      <p class="card-desc">국내·해외 ETF/주식 실시간 주가 반영, 계좌별 포트폴리오 관리, 수량 변동 시뮬레이션.</p>
-      <div class="card-bottom"><div class="card-tags"><span class="card-tag">실시간</span><span class="card-tag">개별주식</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
+    <div class="tool-card card1" onclick="goStockHub()">
+      <div class="card-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg></div>
+      <div class="card-title-row"><span class="card-title">주가 분석</span><span class="card-pill">분석</span></div>
+      <p class="card-desc">월 배당금 계산기와 종목 종합 스코어 분석으로 투자 판단을 지원합니다.</p>
+      <div class="card-bottom"><div class="card-tags"><span class="card-tag">배당금</span><span class="card-tag">스코어</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
     </div>
-    <div class="tool-card card2" onclick="goTax()">
+    <div class="tool-card card2" onclick="goTaxHub()">
       <div class="card-icon-wrap"><svg viewBox="0 0 26 26" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="16" height="20" rx="2"/><path d="M9 8h8M9 12h8M9 16h5"/></svg></div>
       <div class="card-title-row"><span class="card-title">세금 계산기</span><span class="card-pill">부동산·연말</span></div>
       <p class="card-desc">부동산 양도소득세·취득세와 근로소득 연말정산 환급액을 간편하게 추정합니다.</p>
@@ -646,12 +738,460 @@ canvas#donut{width:160px;height:160px}
   <footer class="home-footer"><div class="footer-logo">자산플로우</div><div class="footer-copy">© 2025 자산플로우 · 모든 계산은 참고용입니다</div></footer>
 </div>
 
+<!-- STOCK HUB PAGE -->
+<div id="page-stock-hub" class="page">
+  <div class="tax-nav">
+    <button class="back-btn" onclick="goHome()">← 홈</button>
+    <span class="div-nav-title">📊 주가 분석</span>
+    <div class="nav-spacer"></div>
+  </div>
+  <div style="max-width:800px;margin:48px auto;padding:0 32px">
+    <div style="margin-bottom:32px">
+      <div class="hero-label"><span class="dot"></span>STOCK ANALYSIS</div>
+      <h2 style="font-size:26px;font-weight:800;color:var(--g900);letter-spacing:-1px;margin-bottom:8px">어떤 분석을 하시겠어요?</h2>
+      <p style="font-size:14px;color:var(--text2)">월 배당금 계산기 또는 종목 종합 스코어 분석을 선택하세요.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="tool-card card1" onclick="goDiv()" style="cursor:pointer">
+        <div class="card-icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><circle cx="15" cy="15" r="1.5" fill="#2e8b57"/><path d="M12 15h6"/><path d="M12 12h6"/></svg>
+        </div>
+        <div class="card-title-row"><span class="card-title">월 배당금 계산기</span><span class="card-pill" style="background:#e8f7ef;color:#2e8b57">배당</span></div>
+        <p class="card-desc">ETF·주식 포트폴리오의 월 배당금을 계산하고 수수료·세금 내역을 분석합니다.</p>
+        <div class="card-bottom"><div class="card-tags"><span class="card-tag">ETF</span><span class="card-tag">배당세</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
+      </div>
+      <div class="tool-card card2" onclick="goStockAnalysis()" style="cursor:pointer">
+        <div class="card-icon-wrap" style="background:#e6f4f1">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+        </div>
+        <div class="card-title-row"><span class="card-title">종목 스코어 분석</span><span class="card-pill" style="background:#e6f4f1;color:#1a7a6a">분석</span></div>
+        <p class="card-desc">시장 환경·기업 재무·테마 모멘텀을 종합해 투자 판단 스코어카드를 제공합니다.</p>
+        <div class="card-bottom"><div class="card-tags"><span class="card-tag">시장환경</span><span class="card-tag">재무</span><span class="card-tag">테마</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAX HUB PAGE -->
+<div id="page-tax-hub" class="page">
+  <div class="tax-nav">
+    <button class="back-btn" onclick="goHome()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 홈</button>
+    <span class="div-nav-title">세금 계산기</span>
+    <div class="nav-spacer"></div>
+  </div>
+  <div style="max-width:880px;margin:48px auto;padding:0 32px">
+    <div style="margin-bottom:36px">
+      <div class="hero-label"><span class="dot"></span>TAX CALCULATOR</div>
+      <h2 style="font-size:26px;font-weight:800;color:var(--g900);letter-spacing:-1px;margin-bottom:8px">어떤 세금을 계산하시겠어요?</h2>
+      <p style="font-size:14px;color:var(--text2)">부동산 양도소득세·취득세 또는 근로소득 연말정산 환급 시뮬레이션을 선택하세요.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px" class="tax-hub-grid">
+
+      <!-- 양도소득세 -->
+      <div class="tool-card card1" onclick="goTaxTab('cgt')" style="cursor:pointer">
+        <div class="card-icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L13 3l10 9v11H17v-6h-4v6H3V12z"/></svg>
+        </div>
+        <div class="card-title-row"><span class="card-title">부동산 양도소득세</span><span class="card-pill" style="background:#e8f7ef;color:#2e8b57">양도세</span></div>
+        <p class="card-desc">주택·토지 등 부동산 매도 시 납부하는 양도소득세를 계산합니다. 장기보유특별공제·1주택 비과세 자동 판단.</p>
+        <div class="card-bottom">
+          <div class="card-tags"><span class="card-tag">양도차익</span><span class="card-tag">장특공</span><span class="card-tag">비과세</span></div>
+          <div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2e8b57" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div>
+        </div>
+      </div>
+
+      <!-- 취득세 -->
+      <div class="tool-card card2" onclick="goTaxTab('acq')" style="cursor:pointer">
+        <div class="card-icon-wrap" style="background:#e6f4f1">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+        </div>
+        <div class="card-title-row"><span class="card-title">취득세</span><span class="card-pill" style="background:#e6f4f1;color:#1a7a6a">취득세</span></div>
+        <p class="card-desc">부동산 취득(매매·증여·상속) 시 납부하는 취득세·지방교육세·농어촌특별세를 계산합니다.</p>
+        <div class="card-bottom">
+          <div class="card-tags"><span class="card-tag">매매</span><span class="card-tag">증여</span><span class="card-tag">상속</span></div>
+          <div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#1a7a6a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div>
+        </div>
+      </div>
+
+      <!-- 연말정산 -->
+      <div class="tool-card card3" onclick="goTaxTab('yr')" style="cursor:pointer">
+        <div class="card-icon-wrap" style="background:#eaf5ec">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2d7a4a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="4" x2="8" y2="9"/><line x1="16" y1="4" x2="16" y2="9"/><path d="M8 14h3M8 17h5"/><circle cx="16" cy="15.5" r="2.5" fill="#eaf5ec" stroke="#2d7a4a"/><path d="M14.5 15.5l1 1 2-2"/></svg>
+        </div>
+        <div class="card-title-row"><span class="card-title">근로소득 연말정산</span><span class="card-pill" style="background:#eaf5ec;color:#2d7a4a">연말정산</span></div>
+        <p class="card-desc">급여·상여 입력부터 인적공제·소득공제·세액공제까지 단계별로 환급액을 시뮬레이션합니다.</p>
+        <div class="card-bottom">
+          <div class="card-tags"><span class="card-tag">환급</span><span class="card-tag">세액공제</span><span class="card-tag">절세팁</span></div>
+          <div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2d7a4a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div>
+        </div>
+      </div>
+
+    </div>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:40px">⚠ 모든 계산기는 참고용입니다. 실제 세금은 세무사와 상담하세요. (2024년 세법 기준)</p>
+  </div>
+</div>
+
+<!-- STOCK ANALYSIS PAGE -->
+<div id="page-stock-analysis" class="page">
+  <!-- NAV -->
+  <div class="tax-nav">
+    <button class="back-btn" onclick="goStockHub()">← 뒤로</button>
+    <span class="div-nav-title">📈 종목 스코어 분석</span>
+    <div class="nav-spacer"></div>
+    <div class="tax-main-tabs">
+      <button class="tax-tab active" id="stab1" onclick="switchStockTab('macro',this)">🌐 시장 환경</button>
+      <button class="tax-tab" id="stab2" onclick="switchStockTab('finance',this)">📊 기업 재무</button>
+      <button class="tax-tab" id="stab3" onclick="switchStockTab('theme',this)">🔥 테마·모멘텀</button>
+    </div>
+  </div>
+
+  <!-- 탭 1: 시장 환경 -->
+  <div id="stock-macro" class="tax-section active">
+    <div class="tax-layout">
+      <div>
+        <div class="t-panel">
+          <div class="t-panel-title">🌐 시장 환경 데이터 입력</div>
+          <div class="t-body">
+            <div class="t-section-label">금리 환경</div>
+            <div class="t-field">
+              <label>미국 기준금리 (%)</label>
+              <input class="t-inp" id="sa-fedrate" type="number" step="0.25" placeholder="예: 5.25" oninput="calcStockScore()">
+            </div>
+            <div class="t-field">
+              <label>FOMC 최근 방향성</label>
+              <select class="t-sel" id="sa-fomc" onchange="calcStockScore()">
+                <option value="cut">금리 인하 (비둘기)</option>
+                <option value="hold" selected>동결</option>
+                <option value="hike">금리 인상 (매파)</option>
+              </select>
+            </div>
+            <hr class="t-divider">
+            <div class="t-section-label">시장 심리</div>
+            <div class="t-field">
+              <label>달러/원 환율</label>
+              <input class="t-inp" id="sa-usdkrw" type="text" inputmode="numeric" placeholder="예: 1,350" oninput="fmtCommaInput(this);calcStockScore()">
+            </div>
+            <div class="t-field">
+              <label>VIX 공포지수</label>
+              <input class="t-inp" id="sa-vix" type="number" step="0.1" placeholder="예: 18.5" oninput="calcStockScore()">
+            </div>
+            <hr class="t-divider">
+            <div class="t-section-label">주요 지수 (최근 1개월 등락률 %)</div>
+            <div class="t-field">
+              <label>나스닥 (NASDAQ)</label>
+              <input class="t-inp" id="sa-nasdaq" type="number" step="0.1" placeholder="예: 2.3 또는 -1.5" oninput="calcStockScore()">
+            </div>
+            <div class="t-field">
+              <label>S&amp;P 500</label>
+              <input class="t-inp" id="sa-sp500" type="number" step="0.1" placeholder="예: 1.8" oninput="calcStockScore()">
+            </div>
+            <div class="t-field">
+              <label>미국 CPI (전년대비 %)</label>
+              <input class="t-inp" id="sa-cpi" type="number" step="0.1" placeholder="예: 3.2" oninput="calcStockScore()">
+            </div>
+            <div class="t-field">
+              <label>미국 10년 국채 금리 (%)</label>
+              <input class="t-inp" id="sa-us10y" type="number" step="0.01" placeholder="예: 4.3" oninput="calcStockScore()">
+            </div>
+            <hr class="t-divider">
+            <div class="t-section-label">국내 지표</div>
+            <div class="t-field">
+              <label>KOSPI (최근 1개월 등락률 %)</label>
+              <input class="t-inp" id="sa-kospi" type="number" step="0.1" placeholder="예: 1.2 또는 -2.3" oninput="calcStockScore()">
+            </div>
+            <div class="t-field">
+              <label>한국 기준금리 (%)</label>
+              <input class="t-inp" id="sa-bokrate" type="number" step="0.25" placeholder="예: 3.50" oninput="calcStockScore()">
+            </div>
+            <div class="t-notice-box info" style="margin-top:8px">
+              💡 데이터는 <strong>네이버 금융</strong>, <strong>인베스팅닷컴</strong>, <strong>한국은행</strong>에서 확인 후 입력하세요.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="stock-score-panel"><!-- 스코어 패널 공통 렌더 --></div>
+    </div>
+  </div>
+
+  <!-- 탭 2: 기업 재무 -->
+  <div id="stock-finance" class="tax-section">
+    <div class="tax-layout">
+      <div>
+
+        <!-- ① 종목 기본 정보 -->
+        <div class="t-panel">
+          <div class="t-panel-title">📋 종목 기본 정보</div>
+          <div class="t-body">
+            <div class="t-row2">
+              <div class="t-field">
+                <label>종목명</label>
+                <input class="t-inp" id="sa-ticker" type="text" placeholder="예: 삼성전자" oninput="calcStockScore()">
+              </div>
+              <div class="t-field">
+                <label>현재 주가 (원)</label>
+                <input class="t-inp" id="sa-price" type="text" inputmode="numeric" placeholder="예: 74,400" oninput="fmtCommaInput(this);saAutoCalc();calcStockScore()">
+              </div>
+            </div>
+            <div class="t-field">
+              <label>업종</label>
+              <select class="t-sel" id="sa-sector" onchange="saSectorChange();calcStockScore()">
+                <option value="tech">반도체·IT</option>
+                <option value="bio">바이오·헬스케어</option>
+                <option value="finance">금융·보험</option>
+                <option value="consumer">소비재·유통</option>
+                <option value="energy">에너지·화학</option>
+                <option value="industrial">산업재·건설</option>
+                <option value="telecom">통신·미디어</option>
+                <option value="etc">기타</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ② 재무제표 원본 데이터 -->
+        <div class="t-panel">
+          <div class="t-panel-title">📊 재무제표 (최근 연도 기준, 단위: 억원)</div>
+          <div class="t-body">
+            <div class="t-notice-box info">💡 <strong>DART(전자공시)</strong> 또는 <strong>네이버 금융 → 재무제표</strong>에서 확인 후 입력하세요.</div>
+            <div class="t-section-label">손익계산서</div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>매출액 <span class="t-sub-label">억원</span></label>
+                <input class="t-inp" id="sa-revenue" type="text" inputmode="numeric" placeholder="예: 3,022,314" oninput="fmtCommaInput(this);saAutoCalc();calcStockScore()">
+              </div>
+              <div class="t-field">
+                <label>영업이익 <span class="t-sub-label">억원 · 손실 시 - 입력</span></label>
+                <input class="t-inp" id="sa-opincome" type="text" inputmode="numeric" placeholder="예: 65,670 또는 -3,200" oninput="fmtCommaInputSigned(this);saAutoCalc();calcStockScore()">
+              </div>
+            </div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>당기순이익 <span class="t-sub-label">억원 · 손실 시 - 입력</span></label>
+                <input class="t-inp" id="sa-netincome" type="text" inputmode="numeric" placeholder="예: 53,489 또는 -8,900" oninput="fmtCommaInputSigned(this);saAutoCalc();calcStockScore()">
+              </div>
+              <div class="t-field">
+                <label>EBITDA <span class="t-sub-label">억원 · 손실 시 - 입력</span></label>
+                <input class="t-inp" id="sa-ebitda" type="text" inputmode="numeric" placeholder="영업이익+감가상각 (손실 가능)" oninput="fmtCommaInputSigned(this);saAutoCalc();calcStockScore()">
+              </div>
+            </div>
+            <div class="t-field">
+              <label>전년 매출액 <span class="t-sub-label">억원 (매출 성장률 자동 계산)</span></label>
+              <input class="t-inp" id="sa-rev-prev" type="text" inputmode="numeric" placeholder="전년도 매출액" oninput="fmtCommaInput(this);saAutoCalc();calcStockScore()">
+            </div>
+            <hr class="t-divider">
+            <div class="t-section-label">재무상태표</div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>총자산 <span class="t-sub-label">억원</span></label>
+                <input class="t-inp" id="sa-assets" type="text" inputmode="numeric" placeholder="예: 4,559,082" oninput="fmtCommaInput(this);saAutoCalc();calcStockScore()">
+              </div>
+              <div class="t-field">
+                <label>총부채 <span class="t-sub-label">억원</span></label>
+                <input class="t-inp" id="sa-liabilities" type="text" inputmode="numeric" placeholder="예: 924,452" oninput="fmtCommaInput(this);saAutoCalc();calcStockScore()">
+              </div>
+            </div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>자기자본 <span class="t-sub-label">억원</span></label>
+                <input class="t-inp" id="sa-equity" type="text" inputmode="numeric" placeholder="예: 3,634,630" oninput="fmtCommaInput(this);saAutoCalc();calcStockScore()">
+              </div>
+              <div class="t-field">
+                <label>영업현금흐름 <span class="t-sub-label">억원</span></label>
+                <input class="t-inp" id="sa-ocf" type="text" inputmode="numeric" placeholder="예: 112,340" oninput="fmtCommaInput(this);saAutoCalc();calcStockScore()">
+              </div>
+            </div>
+            <div class="t-field">
+              <label>발행주식수 <span class="t-sub-label">만 주 단위</span></label>
+              <input class="t-inp" id="sa-shares" type="text" inputmode="numeric" placeholder="예: 59,693 (삼성전자 약 5.97억주)" oninput="fmtCommaInput(this);saAutoCalc();calcStockScore()">
+            </div>
+          </div>
+        </div>
+
+        <!-- ③ 투자 지표 (자동 계산 + 직접 수정 가능) -->
+        <div class="t-panel">
+          <div class="t-panel-title">📈 투자 지표 <span style="font-size:10px;font-weight:400;color:var(--muted)">재무제표 입력 시 자동 계산 · 직접 수정 가능</span></div>
+          <div class="t-body">
+            <div class="t-section-label">주당 지표</div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>EPS (원) <span class="t-sub-label">순이익 ÷ 주식수</span></label>
+                <div class="t-field-auto-wrap">
+                  <input class="t-inp" id="sa-eps-disp" type="text" inputmode="numeric" placeholder="직접 입력 또는 자동 계산" oninput="this.classList.remove('t-inp-auto');saAutoCalc();calcStockScore()">
+                  <span class="t-auto-badge">자동</span>
+                </div>
+                <div class="t-hint" id="sa-eps-hint" style="display:none;color:var(--g700)">✓ 당기순이익 · 발행주식수로 계산됨</div>
+              </div>
+              <div class="t-field">
+                <label>BPS (원) <span class="t-sub-label">자기자본 ÷ 주식수</span></label>
+                <div class="t-field-auto-wrap">
+                  <input class="t-inp" id="sa-bps-disp" type="text" inputmode="numeric" placeholder="직접 입력 또는 자동 계산" oninput="this.classList.remove('t-inp-auto');saAutoCalc();calcStockScore()">
+                  <span class="t-auto-badge">자동</span>
+                </div>
+                <div class="t-hint" id="sa-bps-hint" style="display:none;color:var(--g700)">✓ 자기자본 · 발행주식수로 계산됨</div>
+              </div>
+            </div>
+            <div class="t-section-label">밸류에이션 배수</div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>PER (배) <span class="t-sub-label">주가 ÷ EPS</span></label>
+                <div class="t-field-auto-wrap">
+                  <input class="t-inp" id="sa-per" type="number" step="0.1" placeholder="직접 입력 또는 자동 계산" oninput="this.classList.remove('t-inp-auto');calcStockScore()">
+                  <span class="t-auto-badge">자동</span>
+                </div>
+              </div>
+              <div class="t-field">
+                <label>PBR (배) <span class="t-sub-label">주가 ÷ BPS</span></label>
+                <div class="t-field-auto-wrap">
+                  <input class="t-inp" id="sa-pbr" type="number" step="0.01" placeholder="직접 입력 또는 자동 계산" oninput="this.classList.remove('t-inp-auto');calcStockScore()">
+                  <span class="t-auto-badge">자동</span>
+                </div>
+              </div>
+            </div>
+            <div class="t-section-label">수익성 · 안정성</div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>ROE (%)</label>
+                <input class="t-inp" id="sa-roe" type="number" step="0.1" placeholder="예: 15.2 또는 -8.3" oninput="calcStockScore()">
+              </div>
+              <div class="t-field">
+                <label>영업이익률 (%)</label>
+                <input class="t-inp" id="sa-opm" type="number" step="0.1" placeholder="예: 12.0 또는 -3.5" oninput="calcStockScore()">
+              </div>
+            </div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>부채비율 (%)</label>
+                <input class="t-inp" id="sa-debt" type="number" step="1" placeholder="자동 계산" oninput="calcStockScore()">
+              </div>
+              <div class="t-field">
+                <label>매출 성장률 (%)</label>
+                <input class="t-inp" id="sa-revgrowth" type="number" step="0.1" placeholder="예: 10.5 또는 -4.2" oninput="calcStockScore()">
+              </div>
+            </div>
+            <div class="t-field">
+              <label>EPS 성장률 (전년대비 %)</label>
+              <input class="t-inp" id="sa-epsgrowth" type="number" step="0.1" placeholder="예: 15.2 또는 -5.0" oninput="calcStockScore()">
+            </div>
+          </div>
+        </div>
+
+        <!-- ④ 목표 밸류에이션 배수 -->
+        <div class="t-panel">
+          <div class="t-panel-title">🎯 목표 밸류에이션 <span style="font-size:10px;font-weight:400;color:var(--muted)">업종 선택 시 자동 적용</span></div>
+          <div class="t-body">
+            <div class="t-row2">
+              <div class="t-field">
+                <label>목표 PER (배)</label>
+                <input class="t-inp" id="sa-tgt-per" type="number" step="0.1" placeholder="업종 평균 자동" oninput="calcStockScore()">
+              </div>
+              <div class="t-field">
+                <label>목표 PBR (배)</label>
+                <input class="t-inp" id="sa-tgt-pbr" type="number" step="0.01" placeholder="업종 평균 자동" oninput="calcStockScore()">
+              </div>
+            </div>
+            <div class="t-field">
+              <label>요구수익률 / 할인율 (%) <span class="t-sub-label">DDM 모델 기본값 8%</span></label>
+              <input class="t-inp" id="sa-discount" type="number" step="0.1" value="8" placeholder="8.0" oninput="calcStockScore()">
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div id="stock-score-panel2"><!-- 스코어 패널 --></div>
+    </div>
+  </div>
+
+  <!-- 탭 3: 테마·모멘텀 -->
+  <div id="stock-theme" class="tax-section">
+    <div class="tax-layout">
+      <div>
+        <div class="t-panel">
+          <div class="t-panel-title">🔥 테마 · 모멘텀 분석</div>
+          <div class="t-body">
+            <div class="t-section-label">관련 테마 (해당 항목 체크)</div>
+            <div id="sa-theme-checks" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px">
+              <!-- JS로 렌더 -->
+            </div>
+            <hr class="t-divider">
+            <div class="t-section-label">기술적 지표</div>
+            <div class="t-field">
+              <label>52주 최고가 (원/$)</label>
+              <input class="t-inp" id="sa-high52" type="text" inputmode="numeric" placeholder="예: 88,800" oninput="fmtCommaInput(this);calcStockScore()">
+            </div>
+            <div class="t-field">
+              <label>52주 최저가 (원/$)</label>
+              <input class="t-inp" id="sa-low52" type="text" inputmode="numeric" placeholder="예: 49,900" oninput="fmtCommaInput(this);calcStockScore()">
+            </div>
+            <div class="t-field">
+              <label>현재가 (원/$)</label>
+              <input class="t-inp" id="sa-current" type="text" inputmode="numeric" placeholder="예: 74,400" oninput="fmtCommaInput(this);calcStockScore()">
+            </div>
+            <hr class="t-divider">
+            <div class="t-section-label">수급 · 거래량</div>
+            <div class="t-field">
+              <label>최근 외국인 수급 방향</label>
+              <select class="t-sel" id="sa-foreign" onchange="calcStockScore()">
+                <option value="buy">순매수 (매수 우위)</option>
+                <option value="neutral" selected>중립</option>
+                <option value="sell">순매도 (매도 우위)</option>
+              </select>
+            </div>
+            <div class="t-field">
+              <label>거래량 (20일 평균 대비)</label>
+              <select class="t-sel" id="sa-volume" onchange="calcStockScore()">
+                <option value="surge">급증 (2배 이상)</option>
+                <option value="normal" selected>보통 (0.5~2배)</option>
+                <option value="low">감소 (0.5배 이하)</option>
+              </select>
+            </div>
+            <div class="t-field">
+              <label>기관 수급 방향</label>
+              <select class="t-sel" id="sa-institution" onchange="calcStockScore()">
+                <option value="buy">순매수</option>
+                <option value="neutral" selected>중립</option>
+                <option value="sell">순매도</option>
+              </select>
+            </div>
+            <hr class="t-divider">
+            <div class="t-section-label">뉴스 · 공시 이벤트</div>
+            <div class="t-notice-box info" style="margin-bottom:8px">호재는 초록, 악재는 빨간색입니다. 해당 항목을 모두 선택하세요.</div>
+            <div id="sa-news-checks" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px"></div>
+            <hr class="t-divider">
+            <div class="t-section-label">애널리스트 컨센서스</div>
+            <div class="t-row2">
+              <div class="t-field">
+                <label>목표주가 평균 (원)</label>
+                <input class="t-inp" id="sa-analyst-tp" type="text" inputmode="numeric" placeholder="예: 90,000" oninput="calcStockScore()">
+              </div>
+              <div class="t-field">
+                <label>최근 3개월 리포트</label>
+                <select class="t-sel" id="sa-analyst-count" onchange="calcStockScore()">
+                  <option value="0">없음 (0개)</option>
+                  <option value="1">1~2개</option>
+                  <option value="2" selected>3~5개</option>
+                  <option value="3">6개 이상</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="stock-score-panel3"><!-- 스코어 패널 --></div>
+    </div>
+  </div>
+
+  <div class="tax-disclaimer">⚠ 이 분석은 투자 참고용 스코어카드입니다. 투자 손익에 대한 책임은 투자자 본인에게 있으며, 어떠한 수익도 보장하지 않습니다. 반드시 전문가와 상담 후 투자 결정을 내리세요.</div>
+</div>
+
 <!-- DIVIDEND PAGE -->
 <div id="page-div" class="page">
   <div class="div-nav">
     <button class="back-btn" onclick="goHome()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 홈</button>
     <span class="div-nav-title">월 배당금 계산기</span>
     <div class="nav-spacer"></div>
+    <button class="save-btn" id="div-save-btn" onclick="openSaveModal('dividend')" title="현재 포트폴리오 스냅샷 저장">
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 13h10V5l-4-4H2v12z"/><path d="M8 1v4h4"/><path d="M4 8h6M4 10.5h4"/></svg>저장
+    </button>
     <button class="refresh-btn" id="refreshBtn" onclick="fetchAllPrices()">
       <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10.5 2A5 5 0 1 0 11 6"/><polyline points="8,1 10.5,2 9.5,4.5"/></svg>
       실시간 갱신
@@ -804,7 +1344,7 @@ canvas#donut{width:160px;height:160px}
 <!-- TAX PAGE -->
 <div id="page-tax" class="page">
   <div class="tax-nav">
-    <button class="back-btn" onclick="goHome()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 홈</button>
+    <button class="back-btn" onclick="goTaxHub()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 세금 계산기</button>
     <span class="div-nav-title">세금 계산기</span>
     <div class="nav-spacer"></div>
     <div class="tax-main-tabs">
@@ -905,6 +1445,9 @@ canvas#donut{width:160px;height:160px}
           <div class="t-result-value red" id="cgt-total">0원</div>
           <div class="t-result-sub" id="cgt-sub">양도 정보를 입력해주세요</div>
           <div id="cgt-badges"></div>
+          <button class="save-btn" id="cgt-save-btn" disabled onclick="openSaveModal('taxCgt')" style="margin:10px 0 0" title="양도소득세 계산 결과 저장">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 13h10V5l-4-4H2v12z"/><path d="M8 1v4h4"/><path d="M4 8h6M4 10.5h4"/></svg>결과 저장
+          </button>
         </div>
         <div class="t-sum-grid">
           <div class="t-sum-card"><div class="t-sum-label">양도차익</div><div class="t-sum-val" id="cgt-gain">—</div></div>
@@ -969,6 +1512,10 @@ canvas#donut{width:160px;height:160px}
               <label>취득가액 (원)</label>
               <input class="t-inp" id="acq-price" type="text" inputmode="numeric" placeholder="실거래가 또는 시가표준액" oninput="calcAcq()">
             </div>
+            <div class="t-field">
+              <label>취득일 <small style="color:var(--muted);font-weight:400">(저장 후 자금 플래너 해당 월에 자동 반영)</small></label>
+              <input class="t-inp" id="acq-date" type="date" oninput="calcAcq()">
+            </div>
             <div class="t-field" id="acq-areaWrap">
               <label>전용면적 (㎡) — 농어촌특별세 판단</label>
               <input class="t-inp" id="acq-area" type="number" placeholder="예: 84" oninput="calcAcq()">
@@ -982,6 +1529,9 @@ canvas#donut{width:160px;height:160px}
           <div class="t-result-label">총 취득 관련 세금 합계</div>
           <div class="t-result-value gold" id="acq-total">0원</div>
           <div class="t-result-sub" id="acq-sub">취득 정보를 입력해주세요</div>
+          <button class="save-btn" id="acq-save-btn" disabled onclick="openSaveModal('taxAcq')" style="margin:10px 0 0">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 13h10V5l-4-4H2v12z"/><path d="M8 1v4h4"/><path d="M4 8h6M4 10.5h4"/></svg>결과 저장
+          </button>
         </div>
         <div class="t-sum-grid">
           <div class="t-sum-card"><div class="t-sum-label">취득세</div><div class="t-sum-val" id="acq-s1" style="color:var(--gold)">—</div></div>
@@ -1402,6 +1952,9 @@ canvas#donut{width:160px;height:160px}
           <div class="t-result-value" id="yr-result-value" style="color:var(--muted)">—</div>
           <div class="t-result-sub" id="yr-result-sub">급여를 입력하면 실시간으로 계산됩니다</div>
           <div id="yr-result-badge"></div>
+          <button class="save-btn" id="yr-save-btn" disabled onclick="openSaveModal('taxYr')" style="margin-top:10px">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 13h10V5l-4-4H2v12z"/><path d="M8 1v4h4"/><path d="M4 8h6M4 10.5h4"/></svg>결과 저장
+          </button>
         </div>
         <div class="t-panel">
           <div class="t-panel-title">연말정산 계산 흐름</div>
@@ -1430,6 +1983,9 @@ canvas#donut{width:160px;height:160px}
   <div class="pl-month-bar">
     <div class="pl-month-tabs" id="pl-month-tabs"></div>
     <div class="pl-month-actions">
+      <button class="pl-action-btn" style="background:var(--blue);color:#fff" onclick="openImportModal()">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 2v8M4 7l3 3 3-3"/><path d="M2 11h10"/></svg>내 자산 가져오기
+      </button>
       <button class="pl-action-btn pl-action-copy" onclick="plApplyAll(this)" title="이번 달 데이터를 나머지 11개월에 모두 복사"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="8" height="8" rx="1.5"/><path d="M2 10V2h8"/></svg>전체 월에 적용</button>
       <button class="pl-action-btn pl-action-reset" onclick="plResetMonth()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 7a5 5 0 1 1 1.5 3.5"/><polyline points="2,4 2,7 5,7"/></svg>이달 초기화</button>
     </div>
@@ -1912,6 +2468,33 @@ canvas#donut{width:160px;height:160px}
   </div>
 </div>
 
+<!-- SAVE MODAL -->
+<div class="modal-overlay" id="saveModal">
+  <div class="modal-box" style="position:relative;max-width:380px">
+    <button class="modal-close" onclick="closeSaveModal()">×</button>
+    <div class="modal-title" id="saveModal-title">💾 저장하기</div>
+    <div class="modal-desc" id="saveModal-desc">이름을 입력하고 저장하세요.</div>
+    <div class="modal-field">
+      <label>저장 이름</label>
+      <input class="modal-inp" id="saveModal-name" placeholder="예: 2024년 내 포트폴리오">
+    </div>
+    <button class="modal-btn" onclick="confirmSave()">저장</button>
+    <button class="modal-btn secondary" onclick="closeSaveModal()">취소</button>
+  </div>
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal-box" style="position:relative;max-width:520px;max-height:85vh;overflow-y:auto">
+    <button class="modal-close" onclick="closeImportModal()">×</button>
+    <div class="modal-title">📥 내 자산 가져오기</div>
+    <div class="modal-desc">저장된 데이터를 선택하면 자금 플래너에 자동으로 적용됩니다.</div>
+    <div id="importModal-body"></div>
+    <button class="modal-btn" onclick="applyImport()" style="margin-top:16px">적용하기</button>
+    <button class="modal-btn secondary" onclick="closeImportModal()">취소</button>
+  </div>
+</div>
+
 <script>
 // ════════════════════════════════════════
 // ASSET DATABASE
@@ -1975,6 +2558,19 @@ const ASSET_DB = {
 const USD_KRW = 1385;
 const COLORS = ['#2e8b57','#3aaf6f','#0d9488','#1a5fa8','#7c3aed','#d4a017','#e05252','#0891b2','#6d28d9','#059669','#dc2626','#2563eb','#9333ea','#b45309','#0f766e'];
 const FREQ_MAP = {'monthly':'월배당','quarterly':'분기배당','semi-annual':'반기배당','annual':'연배당'};
+
+// ════════════════════════════════════════
+// APP SAVES (localStorage)
+// ════════════════════════════════════════
+let appSaves = {dividend:[],taxCgt:[],taxAcq:[],taxYr:[],realestate:[]};
+let lastCgtResult=null;
+let lastAcqResult=null;
+let lastYrResult=null;
+
+function loadAppSaves(){
+  try{const s=localStorage.getItem('af_saves');if(s)appSaves=Object.assign({dividend:[],taxCgt:[],taxAcq:[],taxYr:[],realestate:[]},JSON.parse(s));}catch(e){}
+}
+function saveAppSaves(){localStorage.setItem('af_saves',JSON.stringify(appSaves));}
 
 // ════════════════════════════════════════
 // SECURITY — XOR+Base64 credential encryption
@@ -2192,7 +2788,7 @@ function loadState() {
 // ════════════════════════════════════════
 // NAVIGATION
 // ════════════════════════════════════════
-function goDiv(){loadState();show('page-div');renderAccounts();updateKisBadge(!!kisKey);renderAll();}
+function goDiv(){loadState();loadAppSaves();show('page-div');renderAccounts();updateKisBadge(!!kisKey);renderAll();}
 function goHome(){show('page-home');}
 function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
 
@@ -2656,14 +3252,30 @@ document.addEventListener('input',function(e){
     el.classList.contains('t-inline-inp')||
     el.classList.contains('qty-input')||
     el.classList.contains('sim-delta-input')||
-    ['cgt-buy','cgt-sell','acq-price','c-price','r-equity','r-debt','r-income','r-price'].includes(el.id);
+    ['cgt-buy','cgt-sell','acq-price','c-price','r-equity','r-debt','r-income','r-price',
+     'sa-revenue','sa-opincome','sa-netincome','sa-ebitda','sa-rev-prev',
+     'sa-assets','sa-liabilities','sa-equity','sa-ocf','sa-shares',
+     'sa-price','sa-analyst-tp'].includes(el.id);
   if(isMoneyEl) moneyFmt(el);
 },true);
 
 // ════════════════════════════════════════
 // TAX PAGE
 // ════════════════════════════════════════
-function goTax(){show('page-tax');taxInit();}
+function goTaxHub(){show('page-tax-hub');}
+
+function goTax(){show('page-tax-hub');}
+
+function goTaxTab(tab){
+  show('page-tax');
+  taxInit();
+  const tabMap={cgt:'ttab1',acq:'ttab2',yr:'ttab3'};
+  const btnId=tabMap[tab];
+  if(btnId){
+    const btn=document.getElementById(btnId);
+    if(btn) switchTax(tab,btn);
+  }
+}
 
 function taxInit(){
   calcAcq();
@@ -2784,6 +3396,8 @@ function calcCgt(){
       tW('cgt-badges').innerHTML='<span class="t-badge green">✓ 전액 비과세</span>';
       rows.push(['1세대 1주택 비과세','전액 면제','pos']);
       tbody.innerHTML=rows.map(([k,v,c])=>`<tr><td class="t-step-key">${k}</td><td class="t-step-val ${c}">${v}</td></tr>`).join('');
+      lastCgtResult={assetType:document.getElementById('cgt-assetType')?.options[document.getElementById('cgt-assetType')?.selectedIndex]?.text||'',sellPrice:sell,taxTotal:0,label:''};
+      const saveBtnCgt0=document.getElementById('cgt-save-btn');if(saveBtnCgt0)saveBtnCgt0.disabled=false;
       drawCgtChart(buy,expense,at,adj,reside,sell);return;
     } else {
       taxableGain=gain*(sell-1200000000)/sell;
@@ -2839,6 +3453,14 @@ function calcCgt(){
   tW('cgt-sub').textContent=`양도세 ${tFmtFull(tax)} + 지방소득세 ${tFmtFull(local)}`;
   tW('cgt-badges').innerHTML=badges;
   tbody.innerHTML=rows.map(([k,v,c])=>`<tr><td class="t-step-key">${k}</td><td class="t-step-val ${c}">${v}</td></tr>`).join('');
+  lastCgtResult={
+    assetType:document.getElementById('cgt-assetType')?.options[document.getElementById('cgt-assetType')?.selectedIndex]?.text||'',
+    sellPrice:rawNum(document.getElementById('cgt-sell')?.value||'0'),
+    taxTotal:total,
+    label:''
+  };
+  const saveBtn=document.getElementById('cgt-save-btn');
+  if(saveBtn)saveBtn.disabled=false;
   drawCgtChart(buy,expense,at,adj,reside,sell);
 }
 
@@ -2919,6 +3541,18 @@ function calcAcq(){
   tW('acq-total').textContent=tFmtFull(total);
   tW('acq-sub').textContent=`취득세율 ${(rate*100).toFixed(2)}% 기준`;
   if(tW('acq-tip-text'))tW('acq-tip-text').textContent=tipText;
+  const acqDateVal=document.getElementById('acq-date')?.value||'';
+  const acqMonthIdx=acqDateVal?new Date(acqDateVal).getMonth():null; // 0=1월
+  lastAcqResult={
+    assetType:document.getElementById('acq-asset')?.options[document.getElementById('acq-asset')?.selectedIndex]?.text||'',
+    price:rawNum(document.getElementById('acq-price')?.value||'0'),
+    taxTotal:total,
+    acquisitionDate:acqDateVal,
+    acquisitionMonth:acqMonthIdx,
+    label:''
+  };
+  const acqSaveBtn=document.getElementById('acq-save-btn');
+  if(acqSaveBtn)acqSaveBtn.disabled=false;
 
   const rows=[
     ['취득가액',tFmtFull(price),''],
@@ -3202,6 +3836,13 @@ function yrCalc(){
   const prepaid=tV('yr-prepaid')+tV('yr-prevPaid');
   const prepaidLocal=tV('yr-prepaidLocal')+tV('yr-prevPaidLocal');
   const refund=(prepaid+prepaidLocal)-(finalTax+finalLocal);
+  lastYrResult={
+    gross:rawNum(document.getElementById('yr-salary')?.value||'0')+rawNum(document.getElementById('yr-bonus')?.value||'0'),
+    refund:refund,
+    label:''
+  };
+  const yrSaveBtn=document.getElementById('yr-save-btn');
+  if(yrSaveBtn)yrSaveBtn.disabled=false;
 
   // ── 결과 표시 ──
   const rv=tW('yr-result-value');
@@ -3387,10 +4028,13 @@ function calcBuy(){
     verdictReason=`DSR ${dsr.toFixed(1)}% — 40% 초과로 대출 승인 제한 가능`;
   }
   document.getElementById('r-result-section').innerHTML=`
-    <div class="r-verdict ${verdictCls}">
+    <div class="r-verdict ${verdictCls}" id="r-verdict">
       <div class="r-verdict-title">${verdictTitle}</div>
       <div class="r-verdict-reason">${verdictReason}</div>
     </div>
+    <button class="save-btn" id="re-save-btn" onclick="openSaveModal('realestate')" style="margin-bottom:14px">
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 13h10V5l-4-4H2v12z"/><path d="M8 1v4h4"/><path d="M4 8h6M4 10.5h4"/></svg>이 계산 저장
+    </button>
     <div class="r-equity-nums">
       <div class="r-equity-item">
         <div class="r-equity-label">내 순 자기자본</div>
@@ -3434,6 +4078,8 @@ function calcBuy(){
 
   // 슬라이더용 상태 저장
   rBuyState={price,ltvLoan,netEquity,monthly,grossIncome,rate,term};
+  const reSaveBtn=document.getElementById('re-save-btn');
+  if(reSaveBtn)reSaveBtn.disabled=rBuyState.monthly?false:true;
   updateScenario();
 }
 
@@ -3762,11 +4408,12 @@ let plannerRows={
   ],
   fin:[
     {id:'pr_interest',label:'이자비용'},
-    {id:'pr_stocks',label:'주식 투자'},
+    {id:'pr_stocks',label:'월 배당금'},
     {id:'pr_pension',label:'IRP · 연금저축'},
     {id:'pr_fund',label:'펀드'},
     {id:'pr_housing',label:'주택청약'},
-    {id:'pr_otherFin',label:'기타 금융'},
+    {id:'pr_acqTax',label:'취득세'},
+    {id:'pr_otherFin',label:'세금 등(연말정산)'},
   ],
 };
 
@@ -4122,6 +4769,564 @@ function plRenderConsult(){
     tips.push({t:'warn',icon:'🛒',title:`생활비 비중 ${Math.round(r.living/r.income*100)}% — 과다`,body:'생활비가 수익의 50%를 초과합니다. 식비·개인 용돈 항목을 우선 점검하세요.'});
   }
   el.innerHTML=tips.map(tp=>`<div class="pl-tip ${tp.t}"><div class="pl-tip-header"><span class="pl-tip-icon">${tp.icon}</span><span class="pl-tip-title">${tp.title}</span></div><div class="pl-tip-body">${tp.body}</div></div>`).join('');
+}
+
+// ════════════════════════════════════════
+// SAVE MODAL
+// ════════════════════════════════════════
+let saveModalType=null;
+function openSaveModal(type){
+  loadAppSaves();
+  saveModalType=type;
+  const titles={dividend:'월 배당금 포트폴리오',taxCgt:'양도소득세 계산',taxAcq:'취득세 계산',taxYr:'연말정산 환급/추징',realestate:'주택 구매 시뮬레이션'};
+  document.getElementById('saveModal-title').textContent='💾 '+titles[type]+' 저장';
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
+  document.getElementById('saveModal-name').value=dateStr+' '+titles[type];
+  document.getElementById('saveModal').classList.add('open');
+  setTimeout(()=>document.getElementById('saveModal-name').select(),50);
+}
+function closeSaveModal(){document.getElementById('saveModal').classList.remove('open');}
+function confirmSave(){
+  const name=document.getElementById('saveModal-name').value.trim()||'저장';
+  const id='sv_'+Date.now();
+  const now=new Date().toLocaleDateString('ko-KR');
+  loadAppSaves();
+  if(saveModalType==='dividend'){
+    const totMonthly=portfolio.reduce((s,p)=>{
+      const inv=toKRW(p)*p.qty;
+      const tax=p.meta.market==='US'?0.15:0.154;
+      return s+inv*(p.meta.annualYield/100)/12*(1-tax);
+    },0);
+    appSaves.dividend.push({id,name,date:now,monthlyNet:Math.round(totMonthly),annualNet:Math.round(totMonthly*12),itemCount:portfolio.length});
+  } else if(saveModalType==='taxCgt'&&lastCgtResult){
+    appSaves.taxCgt.push({id,name,date:now,...lastCgtResult,label:name});
+  } else if(saveModalType==='taxAcq'&&lastAcqResult){
+    appSaves.taxAcq.push({id,name,date:now,...lastAcqResult,label:name});
+  } else if(saveModalType==='taxYr'&&lastYrResult){
+    appSaves.taxYr.push({id,name,date:now,...lastYrResult,label:name});
+  } else if(saveModalType==='realestate'&&rBuyState.price){
+    appSaves.realestate.push({id,name,date:now,price:rBuyState.price,monthly:rBuyState.monthly,rate:rBuyState.rate,term:rBuyState.term,label:name});
+  }
+  saveAppSaves();
+  closeSaveModal();
+  const btn=document.getElementById(
+    saveModalType==='dividend'?'div-save-btn':
+    saveModalType==='taxCgt'?'cgt-save-btn':
+    saveModalType==='taxAcq'?'acq-save-btn':
+    saveModalType==='taxYr'?'yr-save-btn':'re-save-btn'
+  );
+  if(btn){const orig=btn.innerHTML;btn.innerHTML='✓ 저장됨';btn.style.color='var(--g500)';setTimeout(()=>{btn.innerHTML=orig;btn.style.color='';},2000);}
+}
+function deleteSave(type,id){
+  loadAppSaves();
+  appSaves[type]=appSaves[type].filter(s=>s.id!==id);
+  saveAppSaves();
+  openImportModal();
+}
+
+// ════════════════════════════════════════
+// IMPORT MODAL
+// ════════════════════════════════════════
+let importSelections={dividend:null,taxYr:null,realestate:null,taxAcq:null};
+
+function openImportModal(){
+  loadAppSaves();
+  importSelections={dividend:null,taxYr:null,realestate:null,taxAcq:null};
+  renderImportModal();
+  document.getElementById('importModal').classList.add('open');
+}
+function closeImportModal(){document.getElementById('importModal').classList.remove('open');}
+
+function renderImportModal(){
+  const body=document.getElementById('importModal-body');
+  if(!body)return;
+
+  const mkSection=(title,key,items,valueFormatter)=>{
+    if(!items.length)return`<div class="import-section"><div class="import-section-title">${title}</div><div class="import-empty">저장된 데이터가 없습니다</div></div>`;
+    const cards=items.map((s)=>`
+      <label class="import-card" id="imp-card-${key}-${s.id}">
+        <input type="radio" name="imp-${key}" value="${s.id}" onchange="importSelections['${key}']='${s.id}';document.querySelectorAll('[id^=imp-card-${key}-]').forEach(el=>el.classList.remove('selected'));document.getElementById('imp-card-${key}-${s.id}').classList.add('selected')">
+        <div class="import-card-info">
+          <div class="import-card-name">${s.name}</div>
+          <div class="import-card-sub">${s.date} · ${valueFormatter(s)}</div>
+        </div>
+        <button class="import-card-del" onclick="event.preventDefault();event.stopPropagation();deleteSave('${key}','${s.id}')" title="삭제">✕</button>
+      </label>`).join('');
+    return`<div class="import-section"><div class="import-section-title">${title}</div>${cards}</div>`;
+  };
+
+  body.innerHTML=
+    mkSection('💰 월 배당금 포트폴리오','dividend',appSaves.dividend,s=>`월 ${tFmt(s.monthlyNet)} · ${s.itemCount}종목`)+
+    mkSection('🏠 취득세','taxAcq',appSaves.taxAcq,s=>{const mn=s.acquisitionMonth!=null?`${s.acquisitionMonth+1}월 반영`:'날짜 미입력';return`${tFmt(s.taxTotal)} · ${mn}`;})+
+    mkSection('🏦 연말정산','taxYr',appSaves.taxYr,s=>s.refund>=0?`환급 ${tFmt(s.refund)}`:`추징 ${tFmt(-s.refund)}`)+
+    mkSection('🏠 주택 구매 시뮬레이션','realestate',appSaves.realestate,s=>`월 ${tFmt(s.monthly)} · ${(s.rate||0)}% ${(s.term||0)}년`);
+}
+
+function applyImport(){
+  if(importSelections.dividend){
+    const sv=appSaves.dividend.find(s=>s.id===importSelections.dividend);
+    if(sv){
+      plannerData.forEach(d=>{d['pr_stocks']=Math.ceil(sv.monthlyNet);});
+    }
+  }
+  if(importSelections.realestate){
+    const sv=appSaves.realestate.find(s=>s.id===importSelections.realestate);
+    if(sv){
+      plannerData.forEach(d=>{d['pr_interest']=Math.ceil(sv.monthly);});
+    }
+  }
+  if(importSelections.taxAcq){
+    const sv=appSaves.taxAcq.find(s=>s.id===importSelections.taxAcq);
+    if(sv&&sv.acquisitionMonth!=null){
+      plannerData[sv.acquisitionMonth]['pr_acqTax']=Math.ceil(sv.taxTotal);
+    }
+  }
+  if(importSelections.taxYr){
+    const sv=appSaves.taxYr.find(s=>s.id===importSelections.taxYr);
+    if(sv){
+      const raw=sv.refund>=0?-Math.abs(sv.refund):Math.abs(sv.refund);
+      plannerData[1]['pr_otherFin']=raw<0?-Math.ceil(Math.abs(raw)):Math.ceil(raw);
+    }
+  }
+  closeImportModal();
+  plWriteForm(plannerMonth);
+  plUpdate();
+  const btn=document.querySelector('.pl-action-btn[onclick="openImportModal()"]');
+  if(btn){const orig=btn.innerHTML;btn.innerHTML='✓ 적용됨';btn.style.background='var(--g700)';setTimeout(()=>{btn.innerHTML=orig;btn.style.background='var(--blue)';},2000);}
+}
+
+// 모달 오버레이 클릭 닫기
+document.getElementById('saveModal').addEventListener('click',function(e){if(e.target===this)closeSaveModal();});
+document.getElementById('importModal').addEventListener('click',function(e){if(e.target===this)closeImportModal();});
+
+// ════════════════════════════════════════
+// 주가 분석 스코어카드
+// ════════════════════════════════════════
+
+// ── 숫자 파서 (콤마 제거) ──
+function numParse(id){
+  const el=document.getElementById(id);
+  if(!el)return 0;
+  return parseFloat((el.value||'').replace(/,/g,''))||0;
+}
+// ── 콤마 포맷 입력 (양수 전용) ──
+function fmtCommaInput(el){
+  const right=el.value.length-el.selectionStart;
+  const raw=el.value.replace(/[^0-9]/g,'');
+  if(!raw){el.value='';return;}
+  el.value=Number(raw).toLocaleString('ko-KR');
+  const newPos=Math.max(0,el.value.length-right);
+  try{el.setSelectionRange(newPos,newPos);}catch(e){}
+}
+// ── 콤마 포맷 입력 (음수 허용 — 손실 가능 필드용) ──
+function fmtCommaInputSigned(el){
+  const right=el.value.length-el.selectionStart;
+  const isNeg=el.value.trimStart().startsWith('-');
+  const raw=el.value.replace(/[^0-9]/g,'');
+  if(!raw){el.value=isNeg?'-':'';return;}
+  el.value=(isNeg?'-':'')+Number(raw).toLocaleString('ko-KR');
+  const newPos=Math.max(0,el.value.length-right);
+  try{el.setSelectionRange(newPos,newPos);}catch(e){}
+}
+function setAutoVal(id,val){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.value=val;
+  el.classList.add('t-inp-auto');
+}
+
+// ── 재무제표 자동 계산 ──
+function saAutoCalc(){
+  const price=numParse('sa-price');
+  const netincome=numParse('sa-netincome');  // 억원
+  const equity=numParse('sa-equity');        // 억원
+  const shares=numParse('sa-shares');        // 만주
+  const revenue=numParse('sa-revenue');      // 억원
+  const revPrev=numParse('sa-rev-prev');     // 억원
+  const opincome=numParse('sa-opincome');    // 억원
+  const liabilities=numParse('sa-liabilities'); // 억원
+
+  // EPS (원) = 순이익(억원) × 10,000 / 발행주식수(만주) — 손실(음수) 허용
+  let epsCalcDone=false;
+  if(netincome!==0&&shares>0){
+    const eps=Math.round(netincome*10000/shares);
+    const epsStr=(eps<0?'-':'')+Math.abs(eps).toLocaleString('ko-KR');
+    setAutoVal('sa-eps-disp',epsStr);
+    const hint=document.getElementById('sa-eps-hint');if(hint)hint.style.display='block';
+    epsCalcDone=true;
+    // 적자 시 PER 의미 없음 — 비워둠
+    if(price>0&&eps>0)setAutoVal('sa-per',(price/eps).toFixed(1));
+  } else {
+    const hint=document.getElementById('sa-eps-hint');if(hint)hint.style.display='none';
+  }
+  // BPS (원) = 자기자본(억원) × 10,000 / 발행주식수(만주) — 자본잠식(음수) 허용
+  let bpsCalcDone=false;
+  if(equity!==0&&shares>0){
+    const bps=Math.round(equity*10000/shares);
+    const bpsStr=(bps<0?'-':'')+Math.abs(bps).toLocaleString('ko-KR');
+    setAutoVal('sa-bps-disp',bpsStr);
+    const hint=document.getElementById('sa-bps-hint');if(hint)hint.style.display='block';
+    bpsCalcDone=true;
+    if(price>0&&bps>0)setAutoVal('sa-pbr',(price/bps).toFixed(2));
+  } else {
+    const hint=document.getElementById('sa-bps-hint');if(hint)hint.style.display='none';
+  }
+  // PER 수동 EPS fallback (재무제표 없이 EPS 직접 입력 시, 양수만)
+  if(!epsCalcDone&&price>0){
+    const manualEps=parseFloat((document.getElementById('sa-eps-disp')?.value||'').replace(/,/g,''))||0;
+    if(manualEps>0){
+      const perEl=document.getElementById('sa-per');
+      if(perEl&&!perEl.value)setAutoVal('sa-per',(price/manualEps).toFixed(1));
+    }
+  }
+  // PBR 수동 BPS fallback
+  if(!bpsCalcDone&&price>0){
+    const manualBps=parseFloat((document.getElementById('sa-bps-disp')?.value||'').replace(/,/g,''))||0;
+    if(manualBps>0){
+      const pbrEl=document.getElementById('sa-pbr');
+      if(pbrEl&&!pbrEl.value)setAutoVal('sa-pbr',(price/manualBps).toFixed(2));
+    }
+  }
+  // ROE (%) — 순이익 음수(손실) 허용
+  if(netincome!==0&&equity!==0)setAutoVal('sa-roe',(netincome/equity*100).toFixed(1));
+  // 영업이익률 (%) — 영업손실 허용
+  if(revenue>0&&opincome!==0)setAutoVal('sa-opm',(opincome/revenue*100).toFixed(1));
+  // 부채비율 (%)
+  if(liabilities>0&&equity>0)setAutoVal('sa-debt',(liabilities/equity*100).toFixed(0));
+  // 매출 성장률 (%)
+  if(revenue>0&&revPrev>0)setAutoVal('sa-revgrowth',((revenue-revPrev)/revPrev*100).toFixed(1));
+}
+
+// ── 업종 평균 멀티플 ──
+const SECTOR_MULTIPLES={
+  'tech':{avgPer:20,avgPbr:2.5},'bio':{avgPer:35,avgPbr:3.0},
+  'finance':{avgPer:8,avgPbr:0.7},'consumer':{avgPer:15,avgPbr:1.5},
+  'energy':{avgPer:10,avgPbr:1.0},'industrial':{avgPer:12,avgPbr:1.0},
+  'telecom':{avgPer:12,avgPbr:1.2},'etc':{avgPer:13,avgPbr:1.2},
+};
+function saSectorChange(){
+  const sector=document.getElementById('sa-sector')?.value||'etc';
+  const m=SECTOR_MULTIPLES[sector]||SECTOR_MULTIPLES['etc'];
+  const tp=document.getElementById('sa-tgt-per');
+  const bp=document.getElementById('sa-tgt-pbr');
+  if(tp&&!tp.value)tp.value=m.avgPer;
+  if(bp&&!bp.value)bp.value=m.avgPbr;
+}
+
+// ── 뉴스·공시 이벤트 ──
+const SA_NEWS=[
+  {key:'buyback',label:'🛍 자사주 매입',type:'pos',score:5},
+  {key:'earnings_beat',label:'📈 어닝 서프라이즈',type:'pos',score:5},
+  {key:'new_product',label:'🚀 신제품·서비스',type:'pos',score:4},
+  {key:'big_contract',label:'📝 대형 계약·수주',type:'pos',score:4},
+  {key:'partnership',label:'🤝 전략적 제휴',type:'pos',score:3},
+  {key:'dilution',label:'📉 유상증자',type:'neg',score:-4},
+  {key:'earnings_miss',label:'📉 실적 쇼크·적자',type:'neg',score:-5},
+  {key:'insider_sell',label:'🔴 대주주 대량 매도',type:'neg',score:-4},
+  {key:'audit_issue',label:'⚠ 감사의견 한정',type:'neg',score:-6},
+];
+let saNewsActive=new Set();
+
+function saInitNewsChecks(){
+  const el=document.getElementById('sa-news-checks');
+  if(!el||el.children.length)return;
+  el.innerHTML=SA_NEWS.map(n=>`<div class="sa-theme-check${n.type==='neg'?' sa-news-neg':''}" id="sanews-${n.key}" onclick="saToggleNews('${n.key}')">${n.label}</div>`).join('');
+}
+function saToggleNews(key){
+  if(saNewsActive.has(key))saNewsActive.delete(key);else saNewsActive.add(key);
+  document.getElementById('sanews-'+key)?.classList.toggle('active',saNewsActive.has(key));
+  calcStockScore();
+}
+
+const SA_THEMES=[
+  {key:'ai',label:'🤖 AI·반도체'},{key:'battery',label:'🔋 2차전지'},
+  {key:'bio',label:'🧬 바이오·헬스'},  {key:'defense',label:'🛡 방산'},
+  {key:'kwave',label:'🎵 K-콘텐츠'},  {key:'ev',label:'🚗 전기차'},
+  {key:'solar',label:'☀️ 신재생에너지'},{key:'data',label:'🏗 데이터센터'},
+  {key:'robot',label:'🤖 로봇·자동화'},{key:'finance2',label:'💳 핀테크'},
+];
+let saThemeActive=new Set();
+let saRadarCharts={};
+
+function goStockHub(){show('page-stock-hub');}
+function goStockAnalysis(){show('page-stock-analysis');saInitThemes();calcStockScore();}
+
+function switchStockTab(tab,btn){
+  document.querySelectorAll('#page-stock-analysis .tax-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('#page-stock-analysis .tax-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('stock-'+tab).classList.add('active');
+  if(btn)btn.classList.add('active');
+  calcStockScore();
+}
+
+function saInitThemes(){
+  const el=document.getElementById('sa-theme-checks');
+  if(!el||el.children.length)return;
+  el.innerHTML=SA_THEMES.map(t=>`<div class="sa-theme-check" id="sath-${t.key}" onclick="saToggleTheme('${t.key}')">${t.label}</div>`).join('');
+}
+function saToggleTheme(key){
+  if(saThemeActive.has(key))saThemeActive.delete(key);else saThemeActive.add(key);
+  document.getElementById('sath-'+key)?.classList.toggle('active',saThemeActive.has(key));
+  calcStockScore();
+}
+
+function calcMacroScore(){
+  let score=0;const detail=[];
+  const fedrate=parseFloat(document.getElementById('sa-fedrate')?.value)||0;
+  const fomc=document.getElementById('sa-fomc')?.value||'hold';
+  const usdkrw=numParse('sa-usdkrw');
+  const vix=parseFloat(document.getElementById('sa-vix')?.value)||0;
+  const nasdaq=parseFloat(document.getElementById('sa-nasdaq')?.value)||0;
+  const sp500=parseFloat(document.getElementById('sa-sp500')?.value)||0;
+  const cpi=parseFloat(document.getElementById('sa-cpi')?.value)||0;
+
+  // FOMC (0~12점)
+  const fomcS=fomc==='cut'?12:fomc==='hold'?7:2;
+  score+=fomcS;detail.push({label:'FOMC 방향성',score:fomcS,max:12,badge:fomc==='cut'?'good':fomc==='hold'?'ok':'bad',text:fomc==='cut'?'인하(긍정)':fomc==='hold'?'동결(중립)':'인상(부정)'});
+
+  // 환율 (0~10점)
+  let fxS=0;
+  if(usdkrw>0){fxS=usdkrw<1250?10:usdkrw<1350?7:usdkrw<1450?4:1;}
+  score+=fxS;if(usdkrw>0)detail.push({label:'달러/원 환율',score:fxS,max:10,badge:fxS>=7?'good':fxS>=4?'ok':'bad',text:usdkrw+'원'});
+
+  // VIX (0~10점)
+  let vixS=0;
+  if(vix>0){vixS=vix<15?10:vix<20?7:vix<25?4:vix<30?2:0;}
+  score+=vixS;if(vix>0)detail.push({label:'VIX 공포지수',score:vixS,max:10,badge:vixS>=7?'good':vixS>=4?'ok':'bad',text:vix.toFixed(1)});
+
+  // 나스닥 (0~8점)
+  let nqS=0;
+  if(document.getElementById('sa-nasdaq')?.value!==''){nqS=nasdaq>=3?8:nasdaq>=0?5:nasdaq>=-3?2:0;score+=nqS;detail.push({label:'나스닥 1개월',score:nqS,max:8,badge:nqS>=5?'good':nqS>=2?'ok':'bad',text:(nasdaq>=0?'+':'')+nasdaq.toFixed(1)+'%'});}
+
+  // CPI (0~5점)
+  let cpiS=0;
+  if(document.getElementById('sa-cpi')?.value!==''){cpiS=cpi<2?5:cpi<3?4:cpi<4?2:0;score+=cpiS;detail.push({label:'미국 CPI',score:cpiS,max:5,badge:cpiS>=4?'good':cpiS>=2?'ok':'bad',text:cpi.toFixed(1)+'%'});}
+
+  return{score,max:45,detail};
+}
+
+function calcFinanceScore(){
+  let score=0;const detail=[];
+  const pbr=parseFloat(document.getElementById('sa-pbr')?.value)||0;
+  const per=parseFloat(document.getElementById('sa-per')?.value)||0;
+  const epsGrowth=parseFloat(document.getElementById('sa-epsgrowth')?.value)||0;
+  const roe=parseFloat(document.getElementById('sa-roe')?.value)||0;
+  const opm=parseFloat(document.getElementById('sa-opm')?.value)||0;
+  const debt=parseFloat(document.getElementById('sa-debt')?.value)||0;
+  const revGrowth=parseFloat(document.getElementById('sa-revgrowth')?.value)||0;
+
+  // PBR (0~15점) — 음수(자본잠식) 시 0점
+  if(document.getElementById('sa-pbr')?.value!==''){
+    if(pbr<0){
+      score+=0;detail.push({label:'PBR',score:0,max:15,badge:'bad',text:'자본잠식'});
+    } else {
+      const s=pbr<=1?15:pbr<=2?10:pbr<=3?5:pbr<=5?2:0;
+      score+=s;detail.push({label:'PBR',score:s,max:15,badge:s>=10?'good':s>=5?'ok':'bad',text:pbr.toFixed(2)+'x'});
+    }
+  }
+  // PER (0~12점) — 음수(적자) 시 0점
+  if(document.getElementById('sa-per')?.value!==''){
+    if(per<0){
+      score+=0;detail.push({label:'PER',score:0,max:12,badge:'bad',text:'적자'});
+    } else {
+      const s=per<=10?12:per<=15?9:per<=25?5:per<=40?2:0;
+      score+=s;detail.push({label:'PER',score:s,max:12,badge:s>=9?'good':s>=5?'ok':'bad',text:per.toFixed(1)+'x'});
+    }
+  }
+  // EPS 성장률 (0~10점)
+  if(document.getElementById('sa-epsgrowth')?.value!==''){
+    const s=epsGrowth>=30?10:epsGrowth>=15?8:epsGrowth>=5?5:epsGrowth>=0?2:0;
+    score+=s;detail.push({label:'EPS 성장률',score:s,max:10,badge:s>=7?'good':s>=4?'ok':'bad',text:(epsGrowth>=0?'+':'')+epsGrowth.toFixed(1)+'%'});
+  }
+  // ROE (0~10점)
+  if(document.getElementById('sa-roe')?.value!==''){
+    const s=roe>=20?10:roe>=12?8:roe>=6?4:roe>=0?1:0;
+    score+=s;detail.push({label:'ROE',score:s,max:10,badge:s>=7?'good':s>=4?'ok':'bad',text:roe.toFixed(1)+'%'});
+  }
+  // 영업이익률 (0~8점)
+  if(document.getElementById('sa-opm')?.value!==''){
+    const s=opm>=20?8:opm>=10?6:opm>=5?3:opm>=0?1:0;
+    score+=s;detail.push({label:'영업이익률',score:s,max:8,badge:s>=6?'good':s>=3?'ok':'bad',text:opm.toFixed(1)+'%'});
+  }
+  // 부채비율 (0~8점)
+  if(document.getElementById('sa-debt')?.value!==''){
+    const s=debt<=50?8:debt<=100?6:debt<=200?3:debt<=300?1:0;
+    score+=s;detail.push({label:'부채비율',score:s,max:8,badge:s>=6?'good':s>=3?'ok':'bad',text:debt.toFixed(0)+'%'});
+  }
+  // 매출성장률 (0~7점)
+  if(document.getElementById('sa-revgrowth')?.value!==''){
+    const s=revGrowth>=20?7:revGrowth>=10?5:revGrowth>=3?3:revGrowth>=0?1:0;
+    score+=s;detail.push({label:'매출 성장률',score:s,max:7,badge:s>=5?'good':s>=3?'ok':'bad',text:(revGrowth>=0?'+':'')+revGrowth.toFixed(1)+'%'});
+  }
+  return{score,max:70,detail};
+}
+
+function calcThemeScore(){
+  let score=0;const detail=[];
+  const themeCount=saThemeActive.size;
+  const themeS=Math.min(themeCount*4,16);
+  if(themeCount>0)score+=themeS,detail.push({label:'테마 호재',score:themeS,max:16,badge:themeS>=8?'good':themeS>=4?'ok':'bad',text:themeCount+'개 해당'});
+
+  // 52주 위치 (0~12점)
+  const h=numParse('sa-high52');
+  const l=numParse('sa-low52');
+  const cur=numParse('sa-current');
+  if(h>l&&cur>0){
+    const pos=(cur-l)/(h-l)*100;
+    const s=pos<=30?12:pos<=50?9:pos<=70?6:pos<=85?3:1;
+    score+=s;detail.push({label:'52주 가격 위치',score:s,max:12,badge:s>=9?'good':s>=5?'ok':'bad',text:Math.round(pos)+'% 위치'});
+  }
+
+  // 외국인 수급 (0~10점)
+  const foreign=document.getElementById('sa-foreign')?.value||'neutral';
+  const fS=foreign==='buy'?10:foreign==='neutral'?5:0;
+  score+=fS;detail.push({label:'외국인 수급',score:fS,max:10,badge:fS>=7?'good':fS>=4?'ok':'bad',text:foreign==='buy'?'순매수':foreign==='neutral'?'중립':'순매도'});
+
+  // 기관 수급 (0~8점)
+  const inst=document.getElementById('sa-institution')?.value||'neutral';
+  const iS=inst==='buy'?8:inst==='neutral'?4:0;
+  score+=iS;detail.push({label:'기관 수급',score:iS,max:8,badge:iS>=6?'good':iS>=3?'ok':'bad',text:inst==='buy'?'순매수':inst==='neutral'?'중립':'순매도'});
+
+  // 거래량 (0~6점)
+  const vol=document.getElementById('sa-volume')?.value||'normal';
+  const vS=vol==='surge'?6:vol==='normal'?3:0;
+  score+=vS;detail.push({label:'거래량',score:vS,max:6,badge:vS>=5?'good':vS>=2?'ok':'bad',text:vol==='surge'?'급증':vol==='normal'?'보통':'감소'});
+
+  return{score,max:52,detail};
+}
+
+function calcStockScore(){
+  const macro=calcMacroScore();
+  const finance=calcFinanceScore();
+  const theme=calcThemeScore();
+
+  // 각 카테고리를 100점 만점으로 정규화 후 가중평균
+  const macroN=macro.max>0?macro.score/macro.max*100:0;
+  const finN=finance.max>0?finance.score/finance.max*100:0;
+  const themeN=theme.max>0?theme.score/theme.max*100:0;
+  const total=Math.round(macroN*0.30+finN*0.45+themeN*0.25);
+
+  // 방향성 신호 결정
+  let signal,signalCls,signalIcon;
+  if(total>=68){signal='매수 우호 구간';signalCls='buy';signalIcon='🟢';}
+  else if(total>=45){signal='관망 구간';signalCls='watch';signalIcon='🟡';}
+  else{signal='신중 접근 구간';signalCls='caution';signalIcon='🔴';}
+
+  // 12일 방향성 바 시뮬레이션 (점수 기반 랜덤시드 아닌 결정론적 값)
+  const bars=Array.from({length:12},(_,i)=>{
+    const v=total+(Math.sin(i*1.3+total*0.1)*15);
+    return Math.max(5,Math.min(95,Math.round(v)));
+  });
+
+  // 패널별 고유 레이더 canvas ID 부여
+  const radarIds=['sa-radar','sa-radar2','sa-radar3'];
+  ['stock-score-panel','stock-score-panel2','stock-score-panel3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el)el.innerHTML=renderScorePanel({total,macroN,finN,themeN,signal,signalCls,signalIcon,bars,macro,finance,theme,radarId:radarIds[i]});
+  });
+
+  // 레이더 차트 — 3개 패널 모두 렌더
+  setTimeout(()=>radarIds.forEach(rid=>renderRadarChart(macroN,finN,themeN,rid)),50);
+}
+
+function renderDetGroup(label,color,dot,detail){
+  if(!detail.length)return'';
+  const items=detail.map(d=>{
+    const pct=Math.round(d.score/d.max*100);
+    const barClr=d.badge==='good'?'#22c55e':d.badge==='ok'?'#f59e0b':'#ef4444';
+    return`<div class="sa-det-item">
+      <div class="sa-det-item-row">
+        <span class="sa-det-item-name">${d.label}</span>
+        <span class="sa-badge ${d.badge}">${d.text}</span>
+        <span class="sa-det-pts">${d.score}<span class="sa-det-max">/${d.max}</span></span>
+      </div>
+      <div class="sa-det-bar"><div class="sa-det-bar-fill" style="width:${pct}%;background:${barClr}"></div></div>
+    </div>`;
+  }).join('');
+  return`<div class="sa-det-group">
+    <div class="sa-det-group-hd"><div class="sa-det-group-dot" style="background:${dot}"></div><span class="sa-det-group-label">${label}</span></div>
+    ${items}
+  </div>`;
+}
+
+function renderScorePanel({total,macroN,finN,themeN,signal,signalCls,signalIcon,bars,macro,finance,theme,radarId='sa-radar'}){
+  const scoreColor=total>=68?'var(--g700)':total>=45?'#b45309':'var(--red)';
+  const detailHtml=renderDetGroup('시장 환경','#3b82f6','#3b82f6',macro.detail)
+    +renderDetGroup('기업 재무','#22c55e','#22c55e',finance.detail)
+    +renderDetGroup('테마·모멘텀','#8b5cf6','#8b5cf6',theme.detail);
+  const barHtml=bars.map((v,i)=>{
+    const clr=v>=65?'#22c55e':v>=45?'#f59e0b':'#ef4444';
+    return`<div class="sa-12day-bar" style="height:${v}%;background:${clr};opacity:${0.5+i*0.04}"></div>`;
+  }).join('');
+
+  // 가중치별 기여 점수 (시장환경 30 + 기업재무 45 + 테마 25 = 100)
+  const comps=[
+    {label:'시장 환경', weight:30, contrib:Math.round(macroN*0.30),  clr:'#3b82f6'},
+    {label:'기업 재무', weight:45, contrib:Math.round(finN*0.45),    clr:'#22c55e'},
+    {label:'테마·모멘텀',weight:25, contrib:Math.round(themeN*0.25), clr:'#8b5cf6'},
+  ];
+  const sumHtml=comps.map((c,i)=>`
+    ${i>0?'<div class="sa-sum-op">+</div>':''}
+    <div class="sa-sum-item">
+      <div class="sa-sum-lbl">${c.label}</div>
+      <div class="sa-sum-weight">가중 ${c.weight}점</div>
+      <div class="sa-sum-v" style="color:${c.clr}">${c.contrib}</div>
+      <div class="sa-sum-mx">/ ${c.weight}점</div>
+      <div class="sa-sum-seg-bar"><div class="sa-sum-seg-fill" style="width:${Math.round(c.contrib/c.weight*100)}%;background:${c.clr}"></div></div>
+    </div>`).join('');
+
+  return`
+    <div class="sa-12day">
+      <div class="sa-12day-title">📅 12일 방향성 신호 (기술적 지표 기반)</div>
+      <div class="sa-12day-signal">${signalIcon} ${signal}</div>
+      <div style="font-size:11px;opacity:.7">종합 스코어 ${total}점 기반 방향성 추정</div>
+      <div class="sa-12day-bars">${barHtml}</div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;opacity:.5;margin-top:4px"><span>오늘</span><span>+12일</span></div>
+    </div>
+    <div class="sa-score-sum">
+      ${sumHtml}
+      <div class="sa-sum-op" style="font-size:26px;color:var(--text2)">=</div>
+      <div class="sa-sum-total">
+        <div class="sa-sum-total-lbl">종합 투자 스코어</div>
+        <div class="sa-sum-big" style="color:${scoreColor}">${total}<span class="sa-sum-denom">/100</span></div>
+        <span class="sa-sum-signal-row ${signalCls}">${signalIcon} ${signal}</span>
+      </div>
+    </div>
+    <div class="t-panel" style="margin-bottom:14px">
+      <div class="t-panel-title">레이더 분석</div>
+      <div class="sa-radar-wrap"><canvas id="${radarId}"></canvas></div>
+    </div>
+    <div class="t-panel">
+      <div class="t-panel-title">항목별 상세 점수</div>
+      <div class="sa-det-wrap">${detailHtml||'<div class="sa-det-empty">데이터를 입력하면<br>항목별 점수가 여기에 표시됩니다</div>'}</div>
+    </div>`;
+}
+
+function renderRadarChart(macroN,finN,themeN,canvasId='sa-radar'){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas||typeof Chart==='undefined')return;
+  if(saRadarCharts[canvasId])saRadarCharts[canvasId].destroy();
+  saRadarCharts[canvasId]=new Chart(canvas,{
+    type:'radar',
+    data:{
+      labels:['시장 환경','기업 재무','테마·모멘텀'],
+      datasets:[{
+        label:'스코어',
+        data:[Math.round(macroN),Math.round(finN),Math.round(themeN)],
+        backgroundColor:'rgba(26,92,56,.15)',
+        borderColor:'rgba(26,92,56,.8)',
+        borderWidth:2,
+        pointBackgroundColor:'rgba(26,92,56,1)',
+        pointRadius:4,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      scales:{r:{min:0,max:100,ticks:{stepSize:25,font:{size:9}},pointLabels:{font:{size:11,weight:'700'}}}},
+      plugins:{legend:{display:false}},
+    }
+  });
 }
 </script>
 </body>
