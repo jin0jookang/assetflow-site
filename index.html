@@ -701,7 +701,8 @@ canvas#donut{width:160px;height:160px}
 .val-upside-pos{font-size:11px;font-weight:800;color:var(--g700);margin-top:3px}
 .val-upside-neg{font-size:11px;font-weight:800;color:var(--red);margin-top:3px}
 /* ── AUTH ── */
-#page-auth{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:linear-gradient(155deg,#f0fdf8 0%,#fff 55%)}
+#page-auth{flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:linear-gradient(155deg,#f0fdf8 0%,#fff 55%)}
+#page-auth.active{display:flex}
 .auth-card{width:100%;max-width:400px;background:#fff;border-radius:22px;padding:38px 34px 32px;box-shadow:0 8px 40px rgba(0,0,0,.10),0 0 0 1px rgba(45,122,74,.07)}
 .auth-logo-wrap{text-align:center;margin-bottom:6px}
 .auth-logo{font-size:24px;font-weight:900;color:var(--g700);letter-spacing:-1.2px}
@@ -757,6 +758,14 @@ canvas#donut{width:160px;height:160px}
 .admin-btn-reject:hover{background:#fee2e2}
 .admin-btn-revoke{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)}
 .admin-empty{text-align:center;padding:32px;color:var(--muted);font-size:13px;border:1.5px dashed var(--border);border-radius:12px}
+.admin-toolbar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#fff;border:1.5px solid var(--border);border-radius:12px;margin-bottom:10px}
+.admin-toolbar-label{font-size:12px;font-weight:700;color:var(--muted)}
+.admin-check-wrap{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);user-select:none}
+.admin-check-wrap input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--g500)}
+.admin-filter-tabs{display:flex;gap:4px;margin-bottom:10px}
+.admin-filter-tab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.admin-filter-tab.active{background:var(--g700);color:#fff;border-color:var(--g700)}
+.adm-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--g500);flex-shrink:0}
 /* 홈 유저 영역 */
 .home-user-bar{display:flex;align-items:center;gap:10px;margin-left:auto}
 .home-user-name{font-size:13px;font-weight:700;color:var(--g700)}
@@ -6583,42 +6592,93 @@ function updateAuthUI(){
 }
 
 // ── 어드민 페이지 ──
-function renderAdminPage(){
+let admFilter='all'; // 'all' | 'pending' | 'approved' | 'rejected'
+
+function renderAdminPage(filter){
+  if(filter!==undefined)admFilter=filter;
   const users=afGetUsers();
   const total=users.length;
-  const pending=users.filter(u=>u.status==='pending').length;
-  const approved=users.filter(u=>u.status==='approved').length;
-  const rejected=users.filter(u=>u.status==='rejected').length;
+  const pendingCnt=users.filter(u=>u.status==='pending').length;
+  const approvedCnt=users.filter(u=>u.status==='approved').length;
+  const rejectedCnt=users.filter(u=>u.status==='rejected').length;
   const setTxt=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   setTxt('adm-cnt-total',total);
-  setTxt('adm-cnt-pending',pending);
-  setTxt('adm-cnt-approved',approved);
-  setTxt('adm-cnt-rejected',rejected);
+  setTxt('adm-cnt-pending',pendingCnt);
+  setTxt('adm-cnt-approved',approvedCnt);
+  setTxt('adm-cnt-rejected',rejectedCnt);
   const listEl=document.getElementById('adm-user-list');
   if(!listEl)return;
-  if(total===0){listEl.innerHTML='<div class="admin-empty">등록된 회원이 없습니다.</div>';return;}
-  // 정렬: 대기 → 승인 → 거부
+
+  // 필터 탭
+  const filterLabels=[
+    {key:'all',label:'전체',cnt:total},
+    {key:'pending',label:'승인 대기',cnt:pendingCnt},
+    {key:'approved',label:'승인 완료',cnt:approvedCnt},
+    {key:'rejected',label:'거부됨',cnt:rejectedCnt}
+  ];
+  const filterTabsHtml=`<div class="admin-filter-tabs">
+    ${filterLabels.map(f=>`<button class="admin-filter-tab${admFilter===f.key?' active':''}" onclick="renderAdminPage('${f.key}')">${f.label} ${f.cnt}</button>`).join('')}
+  </div>`;
+
+  // 표시할 유저 필터링 & 정렬
   const order={pending:0,approved:1,rejected:2};
-  const sorted=[...users].sort((a,b)=>(order[a.status]||0)-(order[b.status]||0));
-  listEl.innerHTML=sorted.map(u=>{
-    const statusLabel={pending:'승인 대기',approved:'승인 완료',rejected:'거부됨'}[u.status]||u.status;
-    const btns=u.status==='pending'
-      ?`<button class="admin-btn-approve" onclick="approveUser('${u.email}')">승인</button>
-         <button class="admin-btn-reject" onclick="rejectUser('${u.email}')">거부</button>`
-      :u.status==='approved'
-      ?`<button class="admin-btn-revoke" onclick="revokeUser('${u.email}')">승인 취소</button>`
-      :`<button class="admin-btn-approve" onclick="approveUser('${u.email}')">재승인</button>`;
-    return`<div class="admin-user-card ${u.status}">
-      <div class="admin-user-info">
-        <div class="admin-user-name">${u.name} <span class="admin-badge ${u.status}">${statusLabel}</span></div>
-        <div class="admin-user-email">${u.email}</div>
-        <div class="admin-user-meta">생년월일 ${u.birthdate||'—'} &nbsp;·&nbsp; 가입일 ${u.createdAt||'—'}</div>
-      </div>
-      <div class="admin-actions">${btns}</div>
-    </div>`;
-  }).join('');
+  const filtered=users
+    .filter(u=>admFilter==='all'||u.status===admFilter)
+    .sort((a,b)=>(order[a.status]||0)-(order[b.status]||0));
+
+  if(filtered.length===0){
+    listEl.innerHTML=filterTabsHtml+'<div class="admin-empty">해당 조건의 회원이 없습니다.</div>';
+    return;
+  }
+
+  // 툴바 (체크박스 전체선택 + 일괄 승인/거부)
+  const toolbar=`<div class="admin-toolbar">
+    <label class="admin-check-wrap">
+      <input type="checkbox" id="adm-check-all" onchange="admToggleAll(this.checked)">
+      <span>전체 선택</span>
+    </label>
+    <span class="admin-toolbar-label" id="adm-sel-count" style="color:var(--g500)"></span>
+    <div style="flex:1"></div>
+    <button class="admin-btn-approve" onclick="admBulkAction('approved')">✓ 승인</button>
+    <button class="admin-btn-reject" onclick="admBulkAction('rejected')">✗ 거부</button>
+  </div>`;
+
+  const statusLabel={pending:'승인 대기',approved:'승인 완료',rejected:'거부됨'};
+  const cards=filtered.map(u=>`<div class="admin-user-card ${u.status}" data-email="${u.email}">
+    <input type="checkbox" class="adm-cb" data-email="${u.email}" onchange="admUpdateSelCount()">
+    <div class="admin-user-info">
+      <div class="admin-user-name">${u.name} <span class="admin-badge ${u.status}">${statusLabel[u.status]||u.status}</span></div>
+      <div class="admin-user-email">${u.email}</div>
+      <div class="admin-user-meta">생년월일 ${u.birthdate||'—'} &nbsp;·&nbsp; 가입일 ${u.createdAt||'—'}</div>
+    </div>
+  </div>`).join('');
+
+  listEl.innerHTML=filterTabsHtml+toolbar+cards;
 }
 
+function admToggleAll(checked){
+  document.querySelectorAll('.adm-cb').forEach(cb=>cb.checked=checked);
+  admUpdateSelCount();
+}
+function admUpdateSelCount(){
+  const sel=document.querySelectorAll('.adm-cb:checked').length;
+  const el=document.getElementById('adm-sel-count');
+  if(el)el.textContent=sel>0?sel+'명 선택됨':'';
+  // 전체선택 체크박스 상태 반영
+  const all=document.querySelectorAll('.adm-cb').length;
+  const allCb=document.getElementById('adm-check-all');
+  if(allCb){allCb.checked=sel===all&&all>0;allCb.indeterminate=sel>0&&sel<all;}
+}
+function admBulkAction(newStatus){
+  const selected=[...document.querySelectorAll('.adm-cb:checked')].map(cb=>cb.dataset.email);
+  if(!selected.length){alert('처리할 회원을 선택해주세요.');return;}
+  const label=newStatus==='approved'?'승인':'거부';
+  if(!confirm(selected.length+'명을 '+label+' 처리하시겠어요?'))return;
+  const users=afGetUsers();
+  selected.forEach(email=>{const u=users.find(u=>u.email===email);if(u)u.status=newStatus;});
+  afSaveUsers(users);
+  renderAdminPage();
+}
 function approveUser(email){
   const users=afGetUsers();
   const u=users.find(u=>u.email===email);
@@ -6628,11 +6688,6 @@ function rejectUser(email){
   const users=afGetUsers();
   const u=users.find(u=>u.email===email);
   if(u){u.status='rejected';afSaveUsers(users);renderAdminPage();}
-}
-function revokeUser(email){
-  const users=afGetUsers();
-  const u=users.find(u=>u.email===email);
-  if(u){u.status='pending';afSaveUsers(users);renderAdminPage();}
 }
 
 // ── 앱 초기화: 로그인 상태 확인 ──
