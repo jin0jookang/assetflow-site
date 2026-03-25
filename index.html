@@ -6540,7 +6540,7 @@ function doSignup(){
   if(!pw){showAuthErr('auth-err-signup','비밀번호를 입력해주세요.');return;}
   if(!/[a-zA-Z]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 영문자를 1자 이상 포함해주세요.');return;}
   if(!/[0-9]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 숫자를 1자 이상 포함해주세요.');return;}
-  if(!/[!@#$%^&*()\-_=+\[\]{};':"\\|,.<>/?`~]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 특수문자를 1자 이상 포함해주세요.');return;}
+  if(!/[!@#$%^&*()\-_=+\[\]{};"'\\|,.<>/?~]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 특수문자를 1자 이상 포함해주세요.');return;}
   if(pw.length<8){showAuthErr('auth-err-signup','비밀번호를 8자 이상 입력해주세요.');return;}
   if(pw!==pw2){showAuthErr('auth-err-signup','비밀번호가 일치하지 않습니다.');return;}
   const users=afGetUsers();
