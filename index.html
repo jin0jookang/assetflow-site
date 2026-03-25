@@ -6506,24 +6506,27 @@ function clearAuthErr(){
 function showAuthErr(id,msg){const el=document.getElementById(id);if(el)el.textContent=msg;}
 
 function doLogin(){
-  const id=(document.getElementById('auth-login-email')?.value||'').trim();
-  const pw=document.getElementById('auth-login-pw')?.value||'';
-  if(!id||!pw){showAuthErr('auth-err-login','아이디와 비밀번호를 모두 입력해주세요.');return;}
+  var loginId=(document.getElementById('auth-login-email')||{}).value||'';
+  var loginPw=(document.getElementById('auth-login-pw')||{}).value||'';
+  loginId=loginId.trim();
+  if(!loginId||!loginPw){showAuthErr('auth-err-login','아이디와 비밀번호를 모두 입력해주세요.');return;}
   // 어드민 체크
-  if(id===AF_ADMIN_ID&&pw===AF_ADMIN_PW){
+  if(loginId==='admin'&&loginPw==='1'){
     afSetSession({email:'admin',isAdmin:true});
     renderAdminPage();
     show('page-admin');
     return;
   }
   // 일반 이메일 형식 체크
-  if(!id.includes('@')){showAuthErr('auth-err-login','올바른 이메일 형식을 입력해주세요.');return;}
-  const email=id.toLowerCase();
-  const user=afGetUsers().find(u=>u.email===email&&u.password===pw);
-  if(!user){showAuthErr('auth-err-login','이메일 또는 비밀번호가 일치하지 않습니다.');return;}
-  if(user.status==='pending'){showAuthErr('auth-err-login','가입 승인 대기 중입니다. 관리자 승인 후 이용 가능합니다.');return;}
-  if(user.status==='rejected'){showAuthErr('auth-err-login','가입이 거부되었습니다. 관리자에게 문의해주세요.');return;}
-  afSetSession({email,isAdmin:false});
+  if(loginId.indexOf('@')<0){showAuthErr('auth-err-login','올바른 이메일 형식을 입력해주세요.');return;}
+  var loginEmail=loginId.toLowerCase();
+  var allUsers=afGetUsers();
+  var foundUser=null;
+  for(var i=0;i<allUsers.length;i++){if(allUsers[i].email===loginEmail&&allUsers[i].password===loginPw){foundUser=allUsers[i];break;}}
+  if(!foundUser){showAuthErr('auth-err-login','이메일 또는 비밀번호가 일치하지 않습니다.');return;}
+  if(foundUser.status==='pending'){showAuthErr('auth-err-login','가입 승인 대기 중입니다. 관리자 승인 후 이용 가능합니다.');return;}
+  if(foundUser.status==='rejected'){showAuthErr('auth-err-login','가입이 거부되었습니다. 관리자에게 문의해주세요.');return;}
+  afSetSession({email:loginEmail,isAdmin:false});
   updateAuthUI();
   show('page-home');
 }
@@ -6538,10 +6541,10 @@ function doSignup(){
   if(!email||!email.includes('@')){showAuthErr('auth-err-signup','올바른 이메일을 입력해주세요.');return;}
   if(!birth){showAuthErr('auth-err-signup','생년월일을 입력해주세요.');return;}
   if(!pw){showAuthErr('auth-err-signup','비밀번호를 입력해주세요.');return;}
-  if(!/[a-zA-Z]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 영문자를 1자 이상 포함해주세요.');return;}
-  if(!/[0-9]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 숫자를 1자 이상 포함해주세요.');return;}
-  if(!/[!@#$%^&*()\-_=+\[\]{};"'\\|,.<>/?~]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 특수문자를 1자 이상 포함해주세요.');return;}
   if(pw.length<8){showAuthErr('auth-err-signup','비밀번호를 8자 이상 입력해주세요.');return;}
+  if(!/[a-zA-Z]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 영문자(대소문자)를 1자 이상 포함해주세요.');return;}
+  if(!/[0-9]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 숫자를 1자 이상 포함해주세요.');return;}
+  if(!/[!@#$%^&*()\-_=+{}|;:<>,.?/~]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 특수문자(!@#$% 등)를 1자 이상 포함해주세요.');return;}
   if(pw!==pw2){showAuthErr('auth-err-signup','비밀번호가 일치하지 않습니다.');return;}
   const users=afGetUsers();
   if(users.find(u=>u.email===email)){showAuthErr('auth-err-signup','이미 가입된 이메일입니다. 로그인해주세요.');return;}
