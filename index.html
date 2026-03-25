@@ -601,6 +601,14 @@ canvas#donut{width:160px;height:160px}
 .pl-row:hover .pl-del-btn,.pl-row:focus-within .pl-del-btn{opacity:1;pointer-events:auto}
 .pl-add-row-btn{display:block;width:100%;padding:7px;margin:6px 0 4px;border:1.5px dashed var(--border);background:transparent;border-radius:8px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center}
 .pl-add-row-btn:hover{border-color:var(--g300);color:var(--g700);background:var(--g50)}
+/* 호버 툴팁 */
+.pl-ttip{position:relative;display:inline-flex}
+.pl-ttip[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(15,23,42,.88);color:#fff;font-size:11px;font-weight:600;padding:5px 11px;border-radius:8px;white-space:nowrap;z-index:300;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.pl-ttip[data-tip]:hover::before{content:'';position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:rgba(15,23,42,.88);z-index:300;pointer-events:none}
+/* 자산 배분 범례 */
+.pl-asset-leg{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(226,236,230,.5)}
+.pl-asset-leg:last-child{border-bottom:none}
+.pl-asset-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
 .pl-chart-controls{display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:8px}
 .pl-chart-filters{display:flex;gap:5px;flex-wrap:wrap}
 .pl-filter-btn{padding:4px 11px;border-radius:100px;border:1.5px solid var(--border);background:transparent;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s}
@@ -1189,9 +1197,6 @@ canvas#donut{width:160px;height:160px}
     <button class="back-btn" onclick="goHome()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 홈</button>
     <span class="div-nav-title">월 배당금 계산기</span>
     <div class="nav-spacer"></div>
-    <button class="save-btn" id="div-save-btn" onclick="openSaveModal('dividend')" title="현재 포트폴리오 스냅샷 저장">
-      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 13h10V5l-4-4H2v12z"/><path d="M8 1v4h4"/><path d="M4 8h6M4 10.5h4"/></svg>저장
-    </button>
     <button class="refresh-btn" id="refreshBtn" onclick="fetchAllPrices()">
       <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10.5 2A5 5 0 1 0 11 6"/><polyline points="8,1 10.5,2 9.5,4.5"/></svg>
       실시간 갱신
@@ -1335,6 +1340,11 @@ canvas#donut{width:160px;height:160px}
           <div class="fee-card"><div class="fee-label">증권사 수수료 (추정)</div><div class="fee-value" id="fee-brokerage">0원</div><div class="fee-sub">국내 0.015% / 해외 0.25%</div></div>
           <div class="fee-card" style="background:var(--g50);border-color:var(--g100)"><div class="fee-label">연간 실수령 배당금</div><div class="fee-value" id="fee-net" style="color:var(--g700);font-size:17px;font-weight:800">0원</div><div class="fee-sub">세금 공제 후 / 년</div></div>
         </div>
+        <div style="padding:10px 18px 4px;text-align:right">
+          <button class="save-btn" id="div-save-btn" onclick="openSaveModal('dividend')" title="현재 포트폴리오 스냅샷 저장">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 13h10V5l-4-4H2v12z"/><path d="M8 1v4h4"/><path d="M4 8h6M4 10.5h4"/></svg>결과 저장
+          </button>
+        </div>
         <div style="padding:0 18px 14px;font-size:10px;color:var(--muted);line-height:1.6">⚠ 배당수익률은 참고값입니다. 실제 배당금은 기업 실적에 따라 변동됩니다. 이 계산기는 참고용이며 실제 투자 결정은 전문가와 상담하세요.</div>
       </div>
     </div>
@@ -1345,6 +1355,7 @@ canvas#donut{width:160px;height:160px}
 <div id="page-tax" class="page">
   <div class="tax-nav">
     <button class="back-btn" onclick="goTaxHub()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 세금 계산기</button>
+    <button class="back-btn" onclick="goHome()" style="color:var(--muted);font-size:11px;border-color:var(--border)"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 7.5L7 3l5 4.5"/><path d="M3.5 6.5V11h2.5V8.5h2V11h2.5V6.5"/></svg> 홈으로</button>
     <span class="div-nav-title">세금 계산기</span>
     <div class="nav-spacer"></div>
     <div class="tax-main-tabs">
@@ -1558,11 +1569,14 @@ canvas#donut{width:160px;height:160px}
         <div class="t-panel">
           <div class="t-panel-title">연말정산 단계 입력</div>
           <div class="t-body">
-            <div class="yr-step-nav">
-              <button class="yr-step-pill current" id="ysp1" onclick="goYrStep(1)">① 급여</button>
-              <button class="yr-step-pill locked" id="ysp2" onclick="goYrStep(2)">② 인적공제</button>
-              <button class="yr-step-pill locked" id="ysp3" onclick="goYrStep(3)">③ 소득공제</button>
-              <button class="yr-step-pill locked" id="ysp4" onclick="goYrStep(4)">④ 세액공제</button>
+            <div class="yr-step-nav" style="justify-content:space-between">
+              <div style="display:flex;gap:4px;flex-wrap:wrap">
+                <button class="yr-step-pill current" id="ysp1" onclick="goYrStep(1)">① 급여</button>
+                <button class="yr-step-pill locked" id="ysp2" onclick="goYrStep(2)">② 인적공제</button>
+                <button class="yr-step-pill locked" id="ysp3" onclick="goYrStep(3)">③ 소득공제</button>
+                <button class="yr-step-pill locked" id="ysp4" onclick="goYrStep(4)">④ 세액공제</button>
+              </div>
+              <button onclick="goHome()" style="font-size:11px;font-weight:700;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:100px;padding:4px 11px;cursor:pointer;font-family:var(--sans);white-space:nowrap;flex-shrink:0">🏠 홈으로</button>
             </div>
 
             <!-- STEP 1 -->
@@ -1762,10 +1776,35 @@ canvas#donut{width:160px;height:160px}
               <hr class="t-divider">
               <div class="t-section-label">신용카드 등 소득공제</div>
               <div class="t-notice-box info" style="margin-bottom:6px">
-                💳 <strong>공제 구조</strong><br>
-                총 사용액이 <strong>총급여의 25%</strong>를 넘는 금액부터 공제 시작<br>
-                초과분 공제율: 신용카드 <strong>15%</strong> · 체크카드·현금영수증 <strong>30%</strong> · 전통시장 <strong>40%</strong><br>
-                공제 한도: 총급여 7천만↓ <strong>300만원</strong> / 7천만~1.2억 <strong>250만원</strong> / 1.2억↑ <strong>200만원</strong>
+                💳 <strong>공제 구조</strong> &nbsp;총 사용액이 <strong>총급여의 25%</strong>를 넘는 금액부터 공제 시작
+                <table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:11px">
+                  <thead>
+                    <tr style="background:rgba(0,0,0,.04)">
+                      <th style="padding:5px 8px;text-align:left;font-weight:700;border:1px solid rgba(0,0,0,.08);white-space:nowrap">구분</th>
+                      <th style="padding:5px 8px;text-align:center;font-weight:700;border:1px solid rgba(0,0,0,.08);white-space:nowrap">공제율</th>
+                      <th style="padding:5px 8px;text-align:center;font-weight:700;border:1px solid rgba(0,0,0,.08);white-space:nowrap">총급여 7천만↓</th>
+                      <th style="padding:5px 8px;text-align:center;font-weight:700;border:1px solid rgba(0,0,0,.08);white-space:nowrap">7천만~1.2억</th>
+                      <th style="padding:5px 8px;text-align:center;font-weight:700;border:1px solid rgba(0,0,0,.08);white-space:nowrap">1.2억↑</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="padding:4px 8px;border:1px solid rgba(0,0,0,.08)">신용카드</td>
+                      <td style="padding:4px 8px;text-align:center;border:1px solid rgba(0,0,0,.08);font-weight:700">15%</td>
+                      <td style="padding:4px 8px;text-align:center;border:1px solid rgba(0,0,0,.08)" rowspan="3"><strong>300만원</strong></td>
+                      <td style="padding:4px 8px;text-align:center;border:1px solid rgba(0,0,0,.08)" rowspan="3"><strong>250만원</strong></td>
+                      <td style="padding:4px 8px;text-align:center;border:1px solid rgba(0,0,0,.08)" rowspan="3"><strong>200만원</strong></td>
+                    </tr>
+                    <tr>
+                      <td style="padding:4px 8px;border:1px solid rgba(0,0,0,.08)">체크카드·현금영수증</td>
+                      <td style="padding:4px 8px;text-align:center;border:1px solid rgba(0,0,0,.08);font-weight:700">30%</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:4px 8px;border:1px solid rgba(0,0,0,.08)">전통시장</td>
+                      <td style="padding:4px 8px;text-align:center;border:1px solid rgba(0,0,0,.08);font-weight:700">40%</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
               <div class="t-inline">
                 <span class="t-inline-label">신용카드 사용액 <small class="t-sub-label">초과분의 15% 공제</small></span>
@@ -1946,6 +1985,19 @@ canvas#donut{width:160px;height:160px}
               </div>
               <div class="t-deduct-row" id="yr-donate-r">기부금 세액공제액 합계 <span class="zero">0원</span></div>
 
+              <hr class="t-divider">
+              <div class="t-section-label">ISA 만기 연금계좌 전환 세액공제</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:6px">ISA 계좌 만기 해지 후 연금계좌(연금저축·IRP)로 전환한 금액 · 총급여 5,500만원 이하 12% · 초과 10% · 한도 300만원</div>
+              <div class="t-inline">
+                <span class="t-inline-label">ISA → 연금계좌 전환금액
+                  <small class="t-sub-label">전환금액의 10%(또는 12%), 최대 300만원 세액공제</small>
+                </span>
+                <input class="t-inline-inp" id="yr-isa" type="text" inputmode="numeric" placeholder="0" oninput="fmtCommaInput(this);yrCalc()">
+                <span class="t-inline-unit">원</span>
+              </div>
+              <div class="t-deduct-row" id="yr-isa-r">ISA 전환 세액공제액 <span class="zero">0원</span> <small style="font-weight:400;color:var(--muted)" id="yr-isa-rate"></small></div>
+              <div class="t-notice-box info" style="margin-top:2px">💡 ISA 계좌 내 이자·배당소득은 일반형 200만원 / 서민·농어민형 400만원까지 <strong>비과세</strong>이며, 이 항목과는 별개로 적용됩니다.</div>
+
               <div class="t-inline highlight" style="margin-top:10px">
                 <span class="t-inline-label">개별 세액공제 합계</span>
                 <span style="font-size:14px;font-weight:800;color:var(--g700)" id="yr-taxCreditTotal">—</span>
@@ -2001,11 +2053,14 @@ canvas#donut{width:160px;height:160px}
   <div class="pl-month-bar">
     <div class="pl-month-tabs" id="pl-month-tabs"></div>
     <div class="pl-month-actions">
-      <button class="pl-action-btn" style="background:var(--blue);color:#fff" onclick="openImportModal()">
-        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 2v8M4 7l3 3 3-3"/><path d="M2 11h10"/></svg>내 자산 가져오기
-      </button>
-      <button class="pl-action-btn pl-action-copy" onclick="plApplyAll(this)" title="이번 달 데이터를 나머지 11개월에 모두 복사"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="8" height="8" rx="1.5"/><path d="M2 10V2h8"/></svg>전체 월에 적용</button>
+      <div class="pl-ttip" data-tip="자산플로우에 있는 내 자산을 가지고 오세요.">
+        <button class="pl-action-btn" style="background:var(--blue);color:#fff" onclick="openImportModal()">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 2v8M4 7l3 3 3-3"/><path d="M2 11h10"/></svg>내 자산 가져오기
+        </button>
+      </div>
+      <button class="pl-action-btn pl-action-copy" onclick="openPlApplyModal()" title="적용할 항목과 대상 월을 선택합니다"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="8" height="8" rx="1.5"/><path d="M2 10V2h8"/></svg>월에 적용</button>
       <button class="pl-action-btn pl-action-reset" onclick="plResetMonth()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 7a5 5 0 1 1 1.5 3.5"/><polyline points="2,4 2,7 5,7"/></svg>이달 초기화</button>
+      <button class="pl-action-btn" id="pl-undo-btn" onclick="plUndo()" disabled title="마지막 작업 되돌리기 (최대 15단계)" style="opacity:.4;cursor:not-allowed"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 5h7a3 3 0 0 1 0 6H5"/><path d="M2 5l3-3M2 5l3 3"/></svg>되돌리기</button>
     </div>
   </div>
 
@@ -2075,6 +2130,22 @@ canvas#donut{width:160px;height:160px}
             <div class="pl-break-label">금융 (저축·투자·이자)</div>
             <div class="pl-break-val" id="pl-fin-total" style="font-size:13px">—</div>
           </div>
+        </div>
+      </div>
+
+      <!-- 자산 포트폴리오 -->
+      <div class="t-panel" id="pl-asset-panel" style="margin-bottom:14px;display:none">
+        <div class="t-panel-title">🗂 내 자산 포트폴리오</div>
+        <div class="t-body">
+          <div style="position:relative;width:176px;height:176px;margin:0 auto 14px">
+            <canvas id="pl-asset-chart"></canvas>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;gap:2px">
+              <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.4px">총 자산</div>
+              <div id="pl-asset-total" style="font-size:13px;font-weight:900;color:var(--g900);letter-spacing:-.5px">—</div>
+            </div>
+          </div>
+          <div id="pl-asset-legend"></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.6;padding-top:8px;border-top:1px solid var(--border)">※ 부동산: 취득가 기준 · 주식·배당: 포트폴리오 평가액 · 나머지: 연간 투입액 기준</div>
         </div>
       </div>
 
@@ -2498,6 +2569,56 @@ canvas#donut{width:160px;height:160px}
     </div>
     <button class="modal-btn" onclick="confirmSave()">저장</button>
     <button class="modal-btn secondary" onclick="closeSaveModal()">취소</button>
+  </div>
+</div>
+
+<!-- PLANNER APPLY RANGE MODAL -->
+<div class="modal-overlay" id="plApplyModal" onclick="if(event.target===this)closeApplyModal()" style="display:none;z-index:1100">
+  <div class="modal-box" style="position:relative;max-width:400px">
+    <button class="modal-close" onclick="closeApplyModal()">×</button>
+    <div style="font-size:16px;font-weight:800;color:var(--g900);margin-bottom:16px">📋 적용 범위 설정</div>
+
+    <div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.6px;margin-bottom:8px">적용할 항목</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px">
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="checkbox" id="pac-inc" checked> 💰 수익</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="checkbox" id="pac-liv" checked> 🛒 생활비</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="checkbox" id="pac-mgt" checked> 🏢 관리비</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="checkbox" id="pac-fin" checked> 📈 금융</label>
+    </div>
+
+    <div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.6px;margin-bottom:8px">적용 대상 월</div>
+    <div style="margin-bottom:14px">
+      <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;margin-bottom:7px">
+        <input type="radio" name="pac-range" id="pac-all" checked onchange="document.getElementById('pac-range-sel').style.display='none'"> 전체 월 (1~12월)
+      </label>
+      <label style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer">
+        <input type="radio" name="pac-range" id="pac-custom" onchange="document.getElementById('pac-range-sel').style.display='flex'"> 특정 월 범위 선택
+      </label>
+      <div id="pac-range-sel" style="display:none;align-items:center;gap:8px;margin-top:10px;padding-left:22px">
+        <select id="pac-from" class="t-sel" style="font-size:12px;padding:5px 8px">
+          <option value="0">1월</option><option value="1">2월</option><option value="2">3월</option>
+          <option value="3">4월</option><option value="4">5월</option><option value="5">6월</option>
+          <option value="6">7월</option><option value="7">8월</option><option value="8">9월</option>
+          <option value="9">10월</option><option value="10">11월</option><option value="11">12월</option>
+        </select>
+        <span style="color:var(--muted);font-weight:700">~</span>
+        <select id="pac-to" class="t-sel" style="font-size:12px;padding:5px 8px">
+          <option value="0">1월</option><option value="1">2월</option><option value="2">3월</option>
+          <option value="3">4월</option><option value="4">5월</option><option value="5">6월</option>
+          <option value="6">7월</option><option value="7">8월</option><option value="8">9월</option>
+          <option value="9">10월</option><option value="10">11월</option><option value="11" selected>12월</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;padding:8px 10px;background:var(--g50);border-radius:8px;line-height:1.5">
+      ⚠ 현재 <strong id="pac-cur-month">—</strong>의 데이터를 선택한 항목·범위에 덮어씁니다.<br>현재 달은 제외됩니다.
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="closeApplyModal()" style="padding:7px 16px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--g700);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans)">취소</button>
+      <button onclick="plApplyRange()" style="padding:7px 18px;border-radius:8px;border:none;background:var(--g700);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans)">적용하기</button>
+    </div>
   </div>
 </div>
 
@@ -4486,11 +4607,18 @@ function yrCalc(){
   const donC=Math.round(don1*0.15+Math.min(don2,10000000)*0.15+Math.max(0,don2-10000000)*0.30+hometownC);
   setDRow('yr-donate-r',donC);
 
+  // ── ISA 만기 연금계좌 전환 세액공제 ──
+  const isaAmt=tV('yr-isa');
+  const isaRate=salary<=55000000?0.12:0.10;
+  const isaC=isaAmt?Math.min(Math.round(isaAmt*isaRate),3000000):0;
+  setDRow('yr-isa-r',isaC);
+  if(tW('yr-isa-rate'))tW('yr-isa-rate').textContent=isaAmt?'(공제율 '+(isaRate*100)+'%, 한도 300만원)':'';
+
   // ── 세액공제 합계 & 표준세액공제 비교 ──
   // 특별세액공제(표준대상): 보험료·의료비·교육비·기부금
   const specialC=Math.round(insC+insDC+medC+eduC+donC);
-  // 항상 유지되는 공제: 연금저축·IRP, 월세
-  const alwaysC=pensionC+rentC;
+  // 항상 유지되는 공제: 연금저축·IRP, 월세, ISA
+  const alwaysC=pensionC+rentC+isaC;
   const individualTotal=specialC+alwaysC;
   if(tW('yr-taxCreditTotal'))tW('yr-taxCreditTotal').textContent=tFmtFull(individualTotal);
 
@@ -4711,7 +4839,7 @@ function calcBuy(){
       <div class="r-verdict-reason">${verdictReason}</div>
     </div>
     <button class="save-btn" id="re-save-btn" onclick="openSaveModal('realestate')" style="margin-bottom:14px">
-      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 13h10V5l-4-4H2v12z"/><path d="M8 1v4h4"/><path d="M4 8h6M4 10.5h4"/></svg>이 계산 저장
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 13h10V5l-4-4H2v12z"/><path d="M8 1v4h4"/><path d="M4 8h6M4 10.5h4"/></svg>결과 저장
     </button>
     <div class="r-equity-nums">
       <div class="r-equity-item">
@@ -5086,6 +5214,7 @@ let plannerRows={
   ],
   fin:[
     {id:'pr_interest',label:'이자비용'},
+    {id:'pr_realLoan',label:'부동산 대출 상환'},
     {id:'pr_stocks',label:'월 배당금'},
     {id:'pr_pension',label:'IRP · 연금저축'},
     {id:'pr_fund',label:'펀드'},
@@ -5098,6 +5227,8 @@ let plannerRows={
 // 값: plannerData[month][rowId] = number
 let plannerData=Array(12).fill(null).map(()=>({}));
 let plannerMonth=0;
+let plannerHistory=[];
+const PLANNER_MAX_HISTORY=15;
 let plChart=null;
 let plChartType='bar';
 let plChartFilters={inc:true,liv:true,mgt:true,fin:true,sur:true};
@@ -5209,6 +5340,94 @@ function plUpdate(){
   plRenderTable();
   plRenderChart();
   plRenderConsult();
+  renderAssetAllocation();
+}
+
+// ── 내 자산 포트폴리오 시각화 ──
+let plAssetChart=null;
+const ASSET_COLORS={realestate:'#4ade80',dividend:'#2dd4bf',surplus:'#fbbf24',pension:'#a78bfa',fund:'#60a5fa',housing:'#f472b6'};
+
+function renderAssetAllocation(){
+  const panel=document.getElementById('pl-asset-panel');
+  if(!panel)return;
+  loadAppSaves();
+
+  const assets=[];
+
+  // 부동산 (취득가 기준)
+  if(appliedImports.realestate){
+    const sv=appSaves.realestate?.find(s=>s.id===appliedImports.realestate.id);
+    if(sv?.price)assets.push({key:'realestate',label:'🏠 부동산',value:sv.price,color:ASSET_COLORS.realestate});
+  }
+
+  // 주식·배당 (포트폴리오 평가액)
+  if(appliedImports.dividend){
+    const sv=appSaves.dividend?.find(s=>s.id===appliedImports.dividend.id);
+    if(sv?.totalKRW)assets.push({key:'dividend',label:'📈 주식·배당',value:sv.totalKRW,color:ASSET_COLORS.dividend});
+    else if(sv?.annualNet)assets.push({key:'dividend',label:'📈 주식·배당',value:sv.annualNet,color:ASSET_COLORS.dividend});
+  }
+
+  // 잉여금 (연간 누적 흑자)
+  const annualSurplus=plannerData.reduce((sum,d)=>{
+    const inc=plannerRows.inc.reduce((s,r)=>s+(d[r.id]||0),0);
+    const exp=[...plannerRows.liv,...plannerRows.mgt,...plannerRows.fin].reduce((s,r)=>s+(d[r.id]||0),0);
+    return sum+Math.max(0,inc-exp);
+  },0);
+  if(annualSurplus>0)assets.push({key:'surplus',label:'💰 잉여금',value:annualSurplus,color:ASSET_COLORS.surplus});
+
+  // 퇴직연금 (IRP·연금저축) — 연간 납입액
+  const pensionAnnual=plannerData.reduce((s,d)=>s+(d.pr_pension||0),0);
+  if(pensionAnnual>0)assets.push({key:'pension',label:'🏦 퇴직연금',value:pensionAnnual,color:ASSET_COLORS.pension});
+
+  // 펀드 — 연간 납입액
+  const fundAnnual=plannerData.reduce((s,d)=>s+(d.pr_fund||0),0);
+  if(fundAnnual>0)assets.push({key:'fund',label:'📊 펀드',value:fundAnnual,color:ASSET_COLORS.fund});
+
+  // 주택청약 — 연간 납입액
+  const housingAnnual=plannerData.reduce((s,d)=>s+(d.pr_housing||0),0);
+  if(housingAnnual>0)assets.push({key:'housing',label:'🏠 주택청약',value:housingAnnual,color:ASSET_COLORS.housing});
+
+  if(!assets.length){panel.style.display='none';return;}
+  panel.style.display='';
+
+  const total=assets.reduce((s,a)=>s+a.value,0);
+  const totalEl=document.getElementById('pl-asset-total');
+  if(totalEl)totalEl.textContent=tFmt(total);
+
+  // 도넛 차트
+  const canvas=document.getElementById('pl-asset-chart');
+  if(canvas){
+    if(plAssetChart){plAssetChart.destroy();plAssetChart=null;}
+    plAssetChart=new Chart(canvas.getContext('2d'),{
+      type:'doughnut',
+      data:{
+        labels:assets.map(a=>a.label),
+        datasets:[{data:assets.map(a=>a.value),backgroundColor:assets.map(a=>a.color),borderWidth:2.5,borderColor:'#fff',hoverOffset:7}]
+      },
+      options:{
+        cutout:'62%',
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:ctx=>` ${tFmt(ctx.raw)} (${(ctx.raw/total*100).toFixed(1)}%)`}}
+        },
+        animation:{duration:400}
+      }
+    });
+  }
+
+  // 범례
+  const legend=document.getElementById('pl-asset-legend');
+  if(legend)legend.innerHTML=assets.map(a=>`
+    <div class="pl-asset-leg">
+      <div style="display:flex;align-items:center;gap:7px">
+        <div class="pl-asset-dot" style="background:${a.color}"></div>
+        <span style="font-size:12px">${a.label}</span>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:12px;font-weight:700;color:var(--g900)">${tFmt(a.value)}</div>
+        <div style="font-size:10px;color:var(--muted)">${(a.value/total*100).toFixed(1)}%</div>
+      </div>
+    </div>`).join('');
 }
 
 function plUpdateSubtotals(){
@@ -5246,17 +5465,65 @@ function plUpdateTabDots(){
   });
 }
 
-function plApplyAll(btn){
+function openPlApplyModal(){
   plSaveForm();
-  const src={...plannerData[plannerMonth]};
-  plannerData.forEach((_,i)=>{if(i!==plannerMonth)Object.assign(plannerData[i],src);});
+  const el=document.getElementById('pac-cur-month');
+  if(el)el.textContent=PL_MONTHS[plannerMonth];
+  // reset to defaults
+  ['pac-inc','pac-liv','pac-mgt','pac-fin'].forEach(id=>{const c=document.getElementById(id);if(c)c.checked=true;});
+  const ra=document.getElementById('pac-all');if(ra)ra.checked=true;
+  const rs=document.getElementById('pac-range-sel');if(rs)rs.style.display='none';
+  document.getElementById('plApplyModal').style.display='flex';
+}
+function closeApplyModal(){
+  document.getElementById('plApplyModal').style.display='none';
+}
+function plApplyRange(){
+  const catMap={inc:'inc',liv:'liv',mgt:'mgt',fin:'fin'};
+  const cats=Object.keys(catMap).filter(k=>document.getElementById('pac-'+k)?.checked);
+  if(!cats.length){alert('적용할 항목을 하나 이상 선택하세요.');return;}
+  plPushHistory();
+  const src=plannerData[plannerMonth];
+  const allMonths=document.getElementById('pac-all')?.checked;
+  const from=allMonths?0:parseInt(document.getElementById('pac-from')?.value??0);
+  const to=allMonths?11:parseInt(document.getElementById('pac-to')?.value??11);
+  const lo=Math.min(from,to),hi=Math.max(from,to);
+  // collect row IDs for selected categories
+  const rowIds=[];
+  cats.forEach(cat=>plannerRows[cat].forEach(r=>rowIds.push(r.id)));
+  for(let m=lo;m<=hi;m++){
+    if(m===plannerMonth)continue;
+    rowIds.forEach(id=>{plannerData[m][id]=src[id]||0;});
+  }
   plUpdate();
-  const orig=btn.textContent;btn.textContent='✓ 적용 완료';
-  setTimeout(()=>btn.textContent=orig,1600);
+  closeApplyModal();
+}
+
+function plPushHistory(){
+  plannerHistory.push(JSON.parse(JSON.stringify(plannerData)));
+  if(plannerHistory.length>PLANNER_MAX_HISTORY)plannerHistory.shift();
+  plUpdateUndoBtn();
+}
+function plUpdateUndoBtn(){
+  const btn=document.getElementById('pl-undo-btn');
+  if(!btn)return;
+  const has=plannerHistory.length>0;
+  btn.disabled=!has;
+  btn.style.opacity=has?'1':'0.4';
+  btn.style.cursor=has?'pointer':'not-allowed';
+  btn.title=has?`되돌리기 (${plannerHistory.length}단계 저장됨)`:'되돌릴 작업이 없습니다';
+}
+function plUndo(){
+  if(!plannerHistory.length)return;
+  plannerData=plannerHistory.pop();
+  plWriteForm(plannerMonth);
+  plUpdate();
+  plUpdateUndoBtn();
 }
 
 function plResetMonth(){
   if(!confirm(PL_MONTHS[plannerMonth]+' 데이터를 초기화할까요?'))return;
+  plPushHistory();
   plannerData[plannerMonth]={};
   plWriteForm(plannerMonth);
   plUpdate();
@@ -5476,7 +5743,8 @@ function confirmSave(){
       const tax=p.meta.market==='US'?0.15:0.154;
       return s+inv*(p.meta.annualYield/100)/12*(1-tax);
     },0);
-    appSaves.dividend.push({id,name,date:now,monthlyNet:Math.round(totMonthly),annualNet:Math.round(totMonthly*12),itemCount:portfolio.length});
+    const totalKRW=portfolio.reduce((s,p)=>s+toKRW(p)*p.qty,0);
+    appSaves.dividend.push({id,name,date:now,monthlyNet:Math.round(totMonthly),annualNet:Math.round(totMonthly*12),itemCount:portfolio.length,totalKRW:Math.round(totalKRW)});
   } else if(saveModalType==='taxCgt'&&lastCgtResult){
     appSaves.taxCgt.push({id,name,date:now,...lastCgtResult,label:name});
   } else if(saveModalType==='taxAcq'&&lastAcqResult){
@@ -5507,6 +5775,7 @@ function deleteSave(type,id){
 // IMPORT MODAL
 // ════════════════════════════════════════
 let importSelections={dividend:null,taxYr:null,realestate:null,taxAcq:null};
+let appliedImports={dividend:null,realestate:null,taxAcq:null,taxYr:null};
 
 function openImportModal(){
   loadAppSaves();
@@ -5521,7 +5790,13 @@ function renderImportModal(){
   if(!body)return;
 
   const mkSection=(title,key,items,valueFormatter)=>{
-    if(!items.length)return`<div class="import-section"><div class="import-section-title">${title}</div><div class="import-empty">저장된 데이터가 없습니다</div></div>`;
+    const isApplied=!!appliedImports[key];
+    const titleRow=`<div class="import-section-title" style="display:flex;align-items:center;gap:6px">
+      <span>${title}</span>
+      ${isApplied?`<span style="font-size:10px;font-weight:700;color:var(--g500);background:var(--g50);border:1px solid var(--g200);border-radius:6px;padding:2px 8px">✓ 적용됨</span>
+      <button onclick="resetImportSource('${key}')" style="font-size:10px;font-weight:700;color:#dc2626;background:none;border:1px solid #dc2626;border-radius:6px;padding:2px 8px;cursor:pointer;font-family:var(--sans);margin-left:auto">× 초기화</button>`:''}
+    </div>`;
+    if(!items.length)return`<div class="import-section">${titleRow}<div class="import-empty">저장된 데이터가 없습니다</div></div>`;
     const cards=items.map((s)=>`
       <label class="import-card" id="imp-card-${key}-${s.id}">
         <input type="radio" name="imp-${key}" value="${s.id}" onchange="importSelections['${key}']='${s.id}';document.querySelectorAll('[id^=imp-card-${key}-]').forEach(el=>el.classList.remove('selected'));document.getElementById('imp-card-${key}-${s.id}').classList.add('selected')">
@@ -5531,7 +5806,7 @@ function renderImportModal(){
         </div>
         <button class="import-card-del" onclick="event.preventDefault();event.stopPropagation();deleteSave('${key}','${s.id}')" title="삭제">✕</button>
       </label>`).join('');
-    return`<div class="import-section"><div class="import-section-title">${title}</div>${cards}</div>`;
+    return`<div class="import-section">${titleRow}${cards}</div>`;
   };
 
   body.innerHTML=
@@ -5542,22 +5817,26 @@ function renderImportModal(){
 }
 
 function applyImport(){
+  plPushHistory();
   if(importSelections.dividend){
     const sv=appSaves.dividend.find(s=>s.id===importSelections.dividend);
     if(sv){
       plannerData.forEach(d=>{d['pr_stocks']=Math.ceil(sv.monthlyNet);});
+      appliedImports.dividend={id:importSelections.dividend};
     }
   }
   if(importSelections.realestate){
     const sv=appSaves.realestate.find(s=>s.id===importSelections.realestate);
     if(sv){
-      plannerData.forEach(d=>{d['pr_interest']=Math.ceil(sv.monthly);});
+      plannerData.forEach(d=>{d['pr_realLoan']=Math.ceil(sv.monthly);});
+      appliedImports.realestate={id:importSelections.realestate};
     }
   }
   if(importSelections.taxAcq){
     const sv=appSaves.taxAcq.find(s=>s.id===importSelections.taxAcq);
     if(sv&&sv.acquisitionMonth!=null){
       plannerData[sv.acquisitionMonth]['pr_acqTax']=Math.ceil(sv.taxTotal);
+      appliedImports.taxAcq={id:importSelections.taxAcq,month:sv.acquisitionMonth};
     }
   }
   if(importSelections.taxYr){
@@ -5565,6 +5844,7 @@ function applyImport(){
     if(sv){
       const raw=sv.refund>=0?-Math.abs(sv.refund):Math.abs(sv.refund);
       plannerData[1]['pr_otherFin']=raw<0?-Math.ceil(Math.abs(raw)):Math.ceil(raw);
+      appliedImports.taxYr={id:importSelections.taxYr,month:1};
     }
   }
   closeImportModal();
@@ -5572,6 +5852,18 @@ function applyImport(){
   plUpdate();
   const btn=document.querySelector('.pl-action-btn[onclick="openImportModal()"]');
   if(btn){const orig=btn.innerHTML;btn.innerHTML='✓ 적용됨';btn.style.background='var(--g700)';setTimeout(()=>{btn.innerHTML=orig;btn.style.background='var(--blue)';},2000);}
+}
+
+function resetImportSource(type){
+  plPushHistory();
+  if(type==='dividend')plannerData.forEach(d=>{d['pr_stocks']=0;});
+  else if(type==='realestate')plannerData.forEach(d=>{d['pr_realLoan']=0;});
+  else if(type==='taxAcq')plannerData.forEach(d=>{d['pr_acqTax']=0;});
+  else if(type==='taxYr')plannerData.forEach(d=>{d['pr_otherFin']=0;});
+  appliedImports[type]=null;
+  plWriteForm(plannerMonth);
+  plUpdate();
+  renderImportModal();
 }
 
 // 모달 오버레이 클릭 닫기
