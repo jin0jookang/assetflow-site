@@ -700,16 +700,160 @@ canvas#donut{width:160px;height:160px}
 .val-consensus-label{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
 .val-upside-pos{font-size:11px;font-weight:800;color:var(--g700);margin-top:3px}
 .val-upside-neg{font-size:11px;font-weight:800;color:var(--red);margin-top:3px}
+/* ── AUTH ── */
+#page-auth{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:linear-gradient(155deg,#f0fdf8 0%,#fff 55%)}
+.auth-card{width:100%;max-width:400px;background:#fff;border-radius:22px;padding:38px 34px 32px;box-shadow:0 8px 40px rgba(0,0,0,.10),0 0 0 1px rgba(45,122,74,.07)}
+.auth-logo-wrap{text-align:center;margin-bottom:6px}
+.auth-logo{font-size:24px;font-weight:900;color:var(--g700);letter-spacing:-1.2px}
+.auth-logo-dot{color:var(--g500)}
+.auth-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:26px;line-height:1.6}
+.auth-tabs{display:flex;background:var(--g50);border-radius:13px;padding:4px;margin-bottom:22px;gap:3px}
+.auth-tab{flex:1;padding:9px 0;border:none;background:transparent;border-radius:10px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .17s;font-family:var(--sans)}
+.auth-tab.active{background:#fff;color:var(--g700);box-shadow:0 1px 5px rgba(0,0,0,.12)}
+.auth-field{margin-bottom:13px}
+.auth-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.3px;margin-bottom:5px;display:block}
+.auth-input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:var(--sans);color:var(--g900);background:#fff;box-sizing:border-box;transition:border-color .15s,box-shadow .15s;outline:none}
+.auth-input:focus{border-color:var(--g500);box-shadow:0 0 0 3px rgba(45,122,74,.11)}
+.auth-submit{width:100%;padding:13px;border:none;border-radius:12px;background:var(--g700);color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:var(--sans);margin-top:6px;transition:background .15s,transform .1s;letter-spacing:-.3px}
+.auth-submit:hover{background:var(--g900)}
+.auth-submit:active{transform:scale(.98)}
+.auth-err{font-size:12px;color:#dc2626;margin:8px 0 0;text-align:center;min-height:16px;font-weight:600;line-height:1.4}
+.auth-toggle{font-size:12px;color:var(--muted);text-align:center;margin-top:18px}
+.auth-toggle a{color:var(--g700);font-weight:700;cursor:pointer;text-decoration:none}
+.auth-toggle a:hover{text-decoration:underline}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:18px 0 0}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.auth-divider span{font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap}
+/* 어드민 페이지 */
+#page-admin{background:var(--bg);min-height:100vh}
+.admin-nav{display:flex;align-items:center;gap:12px;padding:0 24px;height:54px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.admin-nav-logo{font-size:15px;font-weight:900;color:var(--g700);letter-spacing:-.5px}
+.admin-nav-badge{background:#dc2626;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:100px;letter-spacing:.3px}
+.admin-body{max-width:900px;margin:0 auto;padding:28px 20px}
+.admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.admin-stat{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:16px 18px}
+.admin-stat-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.admin-stat-val{font-size:24px;font-weight:900;color:var(--g900);letter-spacing:-1px;line-height:1}
+.admin-stat.pending .admin-stat-val{color:#d97706}
+.admin-stat.approved .admin-stat-val{color:var(--g700)}
+.admin-stat.rejected .admin-stat-val{color:#dc2626}
+.admin-section-title{font-size:13px;font-weight:800;color:var(--g900);margin:20px 0 10px;display:flex;align-items:center;gap:7px}
+.admin-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px}
+.admin-badge.pending{background:#fef3c7;color:#92400e}
+.admin-badge.approved{background:#dcfce7;color:#15803d}
+.admin-badge.rejected{background:#fee2e2;color:#991b1b}
+.admin-user-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
+.admin-user-card.pending{border-left:3px solid #f59e0b}
+.admin-user-card.approved{border-left:3px solid var(--g500)}
+.admin-user-card.rejected{border-left:3px solid #f87171;opacity:.65}
+.admin-user-info{flex:1;min-width:0}
+.admin-user-name{font-size:14px;font-weight:800;color:var(--g900)}
+.admin-user-email{font-size:11px;color:var(--muted);margin-top:1px}
+.admin-user-meta{font-size:10px;color:var(--muted);margin-top:3px}
+.admin-actions{display:flex;gap:6px;flex-shrink:0}
+.admin-btn-approve{padding:6px 14px;border-radius:8px;border:none;background:var(--g700);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.admin-btn-approve:hover{background:var(--g900)}
+.admin-btn-reject{padding:6px 14px;border-radius:8px;border:1.5px solid #fca5a5;background:#fff;color:#dc2626;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.admin-btn-reject:hover{background:#fee2e2}
+.admin-btn-revoke{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.admin-empty{text-align:center;padding:32px;color:var(--muted);font-size:13px;border:1.5px dashed var(--border);border-radius:12px}
+/* 홈 유저 영역 */
+.home-user-bar{display:flex;align-items:center;gap:10px;margin-left:auto}
+.home-user-name{font-size:13px;font-weight:700;color:var(--g700)}
+.home-logout-btn{padding:5px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .15s}
+.home-logout-btn:hover{border-color:var(--g300);color:var(--g700)}
 </style>
 </head>
 <body>
 
+<!-- AUTH PAGE -->
+<div id="page-auth" class="page active">
+  <div class="auth-card">
+    <div class="auth-logo-wrap">
+      <div class="auth-logo">자산플로우<span class="auth-logo-dot">.</span></div>
+    </div>
+    <div class="auth-sub">스마트한 자산 관리를 지금 시작하세요</div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="auth-tab-login" onclick="switchAuthTab('login')">로그인</button>
+      <button class="auth-tab" id="auth-tab-signup" onclick="switchAuthTab('signup')">회원가입</button>
+    </div>
+
+    <!-- 로그인 -->
+    <div id="auth-login-form">
+      <div class="auth-field">
+        <label class="auth-label">아이디 (이메일)</label>
+        <input class="auth-input" id="auth-login-email" type="text" placeholder="example@email.com" autocomplete="username" oninput="clearAuthErr()" onkeydown="if(event.key==='Enter')document.getElementById('auth-login-pw').focus()">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">비밀번호</label>
+        <input class="auth-input" id="auth-login-pw" type="password" placeholder="비밀번호 입력" autocomplete="current-password" oninput="clearAuthErr()" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="auth-err" id="auth-err-login"></div>
+      <button class="auth-submit" onclick="doLogin()">로그인</button>
+      <div class="auth-toggle">처음이신가요? <a onclick="switchAuthTab('signup')">회원가입 신청</a></div>
+    </div>
+
+    <!-- 회원가입 -->
+    <div id="auth-signup-form" style="display:none">
+      <div class="auth-field">
+        <label class="auth-label">이름</label>
+        <input class="auth-input" id="auth-signup-name" type="text" placeholder="홍길동" autocomplete="name" oninput="clearAuthErr()" onkeydown="if(event.key==='Enter')document.getElementById('auth-signup-email').focus()">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">아이디 (이메일)</label>
+        <input class="auth-input" id="auth-signup-email" type="email" placeholder="example@email.com" autocomplete="email" oninput="clearAuthErr()" onkeydown="if(event.key==='Enter')document.getElementById('auth-signup-birth').focus()">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">생년월일</label>
+        <input class="auth-input" id="auth-signup-birth" type="text" inputmode="numeric" maxlength="10" placeholder="YYYY-MM-DD" oninput="autoDateFmt(this);clearAuthErr()" onkeydown="if(event.key==='Enter')document.getElementById('auth-signup-pw').focus()">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">비밀번호</label>
+        <input class="auth-input" id="auth-signup-pw" type="password" placeholder="영문+숫자+특수문자 포함 8자 이상" autocomplete="new-password" oninput="clearAuthErr()" onkeydown="if(event.key==='Enter')document.getElementById('auth-signup-pw2').focus()">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">비밀번호 확인</label>
+        <input class="auth-input" id="auth-signup-pw2" type="password" placeholder="비밀번호 재입력" autocomplete="new-password" oninput="clearAuthErr()" onkeydown="if(event.key==='Enter')doSignup()">
+      </div>
+      <div class="auth-err" id="auth-err-signup"></div>
+      <button class="auth-submit" onclick="doSignup()">가입 신청</button>
+      <div class="auth-toggle">이미 계정이 있으신가요? <a onclick="switchAuthTab('login')">로그인</a></div>
+    </div>
+
+    <div class="auth-divider"><span>가입 신청 후 관리자 승인 시 이용 가능합니다</span></div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="page-admin" class="page">
+  <div class="admin-nav">
+    <div class="admin-nav-logo">자산플로우</div>
+    <span class="admin-nav-badge">ADMIN</span>
+    <div style="flex:1"></div>
+    <button class="home-logout-btn" onclick="doLogout()">로그아웃</button>
+  </div>
+  <div class="admin-body">
+    <div class="admin-stats">
+      <div class="admin-stat"><div class="admin-stat-label">전체 회원</div><div class="admin-stat-val" id="adm-cnt-total">0</div></div>
+      <div class="admin-stat pending"><div class="admin-stat-label">승인 대기</div><div class="admin-stat-val" id="adm-cnt-pending">0</div></div>
+      <div class="admin-stat approved"><div class="admin-stat-label">승인 완료</div><div class="admin-stat-val" id="adm-cnt-approved">0</div></div>
+      <div class="admin-stat rejected"><div class="admin-stat-label">거부됨</div><div class="admin-stat-val" id="adm-cnt-rejected">0</div></div>
+    </div>
+    <div id="adm-user-list"></div>
+  </div>
+</div>
+
 <!-- HOME PAGE -->
-<div id="page-home" class="page active">
+<div id="page-home" class="page">
   <nav class="home-nav">
     <div class="nav-logo">자산플로우</div>
     <ul class="nav-links"><li><a href="#">도구</a></li><li><a href="#">가이드</a></li></ul>
-    <div class="nav-badge">무료 계산기</div>
+    <div class="home-user-bar">
+      <span class="home-user-name" id="home-user-name"></span>
+      <button class="home-logout-btn" id="home-logout-btn" onclick="doLogout()" style="display:none">로그아웃</button>
+      <div class="nav-badge" id="nav-free-badge">무료 계산기</div>
+    </div>
   </nav>
   <section class="hero">
     <div class="hero-label"><span class="dot"></span>금융 분석 도구</div>
@@ -6300,6 +6444,202 @@ function renderRadarChart(macroN,finN,themeN,canvasId='sa-radar'){
     }
   });
 }
+
+// ════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════
+function autoDateFmt(el){
+  // 커서 위치 기록 (삭제 시 자연스러운 동작 유지)
+  const pos=el.selectionStart;
+  const prevLen=el.value.length;
+
+  // 숫자만 추출, 최대 8자리
+  let d=el.value.replace(/\D/g,'');
+  if(d.length>8)d=d.slice(0,8);
+
+  // YYYY-MM-DD 형식으로 조합
+  let out=d;
+  if(d.length>4) out=d.slice(0,4)+'-'+d.slice(4);
+  if(d.length>6) out=d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6);
+
+  el.value=out;
+
+  // 대시 삽입으로 늘어난 길이만큼 커서를 앞으로 보정
+  const added=out.length-prevLen;
+  const newPos=Math.max(0,pos+(added>0?added:0));
+  try{el.setSelectionRange(newPos,newPos);}catch(e){}
+}
+
+const AF_USERS_KEY='assetflow_users';
+const AF_SESSION_KEY='assetflow_session';
+const AF_ADMIN_ID='admin';
+const AF_ADMIN_PW='1';
+
+function afGetUsers(){try{return JSON.parse(localStorage.getItem(AF_USERS_KEY)||'[]');}catch{return[];}}
+function afSaveUsers(u){localStorage.setItem(AF_USERS_KEY,JSON.stringify(u));}
+function afGetSession(){try{return JSON.parse(localStorage.getItem(AF_SESSION_KEY)||'null');}catch{return null;}}
+function afSetSession(obj){localStorage.setItem(AF_SESSION_KEY,JSON.stringify(obj));}
+function afClearSession(){localStorage.removeItem(AF_SESSION_KEY);}
+function afCurrentUser(){
+  const s=afGetSession();
+  if(!s)return null;
+  if(s.isAdmin)return{name:'관리자',email:'admin',isAdmin:true};
+  return afGetUsers().find(u=>u.email===s.email)||null;
+}
+
+function switchAuthTab(tab){
+  const isLogin=tab==='login';
+  document.getElementById('auth-tab-login').classList.toggle('active',isLogin);
+  document.getElementById('auth-tab-signup').classList.toggle('active',!isLogin);
+  document.getElementById('auth-login-form').style.display=isLogin?'':'none';
+  document.getElementById('auth-signup-form').style.display=isLogin?'none':'';
+  clearAuthErr();
+  setTimeout(()=>{
+    const f=isLogin?document.getElementById('auth-login-email'):document.getElementById('auth-signup-name');
+    if(f)f.focus();
+  },50);
+}
+
+function clearAuthErr(){
+  ['auth-err-login','auth-err-signup'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
+}
+function showAuthErr(id,msg){const el=document.getElementById(id);if(el)el.textContent=msg;}
+
+function doLogin(){
+  const id=(document.getElementById('auth-login-email')?.value||'').trim();
+  const pw=document.getElementById('auth-login-pw')?.value||'';
+  if(!id||!pw){showAuthErr('auth-err-login','아이디와 비밀번호를 모두 입력해주세요.');return;}
+  // 어드민 체크
+  if(id===AF_ADMIN_ID&&pw===AF_ADMIN_PW){
+    afSetSession({email:'admin',isAdmin:true});
+    renderAdminPage();
+    show('page-admin');
+    return;
+  }
+  // 일반 이메일 형식 체크
+  if(!id.includes('@')){showAuthErr('auth-err-login','올바른 이메일 형식을 입력해주세요.');return;}
+  const email=id.toLowerCase();
+  const user=afGetUsers().find(u=>u.email===email&&u.password===pw);
+  if(!user){showAuthErr('auth-err-login','이메일 또는 비밀번호가 일치하지 않습니다.');return;}
+  if(user.status==='pending'){showAuthErr('auth-err-login','가입 승인 대기 중입니다. 관리자 승인 후 이용 가능합니다.');return;}
+  if(user.status==='rejected'){showAuthErr('auth-err-login','가입이 거부되었습니다. 관리자에게 문의해주세요.');return;}
+  afSetSession({email,isAdmin:false});
+  updateAuthUI();
+  show('page-home');
+}
+
+function doSignup(){
+  const name=(document.getElementById('auth-signup-name')?.value||'').trim();
+  const email=(document.getElementById('auth-signup-email')?.value||'').trim().toLowerCase();
+  const birth=document.getElementById('auth-signup-birth')?.value||'';
+  const pw=document.getElementById('auth-signup-pw')?.value||'';
+  const pw2=document.getElementById('auth-signup-pw2')?.value||'';
+  if(!name){showAuthErr('auth-err-signup','이름을 입력해주세요.');return;}
+  if(!email||!email.includes('@')){showAuthErr('auth-err-signup','올바른 이메일을 입력해주세요.');return;}
+  if(!birth){showAuthErr('auth-err-signup','생년월일을 입력해주세요.');return;}
+  if(!pw){showAuthErr('auth-err-signup','비밀번호를 입력해주세요.');return;}
+  if(!/[a-zA-Z]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 영문자를 1자 이상 포함해주세요.');return;}
+  if(!/[0-9]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 숫자를 1자 이상 포함해주세요.');return;}
+  if(!/[!@#$%^&*()\-_=+\[\]{};':"\\|,.<>/?`~]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 특수문자를 1자 이상 포함해주세요.');return;}
+  if(pw.length<8){showAuthErr('auth-err-signup','비밀번호를 8자 이상 입력해주세요.');return;}
+  if(pw!==pw2){showAuthErr('auth-err-signup','비밀번호가 일치하지 않습니다.');return;}
+  const users=afGetUsers();
+  if(users.find(u=>u.email===email)){showAuthErr('auth-err-signup','이미 가입된 이메일입니다. 로그인해주세요.');return;}
+  users.push({email,name,birthdate:birth,password:pw,status:'pending',createdAt:new Date().toLocaleDateString('ko-KR')});
+  afSaveUsers(users);
+  // 자동 로그인 없이 승인 대기 안내
+  const errEl=document.getElementById('auth-err-signup');
+  if(errEl){errEl.style.color='var(--g500)';errEl.textContent='가입 신청이 완료되었습니다. 관리자 승인 후 로그인해주세요.';}
+  // 폼 초기화
+  ['auth-signup-name','auth-signup-email','auth-signup-birth','auth-signup-pw','auth-signup-pw2'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+}
+
+function doLogout(){
+  if(!confirm('로그아웃 하시겠어요?'))return;
+  afClearSession();
+  updateAuthUI();
+  show('page-auth');
+}
+
+function updateAuthUI(){
+  const user=afCurrentUser();
+  const nameEl=document.getElementById('home-user-name');
+  const logoutBtn=document.getElementById('home-logout-btn');
+  const badge=document.getElementById('nav-free-badge');
+  if(user&&!user.isAdmin){
+    if(nameEl)nameEl.textContent=user.name+'님 👋';
+    if(logoutBtn)logoutBtn.style.display='';
+    if(badge)badge.style.display='none';
+  }else{
+    if(nameEl)nameEl.textContent='';
+    if(logoutBtn)logoutBtn.style.display='none';
+    if(badge)badge.style.display='';
+  }
+}
+
+// ── 어드민 페이지 ──
+function renderAdminPage(){
+  const users=afGetUsers();
+  const total=users.length;
+  const pending=users.filter(u=>u.status==='pending').length;
+  const approved=users.filter(u=>u.status==='approved').length;
+  const rejected=users.filter(u=>u.status==='rejected').length;
+  const setTxt=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  setTxt('adm-cnt-total',total);
+  setTxt('adm-cnt-pending',pending);
+  setTxt('adm-cnt-approved',approved);
+  setTxt('adm-cnt-rejected',rejected);
+  const listEl=document.getElementById('adm-user-list');
+  if(!listEl)return;
+  if(total===0){listEl.innerHTML='<div class="admin-empty">등록된 회원이 없습니다.</div>';return;}
+  // 정렬: 대기 → 승인 → 거부
+  const order={pending:0,approved:1,rejected:2};
+  const sorted=[...users].sort((a,b)=>(order[a.status]||0)-(order[b.status]||0));
+  listEl.innerHTML=sorted.map(u=>{
+    const statusLabel={pending:'승인 대기',approved:'승인 완료',rejected:'거부됨'}[u.status]||u.status;
+    const btns=u.status==='pending'
+      ?`<button class="admin-btn-approve" onclick="approveUser('${u.email}')">승인</button>
+         <button class="admin-btn-reject" onclick="rejectUser('${u.email}')">거부</button>`
+      :u.status==='approved'
+      ?`<button class="admin-btn-revoke" onclick="revokeUser('${u.email}')">승인 취소</button>`
+      :`<button class="admin-btn-approve" onclick="approveUser('${u.email}')">재승인</button>`;
+    return`<div class="admin-user-card ${u.status}">
+      <div class="admin-user-info">
+        <div class="admin-user-name">${u.name} <span class="admin-badge ${u.status}">${statusLabel}</span></div>
+        <div class="admin-user-email">${u.email}</div>
+        <div class="admin-user-meta">생년월일 ${u.birthdate||'—'} &nbsp;·&nbsp; 가입일 ${u.createdAt||'—'}</div>
+      </div>
+      <div class="admin-actions">${btns}</div>
+    </div>`;
+  }).join('');
+}
+
+function approveUser(email){
+  const users=afGetUsers();
+  const u=users.find(u=>u.email===email);
+  if(u){u.status='approved';afSaveUsers(users);renderAdminPage();}
+}
+function rejectUser(email){
+  const users=afGetUsers();
+  const u=users.find(u=>u.email===email);
+  if(u){u.status='rejected';afSaveUsers(users);renderAdminPage();}
+}
+function revokeUser(email){
+  const users=afGetUsers();
+  const u=users.find(u=>u.email===email);
+  if(u){u.status='pending';afSaveUsers(users);renderAdminPage();}
+}
+
+// ── 앱 초기화: 로그인 상태 확인 ──
+(function initAuth(){
+  const s=afGetSession();
+  if(!s)return; // 미로그인 → page-auth 유지
+  if(s.isAdmin){renderAdminPage();show('page-admin');return;}
+  const user=afGetUsers().find(u=>u.email===s.email&&u.status==='approved');
+  if(user){updateAuthUI();show('page-home');}else{afClearSession();}
+})();
 </script>
 </body>
 </html>
