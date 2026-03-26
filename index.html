@@ -6,6 +6,8 @@
 <title>자산플로우 — 월 배당금 계산기</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -6479,13 +6481,73 @@ function autoDateFmt(el){
   try{el.setSelectionRange(newPos,newPos);}catch(e){}
 }
 
-const AF_USERS_KEY='assetflow_users';
-const AF_SESSION_KEY='assetflow_session';
-const AF_ADMIN_ID='admin';
-const AF_ADMIN_PW='1';
+// ════════════════════════════════════════
+// FIREBASE 초기화
+// ════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyD2RJc18ykpQ4rB4iuYWtzn77LpkCUIRPI",
+  authDomain: "asset-flow-f1342.firebaseapp.com",
+  projectId: "asset-flow-f1342",
+  storageBucket: "asset-flow-f1342.firebasestorage.app",
+  messagingSenderId: "231760778864",
+  appId: "1:231760778864:web:71b0c923343104a14906b5"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const FS_COL = 'assetflow_users';
 
-function afGetUsers(){try{return JSON.parse(localStorage.getItem(AF_USERS_KEY)||'[]');}catch{return[];}}
-function afSaveUsers(u){localStorage.setItem(AF_USERS_KEY,JSON.stringify(u));}
+// ════════════════════════════════════════
+// 세션 & 어드민 설정 (로컬)
+// ════════════════════════════════════════
+const AF_SESSION_KEY = 'assetflow_session';
+const AF_ADMIN_ID = 'admin';
+function getAdminPw(){return localStorage.getItem('af_admin_pw')||'1';}
+
+function emailToDocId(email){
+  return email.replace(/\./g,'__dot__').replace(/@/g,'__at__');
+}
+
+// ════════════════════════════════════════
+// Firestore 실시간 캐시
+// ════════════════════════════════════════
+let _usersCache = [];
+let _initialAuthDone = false;
+
+function afGetUsers(){return _usersCache;}
+
+async function afAddUser(user){
+  _usersCache = _usersCache.filter(u=>u.email!==user.email);
+  _usersCache.push(user);
+  await db.collection(FS_COL).doc(emailToDocId(user.email)).set(user);
+}
+
+async function afUpdateUserStatus(email, status){
+  const u = _usersCache.find(u=>u.email===email);
+  if(u) u.status = status;
+  await db.collection(FS_COL).doc(emailToDocId(email)).update({status});
+}
+
+// 실시간 리스너 — 어느 기기에서 변경해도 즉시 반영
+db.collection(FS_COL).onSnapshot(snap=>{
+  _usersCache = snap.docs.map(d=>d.data());
+  if(!_initialAuthDone){
+    _initialAuthDone = true;
+    initAuth();
+  } else {
+    // 어드민 페이지가 열려있으면 자동 갱신
+    const s = afGetSession();
+    if(s&&s.isAdmin && document.getElementById('page-admin')?.classList.contains('active')){
+      renderAdminPage();
+    }
+  }
+}, err=>{
+  console.error('Firestore 연결 오류:', err);
+  if(!_initialAuthDone){_initialAuthDone=true;initAuth();}
+});
+
+// ════════════════════════════════════════
+// 세션 함수
+// ════════════════════════════════════════
 function afGetSession(){try{return JSON.parse(localStorage.getItem(AF_SESSION_KEY)||'null');}catch{return null;}}
 function afSetSession(obj){localStorage.setItem(AF_SESSION_KEY,JSON.stringify(obj));}
 function afClearSession(){localStorage.removeItem(AF_SESSION_KEY);}
@@ -6496,6 +6558,9 @@ function afCurrentUser(){
   return afGetUsers().find(u=>u.email===s.email)||null;
 }
 
+// ════════════════════════════════════════
+// AUTH UI
+// ════════════════════════════════════════
 function switchAuthTab(tab){
   const isLogin=tab==='login';
   document.getElementById('auth-tab-login').classList.toggle('active',isLogin);
@@ -6520,18 +6585,15 @@ function doLogin(){
   loginId=loginId.trim();
   if(!loginId||!loginPw){showAuthErr('auth-err-login','아이디와 비밀번호를 모두 입력해주세요.');return;}
   // 어드민 체크
-  if(loginId==='admin'&&loginPw==='1'){
+  if(loginId===AF_ADMIN_ID&&loginPw===getAdminPw()){
     afSetSession({email:'admin',isAdmin:true});
     renderAdminPage();
     show('page-admin');
     return;
   }
-  // 일반 이메일 형식 체크
   if(loginId.indexOf('@')<0){showAuthErr('auth-err-login','올바른 이메일 형식을 입력해주세요.');return;}
   var loginEmail=loginId.toLowerCase();
-  var allUsers=afGetUsers();
-  var foundUser=null;
-  for(var i=0;i<allUsers.length;i++){if(allUsers[i].email===loginEmail&&allUsers[i].password===loginPw){foundUser=allUsers[i];break;}}
+  var foundUser=afGetUsers().find(u=>u.email===loginEmail&&u.password===loginPw);
   if(!foundUser){showAuthErr('auth-err-login','이메일 또는 비밀번호가 일치하지 않습니다.');return;}
   if(foundUser.status==='pending'){showAuthErr('auth-err-login','가입 승인 대기 중입니다. 관리자 승인 후 이용 가능합니다.');return;}
   if(foundUser.status==='rejected'){showAuthErr('auth-err-login','가입이 거부되었습니다. 관리자에게 문의해주세요.');return;}
@@ -6540,7 +6602,7 @@ function doLogin(){
   show('page-home');
 }
 
-function doSignup(){
+async function doSignup(){
   const name=(document.getElementById('auth-signup-name')?.value||'').trim();
   const email=(document.getElementById('auth-signup-email')?.value||'').trim().toLowerCase();
   const birth=document.getElementById('auth-signup-birth')?.value||'';
@@ -6555,17 +6617,22 @@ function doSignup(){
   if(!/[0-9]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 숫자를 1자 이상 포함해주세요.');return;}
   if(!/[!@#$%^&*()\-_=+{}|;:<>,.?/~]/.test(pw)){showAuthErr('auth-err-signup','비밀번호에 특수문자(!@#$% 등)를 1자 이상 포함해주세요.');return;}
   if(pw!==pw2){showAuthErr('auth-err-signup','비밀번호가 일치하지 않습니다.');return;}
-  const users=afGetUsers();
-  if(users.find(u=>u.email===email)){showAuthErr('auth-err-signup','이미 가입된 이메일입니다. 로그인해주세요.');return;}
-  users.push({email,name,birthdate:birth,password:pw,status:'pending',createdAt:new Date().toLocaleDateString('ko-KR')});
-  afSaveUsers(users);
-  // 자동 로그인 없이 승인 대기 안내
-  const errEl=document.getElementById('auth-err-signup');
-  if(errEl){errEl.style.color='var(--g500)';errEl.textContent='가입 신청이 완료되었습니다. 관리자 승인 후 로그인해주세요.';}
-  // 폼 초기화
-  ['auth-signup-name','auth-signup-email','auth-signup-birth','auth-signup-pw','auth-signup-pw2'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.value='';
-  });
+  if(afGetUsers().find(u=>u.email===email)){showAuthErr('auth-err-signup','이미 가입된 이메일입니다. 로그인해주세요.');return;}
+  const btn=document.querySelector('#auth-signup-form .auth-submit');
+  if(btn){btn.disabled=true;btn.textContent='처리 중...';}
+  try{
+    await afAddUser({email,name,birthdate:birth,password:pw,status:'pending',createdAt:new Date().toLocaleDateString('ko-KR')});
+    const errEl=document.getElementById('auth-err-signup');
+    if(errEl){errEl.style.color='var(--g500)';errEl.textContent='가입 신청이 완료되었습니다. 관리자 승인 후 로그인해주세요.';}
+    ['auth-signup-name','auth-signup-email','auth-signup-birth','auth-signup-pw','auth-signup-pw2'].forEach(id=>{
+      const el=document.getElementById(id);if(el)el.value='';
+    });
+  }catch(e){
+    console.error(e);
+    showAuthErr('auth-err-signup','오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='가입신청';}
+  }
 }
 
 function doLogout(){
@@ -6591,8 +6658,10 @@ function updateAuthUI(){
   }
 }
 
-// ── 어드민 페이지 ──
-let admFilter='all'; // 'all' | 'pending' | 'approved' | 'rejected'
+// ════════════════════════════════════════
+// 어드민 페이지
+// ════════════════════════════════════════
+let admFilter='all';
 
 function renderAdminPage(filter){
   if(filter!==undefined)admFilter=filter;
@@ -6609,7 +6678,6 @@ function renderAdminPage(filter){
   const listEl=document.getElementById('adm-user-list');
   if(!listEl)return;
 
-  // 필터 탭
   const filterLabels=[
     {key:'all',label:'전체',cnt:total},
     {key:'pending',label:'승인 대기',cnt:pendingCnt},
@@ -6620,7 +6688,6 @@ function renderAdminPage(filter){
     ${filterLabels.map(f=>`<button class="admin-filter-tab${admFilter===f.key?' active':''}" onclick="renderAdminPage('${f.key}')">${f.label} ${f.cnt}</button>`).join('')}
   </div>`;
 
-  // 표시할 유저 필터링 & 정렬
   const order={pending:0,approved:1,rejected:2};
   const filtered=users
     .filter(u=>admFilter==='all'||u.status===admFilter)
@@ -6631,7 +6698,6 @@ function renderAdminPage(filter){
     return;
   }
 
-  // 툴바 (체크박스 전체선택 + 일괄 승인/거부)
   const toolbar=`<div class="admin-toolbar">
     <label class="admin-check-wrap">
       <input type="checkbox" id="adm-check-all" onchange="admToggleAll(this.checked)">
@@ -6664,40 +6730,35 @@ function admUpdateSelCount(){
   const sel=document.querySelectorAll('.adm-cb:checked').length;
   const el=document.getElementById('adm-sel-count');
   if(el)el.textContent=sel>0?sel+'명 선택됨':'';
-  // 전체선택 체크박스 상태 반영
   const all=document.querySelectorAll('.adm-cb').length;
   const allCb=document.getElementById('adm-check-all');
   if(allCb){allCb.checked=sel===all&&all>0;allCb.indeterminate=sel>0&&sel<all;}
 }
-function admBulkAction(newStatus){
+async function admBulkAction(newStatus){
   const selected=[...document.querySelectorAll('.adm-cb:checked')].map(cb=>cb.dataset.email);
   if(!selected.length){alert('처리할 회원을 선택해주세요.');return;}
   const label=newStatus==='approved'?'승인':'거부';
   if(!confirm(selected.length+'명을 '+label+' 처리하시겠어요?'))return;
-  const users=afGetUsers();
-  selected.forEach(email=>{const u=users.find(u=>u.email===email);if(u)u.status=newStatus;});
-  afSaveUsers(users);
+  await Promise.all(selected.map(email=>afUpdateUserStatus(email,newStatus)));
   renderAdminPage();
 }
-function approveUser(email){
-  const users=afGetUsers();
-  const u=users.find(u=>u.email===email);
-  if(u){u.status='approved';afSaveUsers(users);renderAdminPage();}
+async function approveUser(email){
+  await afUpdateUserStatus(email,'approved');
+  renderAdminPage();
 }
-function rejectUser(email){
-  const users=afGetUsers();
-  const u=users.find(u=>u.email===email);
-  if(u){u.status='rejected';afSaveUsers(users);renderAdminPage();}
+async function rejectUser(email){
+  await afUpdateUserStatus(email,'rejected');
+  renderAdminPage();
 }
 
-// ── 앱 초기화: 로그인 상태 확인 ──
-(function initAuth(){
+// ── 앱 초기화: Firestore 리스너가 데이터 받은 후 호출됨 ──
+function initAuth(){
   const s=afGetSession();
-  if(!s)return; // 미로그인 → page-auth 유지
+  if(!s)return;
   if(s.isAdmin){renderAdminPage();show('page-admin');return;}
   const user=afGetUsers().find(u=>u.email===s.email&&u.status==='approved');
   if(user){updateAuthUI();show('page-home');}else{afClearSession();}
-})();
+}
 </script>
 </body>
 </html>
