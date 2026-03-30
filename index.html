@@ -745,6 +745,20 @@ canvas#donut{width:160px;height:160px}
 .admin-badge.pending{background:#fef3c7;color:#92400e}
 .admin-badge.approved{background:#dcfce7;color:#15803d}
 .admin-badge.rejected{background:#fee2e2;color:#991b1b}
+.admin-badge.vip{background:linear-gradient(135deg,#d4a017,#f0c040);color:#fff;box-shadow:0 1px 6px rgba(212,160,23,.3)}
+.vip-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#b8860b,#d4a017,#f0c040);color:#fff;font-size:11px;font-weight:800;padding:5px 14px;border-radius:100px;letter-spacing:.4px;box-shadow:0 2px 10px rgba(212,160,23,.45);white-space:nowrap}
+.adm-tier-row{display:flex;align-items:center;gap:6px;margin-top:10px;flex-wrap:wrap}
+.adm-tier-btn{padding:4px 12px;border-radius:100px;border:1.5px solid var(--border);background:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans);color:var(--muted);transition:all .15s}
+.adm-tier-btn.vip-on{background:linear-gradient(135deg,#d4a017,#f0c040);border-color:#d4a017;color:#fff;box-shadow:0 2px 6px rgba(212,160,23,.35)}
+.adm-tier-btn.reg-on{background:var(--g50);border-color:var(--g400);color:var(--g700)}
+.adm-tier-sep{color:var(--border);margin:0 2px}
+.adm-expiry-label{font-size:11px;font-weight:700;color:var(--muted)}
+.adm-dur-btn{padding:3px 10px;border-radius:100px;border:1.5px solid var(--border);background:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--sans);color:var(--text2);transition:all .15s}
+.adm-dur-btn:hover{background:var(--g50);border-color:var(--g400);color:var(--g700)}
+.adm-date-inp{padding:3px 8px;border:1.5px solid var(--border);border-radius:7px;font-size:11px;font-family:var(--sans);color:var(--text);background:#fff;outline:none;cursor:pointer}
+.adm-date-inp:focus{border-color:var(--g400)}
+.adm-expiry-info{font-size:10px;font-weight:600;color:var(--g500)}
+.adm-expiry-info.expired{color:var(--red)}
 .admin-user-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
 .admin-user-card.pending{border-left:3px solid #f59e0b}
 .admin-user-card.approved{border-left:3px solid var(--g500)}
@@ -862,6 +876,7 @@ canvas#donut{width:160px;height:160px}
     <ul class="nav-links"><li><a href="#">도구</a></li><li><a href="#">가이드</a></li></ul>
     <div class="home-user-bar">
       <span class="home-user-name" id="home-user-name"></span>
+      <span class="vip-badge" id="vip-badge" style="display:none">⭐ VIP 회원</span>
       <button class="home-logout-btn" id="home-logout-btn" onclick="doLogout()" style="display:none">로그아웃</button>
       <div class="nav-badge" id="nav-free-badge">무료 계산기</div>
     </div>
@@ -6526,6 +6541,16 @@ async function afUpdateUserStatus(email, status){
   if(u) u.status = status;
   await db.collection(FS_COL).doc(emailToDocId(email)).update({status});
 }
+async function afUpdateUserFields(email, fields){
+  const u = _usersCache.find(u=>u.email===email);
+  if(u) Object.assign(u, fields);
+  await db.collection(FS_COL).doc(emailToDocId(email)).update(fields);
+}
+function isVipActive(user){
+  if(!user||user.tier!=='vip') return false;
+  if(!user.vipExpiry) return true; // 만료일 미설정 → 무기한
+  return user.vipExpiry >= new Date().toISOString().split('T')[0];
+}
 
 // 실시간 리스너 — 어느 기기에서 변경해도 즉시 반영
 db.collection(FS_COL).onSnapshot(snap=>{
@@ -6647,14 +6672,17 @@ function updateAuthUI(){
   const nameEl=document.getElementById('home-user-name');
   const logoutBtn=document.getElementById('home-logout-btn');
   const badge=document.getElementById('nav-free-badge');
+  const vipBadge=document.getElementById('vip-badge');
   if(user&&!user.isAdmin){
     if(nameEl)nameEl.textContent=user.name+'님 👋';
     if(logoutBtn)logoutBtn.style.display='';
     if(badge)badge.style.display='none';
+    if(vipBadge)vipBadge.style.display=isVipActive(user)?'':'none';
   }else{
     if(nameEl)nameEl.textContent='';
     if(logoutBtn)logoutBtn.style.display='none';
     if(badge)badge.style.display='';
+    if(vipBadge)vipBadge.style.display='none';
   }
 }
 
@@ -6710,14 +6738,36 @@ function renderAdminPage(filter){
   </div>`;
 
   const statusLabel={pending:'승인 대기',approved:'승인 완료',rejected:'거부됨'};
-  const cards=filtered.map(u=>`<div class="admin-user-card ${u.status}" data-email="${u.email}">
-    <input type="checkbox" class="adm-cb" data-email="${u.email}" onchange="admUpdateSelCount()">
-    <div class="admin-user-info">
-      <div class="admin-user-name">${u.name} <span class="admin-badge ${u.status}">${statusLabel[u.status]||u.status}</span></div>
-      <div class="admin-user-email">${u.email}</div>
-      <div class="admin-user-meta">생년월일 ${u.birthdate||'—'} &nbsp;·&nbsp; 가입일 ${u.createdAt||'—'}</div>
-    </div>
-  </div>`).join('');
+  const today=new Date().toISOString().split('T')[0];
+  const cards=filtered.map(u=>{
+    const isVip=u.tier==='vip';
+    const expired=isVip&&u.vipExpiry&&u.vipExpiry<today;
+    const expiryInfo=isVip?(u.vipExpiry?(expired?'⚠ 만료됨: '+u.vipExpiry:'만료: '+u.vipExpiry):'기간 미설정 (무기한)'):'';
+    const tierControls=u.status==='approved'?`
+      <div class="adm-tier-row">
+        <button class="adm-tier-btn${isVip?' vip-on':''}" onclick="setUserTier('${u.email}','vip')">⭐ VIP</button>
+        <button class="adm-tier-btn${!isVip?' reg-on':''}" onclick="setUserTier('${u.email}','regular')">일반</button>
+        ${isVip?`<span class="adm-tier-sep">|</span>
+        <span class="adm-expiry-label">유효기간</span>
+        <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',3)">3개월</button>
+        <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',6)">6개월</button>
+        <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',12)">12개월</button>
+        <input type="date" class="adm-date-inp" value="${u.vipExpiry||''}" onchange="setVipExpiryDirect('${u.email}',this.value)">
+        <span class="adm-expiry-info${expired?' expired':''}">${expiryInfo}</span>`:''}
+      </div>`:'';
+    return `<div class="admin-user-card ${u.status}" data-email="${u.email}">
+      <input type="checkbox" class="adm-cb" data-email="${u.email}" onchange="admUpdateSelCount()">
+      <div class="admin-user-info" style="flex:1;min-width:0">
+        <div class="admin-user-name">${u.name}
+          <span class="admin-badge ${u.status}">${statusLabel[u.status]||u.status}</span>
+          ${isVip?`<span class="admin-badge vip">⭐ VIP</span>`:''}
+        </div>
+        <div class="admin-user-email">${u.email}</div>
+        <div class="admin-user-meta">생년월일 ${u.birthdate||'—'} &nbsp;·&nbsp; 가입일 ${u.createdAt||'—'}</div>
+        ${tierControls}
+      </div>
+    </div>`;
+  }).join('');
 
   listEl.innerHTML=filterTabsHtml+toolbar+cards;
 }
@@ -6748,6 +6798,26 @@ async function approveUser(email){
 }
 async function rejectUser(email){
   await afUpdateUserStatus(email,'rejected');
+  renderAdminPage();
+}
+async function setUserTier(email, tier){
+  const user=_usersCache.find(u=>u.email===email);
+  const fields={tier};
+  if(tier==='vip'&&!user?.vipStart) fields.vipStart=user?.createdAt||new Date().toLocaleDateString('ko-KR');
+  if(tier==='regular') fields.vipExpiry='';
+  await afUpdateUserFields(email, fields);
+  renderAdminPage();
+}
+async function setVipExpiry(email, months){
+  const base=new Date();
+  base.setMonth(base.getMonth()+months);
+  const expiry=base.toISOString().split('T')[0];
+  await afUpdateUserFields(email,{vipExpiry:expiry});
+  renderAdminPage();
+}
+async function setVipExpiryDirect(email, dateStr){
+  if(!dateStr) return;
+  await afUpdateUserFields(email,{vipExpiry:dateStr});
   renderAdminPage();
 }
 
