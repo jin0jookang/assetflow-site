@@ -23,11 +23,55 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── HOME ── */
-.home-nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.nav-logo{font-size:20px;font-weight:800;color:var(--blue);cursor:pointer;letter-spacing:-.5px}
-.nav-links{display:flex;gap:24px;list-style:none}
+.home-nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:0}
+.nav-logo{font-size:20px;font-weight:800;color:var(--blue);cursor:pointer;letter-spacing:-.5px;flex-shrink:0}
+.nav-links{display:flex;gap:4px;list-style:none;margin-left:48px}
 .nav-links a{font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .18s}
 .nav-links a:hover{color:var(--g500)}
+
+/* ── NAV DROPDOWN ── */
+.nav-drop-wrap{position:relative}
+.nav-drop-trigger{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap}
+.nav-drop-trigger:hover{background:var(--g50);color:var(--g700)}
+.nav-drop-trigger.open{background:var(--g50);color:var(--g700)}
+.nav-drop-trigger .caret{font-size:9px;opacity:.6;transition:transform .2s}
+.nav-drop-trigger.open .caret{transform:rotate(180deg)}
+.nav-dropdown{position:absolute;top:calc(100% + 8px);left:0;background:var(--white);border:1.5px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);min-width:190px;z-index:600;display:none;overflow:hidden}
+.nav-dropdown.open{display:block;animation:fadeIn .15s ease}
+.nav-drop-item{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;font-size:13px;color:var(--text);transition:background .15s;gap:12px}
+.nav-drop-item:hover{background:var(--g50)}
+.nav-drop-item.disabled{opacity:.55;cursor:default}
+.nav-drop-item.disabled:hover{background:transparent}
+.nav-drop-label{display:flex;align-items:center;gap:8px}
+.nav-coming-soon{font-size:10px;font-weight:700;background:var(--gold);color:#fff;padding:2px 8px;border-radius:100px;flex-shrink:0}
+.dark-toggle-sw{width:36px;height:20px;background:var(--border);border-radius:100px;position:relative;transition:background .2s;flex-shrink:0;cursor:pointer}
+.dark-toggle-sw::after{content:'';position:absolute;left:2px;top:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+html.dark .dark-toggle-sw{background:var(--g500)}
+html.dark .dark-toggle-sw::after{transform:translateX(16px)}
+
+/* ── GUIDE MODAL ── */
+.guide-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
+.guide-overlay.open{display:flex;animation:fadeIn .2s ease}
+.guide-box{background:var(--white);border-radius:20px;padding:32px 36px;width:100%;max-width:800px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2);position:relative}
+.guide-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);line-height:1;transition:color .15s}
+.guide-close:hover{color:var(--text)}
+.guide-header{margin-bottom:24px}
+.guide-title{font-size:20px;font-weight:800;color:var(--g900);letter-spacing:-.5px;margin-bottom:6px}
+.guide-sub{font-size:13px;color:var(--muted);line-height:1.6}
+.guide-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+.guide-table th{font-size:10px;font-weight:700;color:var(--muted);padding:9px 14px;text-align:left;border-bottom:2px solid var(--border);letter-spacing:.8px;text-transform:uppercase;background:var(--g50)}
+.guide-table td{padding:16px 14px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.7}
+.guide-table tr:last-child td{border-bottom:none}
+.guide-table tbody tr:hover td{background:var(--g50)}
+.guide-tool-name{font-weight:800;color:var(--g900);font-size:13px;display:block}
+.guide-tool-pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:5px;background:var(--g100);color:var(--g700)}
+.guide-purpose{color:var(--text);font-weight:500}
+.guide-value{color:var(--text2)}
+.guide-value li{margin-bottom:3px;padding-left:4px}
+.guide-value ul{padding-left:14px;margin:0}
+
+/* ── DARK MODE ── */
+html.dark{--bg:#0d1117;--white:#161b22;--g900:#e6edf3;--g50:#0d1f15;--g100:#1a3d28;--text:#e6edf3;--text2:#8b949e;--muted:#6e7681;--border:#30363d;--shadow:0 2px 16px rgba(0,0,0,.4);--shadow-lg:0 8px 40px rgba(0,0,0,.6)}
 .nav-badge{background:var(--g100);color:var(--g700);font-size:11px;font-weight:600;padding:5px 14px;border-radius:100px}
 .hero{padding:64px 32px 40px;max-width:1280px;margin:0 auto}
 .hero-label{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--g500);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:20px}
@@ -542,7 +586,8 @@ canvas#donut{width:160px;height:160px}
   .pl-month-bar{flex-direction:column;align-items:stretch;padding:12px 16px;gap:10px}
   .pl-month-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
   .pl-month-tab{flex:none;font-size:11px;padding:7px 4px}
-  .pl-month-actions{justify-content:flex-end}
+  .pl-month-actions{justify-content:flex-start;flex-wrap:wrap;gap:6px}
+  .pl-action-btn{padding:6px 10px;font-size:11px}
 }
 .pl-layout{display:grid;grid-template-columns:400px 1fr;gap:20px;padding:20px 24px;max-width:1480px;margin:0 auto;align-items:start}
 @media(max-width:1100px){.pl-layout{grid-template-columns:1fr}}
@@ -873,7 +918,22 @@ canvas#donut{width:160px;height:160px}
 <div id="page-home" class="page">
   <nav class="home-nav">
     <div class="nav-logo">자산플로우</div>
-    <ul class="nav-links"><li><a href="#">도구</a></li><li><a href="#">가이드</a></li></ul>
+    <ul class="nav-links">
+      <li class="nav-drop-wrap">
+        <span class="nav-drop-trigger" id="tools-trigger" onclick="toggleToolsMenu(event)">도구 <span class="caret">▼</span></span>
+        <div class="nav-dropdown" id="tools-dropdown">
+          <div class="nav-drop-item" onclick="event.stopPropagation();toggleDarkMode()">
+            <span class="nav-drop-label">🌙 다크모드</span>
+            <div class="dark-toggle-sw" id="dark-toggle-sw"></div>
+          </div>
+          <div class="nav-drop-item disabled">
+            <span class="nav-drop-label">💬 Q&amp;A</span>
+            <span class="nav-coming-soon">준비중</span>
+          </div>
+        </div>
+      </li>
+      <li><span class="nav-drop-trigger" onclick="openGuideModal()">가이드</span></li>
+    </ul>
     <div class="home-user-bar">
       <span class="home-user-name" id="home-user-name"></span>
       <span class="vip-badge" id="vip-badge" style="display:none">⭐ VIP 회원</span>
@@ -914,6 +974,89 @@ canvas#donut{width:160px;height:160px}
     </div>
   </div>
   <footer class="home-footer"><div class="footer-logo">자산플로우</div><div class="footer-copy">© 2025 자산플로우 · 모든 계산은 참고용입니다</div></footer>
+</div>
+
+<!-- GUIDE MODAL -->
+<div class="guide-overlay" id="guideModal" onclick="closeGuideModal()">
+  <div class="guide-box" onclick="event.stopPropagation()">
+    <button class="guide-close" onclick="closeGuideModal()">×</button>
+    <div class="guide-header">
+      <div class="guide-title">📖 서비스 가이드</div>
+      <div class="guide-sub">자산플로우의 각 도구별 목적과 활용법을 안내합니다.</div>
+    </div>
+    <table class="guide-table">
+      <thead>
+        <tr>
+          <th style="width:160px">도구</th>
+          <th style="width:220px">목적</th>
+          <th>핵심 기능 &amp; 유용성</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <span class="guide-tool-name">📈 주가 분석</span>
+            <span class="guide-tool-pill">ETF · 주식</span>
+          </td>
+          <td class="guide-purpose">국내·해외 ETF 및 개별 주식 포트폴리오의 <strong>월 배당 수익을 정확하게 예측</strong>합니다.</td>
+          <td class="guide-value">
+            <ul>
+              <li>보유 수량 × 현재 주가 × 배당수익률로 세후 월 배당금 계산</li>
+              <li>KIS API · Yahoo Finance 실시간 주가 반영</li>
+              <li>수량 변동 시뮬레이션으로 추가 투자 효과 사전 확인</li>
+              <li>배당소득세(국내 15.4% / 해외 15%) 자동 차감</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="guide-tool-name">🧾 세금 계산기</span>
+            <span class="guide-tool-pill">부동산 · 연말정산</span>
+          </td>
+          <td class="guide-purpose">부동산 거래 및 근로소득에 대한 <strong>세금을 거래 전에 파악</strong>해 절세 전략을 세울 수 있습니다.</td>
+          <td class="guide-value">
+            <ul>
+              <li>양도소득세: 보유기간·다주택 여부에 따른 세율 자동 적용</li>
+              <li>취득세: 주택 가격·취득 조건별 세율 산출</li>
+              <li>연말정산: 공제 항목 입력 시 환급 예상액 계산</li>
+              <li>거래 전 세금 부담 시뮬레이션으로 순수익 파악 가능</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="guide-tool-name">🏠 집 구매 시뮬레이터</span>
+            <span class="guide-tool-pill">부동산 · 재건축</span>
+          </td>
+          <td class="guide-purpose">내 소득과 자산을 기반으로 <strong>실현 가능한 주택 구매 범위</strong>와 투자 가치를 분석합니다.</td>
+          <td class="guide-value">
+            <ul>
+              <li>LTV · DSR 기준 최대 대출 가능액 및 구매 한도 산출</li>
+              <li>원리금균등 월 상환액 계산 (DSR 40% 초과 경고)</li>
+              <li>재건축·리모델링 사업성 분석 (비례율, 추가 분담금)</li>
+              <li>중도상환·대출 갈아타기 이자 절감 시뮬레이션</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="guide-tool-name">📋 개인 자산 플래너</span>
+            <span class="guide-tool-pill">월별 · 컨설팅</span>
+          </td>
+          <td class="guide-purpose">월별 수익·지출을 손익계산서로 정리하고 <strong>맞춤 재테크 전략을 제안</strong>합니다.</td>
+          <td class="guide-value">
+            <ul>
+              <li>월 수입·고정비·변동비·저축을 한눈에 시각화</li>
+              <li>자산 현황 기반 실현 가능한 재테크 방향 제시</li>
+              <li>소비 vs 투자 기회비용 분석 (복리 미래가치)</li>
+              <li>은퇴자금 목표액 및 달성 시기 시뮬레이션</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:20px;font-size:11px;color:var(--muted);line-height:1.7">⚠ 모든 계산은 참고용입니다. 실제 세금 및 금융 결정은 전문가와 상담하세요.</div>
+  </div>
 </div>
 
 <!-- STOCK HUB PAGE -->
@@ -6820,6 +6963,43 @@ async function setVipExpiryDirect(email, dateStr){
   await afUpdateUserFields(email,{vipExpiry:dateStr});
   renderAdminPage();
 }
+
+// ════════════════════════════════════════
+// 다크모드
+// ════════════════════════════════════════
+// ════════════════════════════════════════
+// 도구 드롭다운 (클릭 방식)
+// ════════════════════════════════════════
+function toggleToolsMenu(e){
+  e.stopPropagation();
+  const trigger=document.getElementById('tools-trigger');
+  const dropdown=document.getElementById('tools-dropdown');
+  const isOpen=dropdown.classList.contains('open');
+  closeToolsMenu();
+  if(!isOpen){trigger.classList.add('open');dropdown.classList.add('open');}
+}
+function closeToolsMenu(){
+  const trigger=document.getElementById('tools-trigger');
+  const dropdown=document.getElementById('tools-dropdown');
+  if(trigger)trigger.classList.remove('open');
+  if(dropdown)dropdown.classList.remove('open');
+}
+document.addEventListener('click', closeToolsMenu);
+
+function toggleDarkMode(){
+  const isDark=document.documentElement.classList.toggle('dark');
+  localStorage.setItem('af_dark',isDark?'1':'0');
+}
+function initDarkMode(){
+  if(localStorage.getItem('af_dark')==='1') document.documentElement.classList.add('dark');
+}
+initDarkMode();
+
+// ════════════════════════════════════════
+// 가이드 모달
+// ════════════════════════════════════════
+function openGuideModal(){document.getElementById('guideModal').classList.add('open');}
+function closeGuideModal(){document.getElementById('guideModal').classList.remove('open');}
 
 // ── 앱 초기화: Firestore 리스너가 데이터 받은 후 호출됨 ──
 function initAuth(){
