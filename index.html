@@ -23,7 +23,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── HOME ── */
-.home-nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:0}
+.home-nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 40px;min-height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:0;flex-wrap:wrap}
 .nav-logo{font-size:20px;font-weight:800;color:var(--blue);cursor:pointer;letter-spacing:-.5px;flex-shrink:0}
 .nav-links{display:flex;gap:4px;list-style:none;margin-left:48px}
 .nav-links a{font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;transition:color .18s}
@@ -72,6 +72,11 @@ html.dark .dark-toggle-sw::after{transform:translateX(16px)}
 
 /* ── DARK MODE ── */
 html.dark{--bg:#0d1117;--white:#161b22;--g900:#e6edf3;--g50:#0d1f15;--g100:#1a3d28;--text:#e6edf3;--text2:#8b949e;--muted:#6e7681;--border:#30363d;--shadow:0 2px 16px rgba(0,0,0,.4);--shadow-lg:0 8px 40px rgba(0,0,0,.6)}
+html.dark .guide-tool-pill{background:rgba(46,139,87,.25);color:#6ee7b7}
+html.dark .guide-table th{color:#8b949e}
+html.dark .guide-tool-name{color:#e6edf3}
+html.dark .guide-purpose strong{color:#6ee7b7}
+html.dark .guide-table tbody tr:hover td{background:rgba(255,255,255,.04)}
 .nav-badge{background:var(--g100);color:var(--g700);font-size:11px;font-weight:600;padding:5px 14px;border-radius:100px}
 .hero{padding:64px 32px 40px;max-width:1280px;margin:0 auto}
 .hero-label{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--g500);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:20px}
@@ -828,10 +833,18 @@ canvas#donut{width:160px;height:160px}
 .admin-filter-tab.active{background:var(--g700);color:#fff;border-color:var(--g700)}
 .adm-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--g500);flex-shrink:0}
 /* 홈 유저 영역 */
-.home-user-bar{display:flex;align-items:center;gap:10px;margin-left:auto}
+.home-user-bar{display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
 .home-user-name{font-size:13px;font-weight:700;color:var(--g700)}
 .home-logout-btn{padding:5px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .15s}
 .home-logout-btn:hover{border-color:var(--g300);color:var(--g700)}
+@media(max-width:640px){
+  .home-nav{height:auto;padding:10px 16px;flex-wrap:wrap;gap:8px}
+  .nav-links{margin-left:0;gap:2px}
+  .home-user-bar{gap:6px}
+  .home-user-name{font-size:12px}
+  .vip-badge{font-size:10px;padding:4px 10px}
+  .home-logout-btn{padding:4px 10px;font-size:10px}
+}
 </style>
 </head>
 <body>
@@ -6974,9 +6987,13 @@ function toggleToolsMenu(e){
   e.stopPropagation();
   const trigger=document.getElementById('tools-trigger');
   const dropdown=document.getElementById('tools-dropdown');
-  const isOpen=dropdown.classList.contains('open');
-  closeToolsMenu();
-  if(!isOpen){trigger.classList.add('open');dropdown.classList.add('open');}
+  if(dropdown.classList.contains('open')){
+    trigger.classList.remove('open');
+    dropdown.classList.remove('open');
+  } else {
+    trigger.classList.add('open');
+    dropdown.classList.add('open');
+  }
 }
 function closeToolsMenu(){
   const trigger=document.getElementById('tools-trigger');
