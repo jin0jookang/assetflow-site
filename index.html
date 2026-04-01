@@ -52,7 +52,7 @@ html.dark .dark-toggle-sw::after{transform:translateX(16px)}
 /* ── GUIDE MODAL ── */
 .guide-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
 .guide-overlay.open{display:flex;animation:fadeIn .2s ease}
-.guide-box{background:var(--white);border-radius:20px;padding:32px 36px;width:100%;max-width:800px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2);position:relative}
+.guide-box{background:var(--white);border-radius:20px;padding:32px 36px;width:100%;max-width:900px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2);position:relative}
 .guide-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);line-height:1;transition:color .15s}
 .guide-close:hover{color:var(--text)}
 .guide-header{margin-bottom:24px}
@@ -810,7 +810,7 @@ canvas#donut{width:160px;height:160px}
 .admin-nav{display:flex;align-items:center;gap:12px;padding:0 24px;height:54px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
 .admin-nav-logo{font-size:15px;font-weight:900;color:var(--g700);letter-spacing:-.5px}
 .admin-nav-badge{background:#dc2626;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:100px;letter-spacing:.3px}
-.admin-body{max-width:900px;margin:0 auto;padding:28px 20px}
+.admin-body{max-width:1400px;margin:0 auto;padding:28px 20px}
 .admin-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px}
 @media(max-width:900px){.admin-stats{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:540px){.admin-stats{grid-template-columns:repeat(2,1fr)}}
@@ -839,6 +839,22 @@ canvas#donut{width:160px;height:160px}
 .adm-dur-btn:hover{background:var(--g50);border-color:var(--g400);color:var(--g700)}
 .adm-date-inp{padding:3px 8px;border:1.5px solid var(--border);border-radius:7px;font-size:11px;font-family:var(--sans);color:var(--text);background:#fff;outline:none;cursor:pointer}
 .adm-date-inp:focus{border-color:var(--g400)}
+/* 입금 내역 */
+.adm-pay-section{margin-top:12px;padding-top:10px;border-top:1px dashed var(--border)}
+.adm-pay-title{font-size:11px;font-weight:800;color:var(--g700);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.adm-pay-add-btn{padding:2px 10px;border-radius:100px;border:1.5px solid var(--g400);background:var(--g50);font-size:11px;font-weight:700;color:var(--g700);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.adm-pay-add-btn:hover{background:var(--g100)}
+.adm-pay-row{display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.adm-pay-inp{padding:5px 8px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;font-family:var(--sans);color:var(--text);background:var(--white);outline:none;transition:border-color .15s}
+.adm-pay-inp:focus{border-color:var(--g400)}
+.adm-pay-date{width:110px}
+.adm-pay-amount{width:120px;text-align:right}
+.adm-pay-memo{flex:1;min-width:80px}
+.adm-pay-del{padding:4px 8px;border:1.5px solid #fca5a5;border-radius:7px;background:#fff1f2;color:#dc2626;font-size:11px;cursor:pointer;font-family:var(--sans);transition:all .15s;flex-shrink:0}
+.adm-pay-del:hover{background:#fee2e2}
+.adm-pay-empty{font-size:11px;color:var(--muted);padding:4px 0}
+.adm-pay-total{font-size:12px;color:var(--text2);margin-top:4px;text-align:right}
+.adm-pay-total strong{color:var(--g700)}
 .adm-expiry-info{font-size:10px;font-weight:600;color:var(--g500)}
 .adm-expiry-info.expired{color:var(--red)}
 .admin-user-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
@@ -864,6 +880,40 @@ canvas#donut{width:160px;height:160px}
 .admin-filter-tab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;font-family:var(--sans);transition:all .15s}
 .admin-filter-tab.active{background:var(--g700);color:#fff;border-color:var(--g700)}
 .adm-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--g500);flex-shrink:0}
+/* 어드민 그리드 테이블 */
+.adm-table-wrap{overflow-x:auto;border-radius:12px;border:1.5px solid var(--border);background:var(--white)}
+.adm-table{width:100%;border-collapse:collapse;font-size:12px}
+.adm-th{padding:10px 12px;text-align:left;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border);background:var(--g50);white-space:nowrap}
+.adm-tr{border-bottom:1px solid var(--border);transition:background .1s}
+.adm-tr:last-child{border-bottom:none}
+.adm-tr:hover{background:var(--g50)}
+.adm-tr.pending .adm-td-cb{border-left:3px solid #f59e0b}
+.adm-tr.approved .adm-td-cb{border-left:3px solid var(--g500)}
+.adm-tr.rejected .adm-td-cb{border-left:3px solid #f87171}
+.adm-tr.rejected{opacity:.75}
+.adm-td{padding:10px 12px;vertical-align:middle;color:var(--text)}
+.adm-td-cb{width:40px}
+.adm-name-text{font-size:14px;font-weight:700;color:var(--g900);display:block}
+.adm-td-email{font-size:13px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adm-td-birth{font-size:13px;white-space:nowrap}
+.adm-tier-sel{padding:5px 8px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);font-size:12px;font-weight:700;color:var(--text);cursor:pointer;font-family:var(--sans);outline:none;width:100%}
+.adm-tier-sel:focus{border-color:var(--g400)}
+.adm-tier-sel:disabled{opacity:.4;cursor:default}
+.adm-pay-toggle-btn{padding:5px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;font-family:var(--sans);transition:all .15s;white-space:nowrap}
+.adm-pay-toggle-btn:hover{border-color:var(--g400);color:var(--g700);background:var(--g50)}
+.adm-pay-toggle-btn.has-pay{border-color:var(--g300);color:var(--g700);background:rgba(46,139,87,.06)}
+.adm-pay-expand-row td{padding:0}
+.adm-pay-expand-inner{padding:18px 24px;background:var(--bg);border-top:1px dashed var(--border)}
+.adm-pay-sub-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+.adm-pay-sub-table th{padding:9px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);border-bottom:1.5px solid var(--border);background:var(--white);white-space:nowrap}
+.adm-pay-sub-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.adm-pay-sub-table tr:last-child td{border-bottom:none}
+.adm-pay-foot{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.adm-pay-sum{font-size:13px;font-weight:700;color:var(--g700)}
+.adm-pay-save-btn{padding:5px 16px;border-radius:8px;border:none;background:var(--g700);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .15s}
+.adm-pay-save-btn:hover{background:var(--g900)}
+.adm-td-action button{display:block;width:100%;padding:4px 10px;font-size:11px;margin-bottom:3px}
+.adm-td-action button:last-child{margin-bottom:0}
 /* 홈 유저 영역 */
 .home-user-bar{display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
 .home-user-name{font-size:13px;font-weight:700;color:var(--g700)}
@@ -1048,9 +1098,9 @@ canvas#donut{width:160px;height:160px}
           <td class="guide-purpose">국내·해외 ETF 및 개별 주식 포트폴리오의 <strong>월 배당 수익을 정확하게 예측</strong>합니다.</td>
           <td class="guide-value">
             <ul>
-              <li>보유 수량 × 현재 주가 × 배당수익률로 세후 월 배당금 계산</li>
+              <li>보유 수량 × 주가 × 배당수익률로 세후 월 배당금 계산</li>
               <li>KIS API · Yahoo Finance 실시간 주가 반영</li>
-              <li>수량 변동 시뮬레이션으로 추가 투자 효과 사전 확인</li>
+              <li>수량 변동 시뮬레이션으로 추가 투자 효과 확인</li>
               <li>배당소득세(국내 15.4% / 해외 15%) 자동 차감</li>
             </ul>
           </td>
@@ -1063,25 +1113,25 @@ canvas#donut{width:160px;height:160px}
           <td class="guide-purpose">부동산 거래 및 근로소득에 대한 <strong>세금을 거래 전에 파악</strong>해 절세 전략을 세울 수 있습니다.</td>
           <td class="guide-value">
             <ul>
-              <li>양도소득세: 보유기간·다주택 여부에 따른 세율 자동 적용</li>
+              <li>양도소득세: 보유기간·다주택 여부 세율 자동 적용</li>
               <li>취득세: 주택 가격·취득 조건별 세율 산출</li>
               <li>연말정산: 공제 항목 입력 시 환급 예상액 계산</li>
-              <li>거래 전 세금 부담 시뮬레이션으로 순수익 파악 가능</li>
+              <li>거래 전 세금 시뮬레이션으로 순수익 파악</li>
             </ul>
           </td>
         </tr>
         <tr>
           <td>
             <span class="guide-tool-name">🏠 집 구매 시뮬레이터</span>
-            <span class="guide-tool-pill">부동산 · 재건축</span>
+            <span class="guide-tool-pill">부동산 · 전세 · 재건축</span>
           </td>
-          <td class="guide-purpose">내 소득과 자산을 기반으로 <strong>실현 가능한 주택 구매 범위</strong>와 투자 가치를 분석합니다.</td>
+          <td class="guide-purpose">주택 구매·전세 대출·재건축까지 <strong>상황별 부동산 전략</strong>을 시뮬레이션합니다.</td>
           <td class="guide-value">
             <ul>
               <li>LTV · DSR 기준 최대 대출 가능액 및 구매 한도 산출</li>
-              <li>원리금균등 월 상환액 계산 (DSR 40% 초과 경고)</li>
+              <li>전세대출 계산: 버팀목(정책·DSR 미적용) · 일반대출 시뮬레이션</li>
               <li>재건축·리모델링 사업성 분석 (비례율, 추가 분담금)</li>
-              <li>중도상환·대출 갈아타기 이자 절감 시뮬레이션</li>
+              <li>원리금균등 월 상환액 계산 (DSR 40% 초과 경고)</li>
             </ul>
           </td>
         </tr>
@@ -1093,7 +1143,7 @@ canvas#donut{width:160px;height:160px}
           <td class="guide-purpose">월별 수익·지출을 손익계산서로 정리하고 <strong>맞춤 재테크 전략을 제안</strong>합니다.</td>
           <td class="guide-value">
             <ul>
-              <li>월 수입·고정비·변동비·저축을 한눈에 시각화</li>
+              <li>월 수입·고정비·변동비·저축 한눈에 시각화</li>
               <li>자산 현황 기반 실현 가능한 재테크 방향 제시</li>
               <li>소비 vs 투자 기회비용 분석 (복리 미래가치)</li>
               <li>은퇴자금 목표액 및 달성 시기 시뮬레이션</li>
@@ -7386,18 +7436,25 @@ function renderAdminPage(filter){
   if(!listEl)return;
 
   const filterLabels=[
-    {key:'all',label:'전체',cnt:total},
+    {key:'all',    label:'전체',     cnt:total},
     {key:'pending',label:'승인 대기',cnt:pendingCnt},
     {key:'approved',label:'승인 완료',cnt:approvedCnt},
-    {key:'rejected',label:'거부됨',cnt:rejectedCnt}
+    {key:'rejected',label:'거부됨',  cnt:rejectedCnt},
+    {key:'vip',    label:'⭐ VIP',   cnt:vipCnt},
+    {key:'regular',label:'👤 일반',  cnt:regularCnt},
   ];
-  const filterTabsHtml=`<div class="admin-filter-tabs">
+  const filterTabsHtml=`<div class="admin-filter-tabs" style="flex-wrap:wrap">
     ${filterLabels.map(f=>`<button class="admin-filter-tab${admFilter===f.key?' active':''}" onclick="renderAdminPage('${f.key}')">${f.label} ${f.cnt}</button>`).join('')}
   </div>`;
 
   const order={pending:0,approved:1,rejected:2};
   const filtered=users
-    .filter(u=>admFilter==='all'||u.status===admFilter)
+    .filter(u=>{
+      if(admFilter==='all') return true;
+      if(admFilter==='vip') return u.status==='approved'&&isVipActive(u);
+      if(admFilter==='regular') return u.status==='approved'&&!isVipActive(u);
+      return u.status===admFilter;
+    })
     .sort((a,b)=>(order[a.status]||0)-(order[b.status]||0));
 
   if(filtered.length===0){
@@ -7406,49 +7463,105 @@ function renderAdminPage(filter){
   }
 
   const toolbar=`<div class="admin-toolbar">
-    <label class="admin-check-wrap">
-      <input type="checkbox" id="adm-check-all" onchange="admToggleAll(this.checked)">
-      <span>전체 선택</span>
-    </label>
     <span class="admin-toolbar-label" id="adm-sel-count" style="color:var(--g500)"></span>
     <div style="flex:1"></div>
-    <button class="admin-btn-approve" onclick="admBulkAction('approved')">✓ 승인</button>
-    <button class="admin-btn-reject" onclick="admBulkAction('rejected')">✗ 거부</button>
+    <button class="admin-btn-approve" onclick="admBulkAction('approved')">✓ 일괄 승인</button>
+    <button class="admin-btn-reject" onclick="admBulkAction('rejected')">✗ 일괄 거부</button>
   </div>`;
 
   const statusLabel={pending:'승인 대기',approved:'승인 완료',rejected:'거부됨'};
   const today=new Date().toISOString().split('T')[0];
-  const cards=filtered.map(u=>{
+  const rows=filtered.map(u=>{
     const isVip=u.tier==='vip';
     const expired=isVip&&u.vipExpiry&&u.vipExpiry<today;
-    const expiryInfo=isVip?(u.vipExpiry?(expired?'⚠ 만료됨: '+u.vipExpiry:'만료: '+u.vipExpiry):'기간 미설정 (무기한)'):'';
-    const tierControls=u.status==='approved'?`
-      <div class="adm-tier-row">
-        <button class="adm-tier-btn${isVip?' vip-on':''}" onclick="setUserTier('${u.email}','vip')">⭐ VIP</button>
-        <button class="adm-tier-btn${!isVip?' reg-on':''}" onclick="setUserTier('${u.email}','regular')">일반</button>
-        ${isVip?`<span class="adm-tier-sep">|</span>
-        <span class="adm-expiry-label">유효기간</span>
-        <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',3)">3개월</button>
-        <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',6)">6개월</button>
-        <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',12)">12개월</button>
-        <input type="date" class="adm-date-inp" value="${u.vipExpiry||''}" onchange="setVipExpiryDirect('${u.email}',this.value)">
-        <span class="adm-expiry-info${expired?' expired':''}">${expiryInfo}</span>`:''}
-      </div>`:'';
-    return `<div class="admin-user-card ${u.status}" data-email="${u.email}">
-      <input type="checkbox" class="adm-cb" data-email="${u.email}" onchange="admUpdateSelCount()">
-      <div class="admin-user-info" style="flex:1;min-width:0">
-        <div class="admin-user-name">${u.name}
-          <span class="admin-badge ${u.status}">${statusLabel[u.status]||u.status}</span>
-          ${isVip?`<span class="admin-badge vip">⭐ VIP</span>`:''}
+    const ek=u.email.replace(/[^a-zA-Z0-9]/g,'_');
+    const pays=u.payments||[];
+    const payTotal=pays.reduce((s,p)=>s+(Number(p.amount)||0),0);
+    const paySubRows=pays.length?pays.map((p,i)=>`
+      <tr>
+        <td style="color:var(--muted);text-align:center;font-size:12px">${i+1}</td>
+        <td><input class="adm-pay-inp adm-pay-date" value="${p.date||''}" placeholder="YYYY-MM-DD" oninput="autoDateFmt(this)"></td>
+        <td><input class="adm-pay-inp" style="width:140px;text-align:right" value="${p.amount?Number(p.amount).toLocaleString('ko-KR'):''}" placeholder="금액" oninput="moneyFmt(this)"></td>
+        <td><input class="adm-pay-inp" style="width:180px" value="${p.memo||''}" placeholder="메모"></td>
+        <td><button class="adm-pay-del" onclick="removePayRow(this)">✕</button></td>
+      </tr>`).join('')
+      :`<tr id="pay-empty-${ek}"><td colspan="5" style="text-align:center;color:var(--muted);padding:12px 0">입금 내역 없음 — 아래 버튼으로 추가하세요</td></tr>`;
+
+    const expiryCell=isVip
+      ?`<input type="text" class="adm-date-inp" value="${u.vipExpiry||''}" placeholder="YYYY-MM-DD" oninput="autoDateFmt(this)" onblur="setVipExpiryDirect('${u.email}',this.value)" style="width:105px"><br>
+        <span style="font-size:10px;color:${expired?'var(--red)':'var(--g500)'}">
+          ${u.vipExpiry?(expired?'⚠ 만료':'✓ 유효'):'미설정'}
+        </span>
+        <div style="display:flex;gap:3px;margin-top:4px">
+          <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',3)">3개월</button>
+          <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',6)">6개월</button>
+          <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',12)">12개월</button>
+        </div>`
+      :`<span style="color:var(--muted);font-size:11px">—</span>`;
+
+    const actionBtns=u.status==='pending'
+      ?`<button class="admin-btn-approve" onclick="approveUser('${u.email}')">✓ 승인</button><button class="admin-btn-reject" onclick="rejectUser('${u.email}')">✗ 거부</button>`
+      :u.status==='approved'
+      ?`<button class="admin-btn-revoke" onclick="rejectUser('${u.email}')">취소</button>`
+      :`<button class="admin-btn-approve" onclick="approveUser('${u.email}')">재승인</button>`;
+
+    return `<tr class="adm-tr ${u.status}" data-email="${u.email}">
+      <td class="adm-td adm-td-cb"><input type="checkbox" class="adm-cb" data-email="${u.email}" onchange="admUpdateSelCount()"></td>
+      <td class="adm-td">
+        <span class="adm-name-text">${u.name}</span>
+        <span class="admin-badge ${u.status}" style="margin-top:3px;display:inline-block">${statusLabel[u.status]||u.status}</span>
+        ${isVip?`<span class="admin-badge vip" style="margin-top:3px;display:inline-block">⭐ VIP</span>`:''}
+      </td>
+      <td class="adm-td adm-td-email">${u.email}</td>
+      <td class="adm-td adm-td-birth">${u.birthdate||'—'}</td>
+      <td class="adm-td" style="white-space:nowrap">${u.createdAt||'—'}</td>
+      <td class="adm-td" style="min-width:110px">
+        <select class="adm-tier-sel" onchange="setUserTier('${u.email}',this.value)" ${u.status!=='approved'?'disabled':''}>
+          <option value="regular"${!isVip?' selected':''}>👤 일반</option>
+          <option value="vip"${isVip?' selected':''}>⭐ VIP</option>
+        </select>
+      </td>
+      <td class="adm-td" style="min-width:145px">${expiryCell}</td>
+      <td class="adm-td" style="min-width:110px">
+        <button class="adm-pay-toggle-btn${pays.length?' has-pay':''}" onclick="togglePayExpand('${ek}')">
+          💳 ${pays.length}건${payTotal>0?' · '+payTotal.toLocaleString('ko-KR')+'원':''}
+        </button>
+      </td>
+      <td class="adm-td adm-td-action" style="min-width:70px">${actionBtns}</td>
+    </tr>
+    <tr class="adm-pay-expand-row" id="pay-expand-${ek}" style="display:none">
+      <td colspan="9">
+        <div class="adm-pay-expand-inner">
+          <table class="adm-pay-sub-table">
+            <thead><tr><th style="width:36px">#</th><th>입금 일자</th><th>금액 (원)</th><th>메모</th><th style="width:50px"></th></tr></thead>
+            <tbody id="pay-tbody-${ek}">${paySubRows}</tbody>
+          </table>
+          <div class="adm-pay-foot">
+            <button class="adm-pay-add-btn" onclick="addLocalPayRow('${ek}')">＋ 입금 추가</button>
+            <button class="adm-pay-save-btn" onclick="saveAllPayments('${u.email}','${ek}')">💾 저장</button>
+            <span class="adm-pay-sum" id="pay-sum-${ek}">${payTotal>0?payTotal.toLocaleString('ko-KR')+'원':''}</span>
+          </div>
         </div>
-        <div class="admin-user-email">${u.email}</div>
-        <div class="admin-user-meta">생년월일 ${u.birthdate||'—'} &nbsp;·&nbsp; 가입일 ${u.createdAt||'—'}</div>
-        ${tierControls}
-      </div>
-    </div>`;
+      </td>
+    </tr>`;
   }).join('');
 
-  listEl.innerHTML=filterTabsHtml+toolbar+cards;
+  const tableHtml=`<div class="adm-table-wrap"><table class="adm-table">
+    <thead><tr>
+      <th class="adm-th"><input type="checkbox" id="adm-check-all" onchange="admToggleAll(this.checked)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--g500)"></th>
+      <th class="adm-th">이름</th>
+      <th class="adm-th">이메일</th>
+      <th class="adm-th">생년월일</th>
+      <th class="adm-th">가입일</th>
+      <th class="adm-th">회원등급</th>
+      <th class="adm-th">유효기간</th>
+      <th class="adm-th">입금내역</th>
+      <th class="adm-th">관리</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+
+  listEl.innerHTML=filterTabsHtml+toolbar+tableHtml;
 }
 
 function admToggleAll(checked){
@@ -7498,6 +7611,50 @@ async function setVipExpiryDirect(email, dateStr){
   if(!dateStr) return;
   await afUpdateUserFields(email,{vipExpiry:dateStr});
   renderAdminPage();
+}
+
+function togglePayExpand(ek){
+  const row=document.getElementById('pay-expand-'+ek);
+  if(!row)return;
+  row.style.display=row.style.display==='none'?'':'none';
+}
+
+// ── 입금 내역 관리 ──
+function addLocalPayRow(ek){
+  const tbody=document.getElementById('pay-tbody-'+ek);
+  if(!tbody) return;
+  // 빈 행 안내 메시지 제거
+  const emptyRow=document.getElementById('pay-empty-'+ek);
+  if(emptyRow) emptyRow.remove();
+  const idx=tbody.querySelectorAll('tr').length+1;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td style="color:var(--muted);text-align:center;font-size:12px">${idx}</td>
+    <td><input class="adm-pay-inp adm-pay-date" placeholder="YYYY-MM-DD" oninput="autoDateFmt(this)"></td>
+    <td><input class="adm-pay-inp" style="width:140px;text-align:right" placeholder="금액" oninput="moneyFmt(this)"></td>
+    <td><input class="adm-pay-inp" style="width:180px" placeholder="메모"></td>
+    <td><button class="adm-pay-del" onclick="removePayRow(this)">✕</button></td>`;
+  tbody.appendChild(tr);
+}
+function removePayRow(btn){
+  btn.closest('tr').remove();
+}
+async function saveAllPayments(email, ek){
+  const tbody=document.getElementById('pay-tbody-'+ek);
+  if(!tbody) return;
+  const payments=[...tbody.querySelectorAll('tr')].map(tr=>{
+    const inputs=tr.querySelectorAll('input');
+    if(inputs.length<3) return null;
+    return {
+      date: inputs[0].value.trim(),
+      amount: inputs[1].value.replace(/,/g,'').trim(),
+      memo: inputs[2].value.trim()
+    };
+  }).filter(p=>p&&(p.date||p.amount));
+  const btn=tbody.closest('.adm-pay-expand-inner')?.querySelector('.adm-pay-save-btn');
+  if(btn){btn.textContent='저장 중…';btn.disabled=true;}
+  await afUpdateUserFields(email,{payments});
+  if(btn){btn.textContent='💾 저장';btn.disabled=false;}
 }
 
 // ════════════════════════════════════════
