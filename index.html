@@ -1070,7 +1070,7 @@ canvas#donut{width:160px;height:160px}
       <div class="card-bottom"><div class="card-tags"><span class="card-tag">손익계산서</span><span class="card-tag">컨설팅</span></div><div class="card-arrow"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#3d6e3a" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 10.5L10.5 2.5M10.5 2.5H5M10.5 2.5V8"/></svg></div></div>
     </div>
   </div>
-  <footer class="home-footer"><div class="footer-logo">자산플로우</div><div class="footer-copy">© 2025 자산플로우 · 모든 계산은 참고용입니다</div></footer>
+  <footer class="home-footer"><div class="footer-logo">자산플로우</div><div class="footer-copy">© 2026 자산플로우 · 모든 계산은 참고용입니다</div></footer>
 </div>
 
 <!-- GUIDE MODAL -->
@@ -7488,11 +7488,13 @@ function renderAdminPage(filter){
       :`<tr id="pay-empty-${ek}"><td colspan="5" style="text-align:center;color:var(--muted);padding:12px 0">입금 내역 없음 — 아래 버튼으로 추가하세요</td></tr>`;
 
     const expiryCell=isVip
-      ?`<input type="text" class="adm-date-inp" value="${u.vipExpiry||''}" placeholder="YYYY-MM-DD" oninput="autoDateFmt(this)" onblur="setVipExpiryDirect('${u.email}',this.value)" style="width:105px"><br>
-        <span style="font-size:10px;color:${expired?'var(--red)':'var(--g500)'}">
+      ?`<input type="text" class="adm-date-inp" value="${u.vipExpiry||''}" placeholder="YYYY-MM-DD" oninput="autoDateFmt(this)" onblur="setVipExpiryDirect('${u.email}',this.value)" style="width:105px">
+        <div style="font-size:10px;color:${expired?'var(--red)':'var(--g500)'};margin-top:3px">
           ${u.vipExpiry?(expired?'⚠ 만료':'✓ 유효'):'미설정'}
-        </span>
-        <div style="display:flex;gap:3px;margin-top:4px">
+        </div>`
+      :`<span style="color:var(--muted);font-size:11px">—</span>`;
+    const expiryBtns=isVip
+      ?`<div style="display:flex;gap:4px;align-items:center">
           <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',3)">3개월</button>
           <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',6)">6개월</button>
           <button class="adm-dur-btn" onclick="setVipExpiry('${u.email}',12)">12개월</button>
@@ -7521,7 +7523,8 @@ function renderAdminPage(filter){
           <option value="vip"${isVip?' selected':''}>⭐ VIP</option>
         </select>
       </td>
-      <td class="adm-td" style="min-width:145px">${expiryCell}</td>
+      <td class="adm-td" style="min-width:120px">${expiryCell}</td>
+      <td class="adm-td" style="min-width:130px">${expiryBtns}</td>
       <td class="adm-td" style="min-width:110px">
         <button class="adm-pay-toggle-btn${pays.length?' has-pay':''}" onclick="togglePayExpand('${ek}')">
           💳 ${pays.length}건${payTotal>0?' · '+payTotal.toLocaleString('ko-KR')+'원':''}
@@ -7530,7 +7533,7 @@ function renderAdminPage(filter){
       <td class="adm-td adm-td-action" style="min-width:70px">${actionBtns}</td>
     </tr>
     <tr class="adm-pay-expand-row" id="pay-expand-${ek}" style="display:none">
-      <td colspan="9">
+      <td colspan="10">
         <div class="adm-pay-expand-inner">
           <table class="adm-pay-sub-table">
             <thead><tr><th style="width:36px">#</th><th>입금 일자</th><th>금액 (원)</th><th>메모</th><th style="width:50px"></th></tr></thead>
@@ -7555,6 +7558,7 @@ function renderAdminPage(filter){
       <th class="adm-th">가입일</th>
       <th class="adm-th">회원등급</th>
       <th class="adm-th">유효기간</th>
+      <th class="adm-th">기간 설정</th>
       <th class="adm-th">입금내역</th>
       <th class="adm-th">관리</th>
     </tr></thead>
