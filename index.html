@@ -927,6 +927,29 @@ canvas#donut{width:160px;height:160px}
   .vip-badge{font-size:10px;padding:4px 10px}
   .home-logout-btn{padding:4px 10px;font-size:10px}
 }
+/* 어드민 모바일 */
+@media(max-width:768px){
+  .admin-nav{height:auto;padding:10px 16px;flex-wrap:wrap;gap:6px}
+  .admin-body{padding:14px 10px}
+  .admin-filter-tabs{flex-wrap:wrap;gap:4px}
+  .admin-filter-tab{padding:5px 10px;font-size:11px}
+  .admin-toolbar{flex-wrap:wrap;gap:6px;padding:8px 10px}
+  .admin-btn-approve,.admin-btn-reject,.admin-btn-revoke{padding:5px 10px;font-size:11px}
+  .adm-table-wrap{border-radius:8px}
+  .adm-pay-expand-inner{padding:12px 14px}
+  .adm-pay-sub-table th,.adm-pay-sub-table td{padding:6px 8px;font-size:11px}
+  .adm-pay-inp{font-size:11px;padding:4px 6px}
+  .adm-pay-date{width:90px}
+  .adm-pay-amount{width:90px}
+  .adm-pay-save-btn{padding:5px 12px;font-size:11px}
+}
+@media(max-width:480px){
+  .admin-stats{grid-template-columns:repeat(2,1fr)!important}
+  .admin-stat{padding:12px 14px}
+  .admin-stat-val{font-size:20px}
+  .adm-pay-row{flex-direction:column;align-items:stretch}
+  .adm-pay-date,.adm-pay-amount{width:100%}
+}
 </style>
 </head>
 <body>
@@ -1253,7 +1276,8 @@ canvas#donut{width:160px;height:160px}
 <div id="page-stock-analysis" class="page">
   <!-- NAV -->
   <div class="tax-nav">
-    <button class="back-btn" onclick="goStockHub()">← 뒤로</button>
+    <button class="back-btn" onclick="goStockHub()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 주가 분석</button>
+    <button class="back-btn" onclick="goHome()" style="color:var(--muted);font-size:11px;border-color:var(--border)"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 7.5L7 3l5 4.5"/><path d="M3.5 6.5V11h2.5V8.5h2V11h2.5V6.5"/></svg> 홈으로</button>
     <span class="div-nav-title">📈 종목 스코어 분석</span>
     <div class="nav-spacer"></div>
     <div class="tax-main-tabs">
@@ -1604,7 +1628,8 @@ canvas#donut{width:160px;height:160px}
 <!-- DIVIDEND PAGE -->
 <div id="page-div" class="page">
   <div class="div-nav">
-    <button class="back-btn" onclick="goHome()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 홈</button>
+    <button class="back-btn" onclick="goStockHub()"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 7H3M3 7l4-4M3 7l4 4"/></svg> 주가 분석</button>
+    <button class="back-btn" onclick="goHome()" style="color:var(--muted);font-size:11px;border-color:var(--border)"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 7.5L7 3l5 4.5"/><path d="M3.5 6.5V11h2.5V8.5h2V11h2.5V6.5"/></svg> 홈으로</button>
     <span class="div-nav-title">월 배당금 계산기</span>
     <div class="nav-spacer"></div>
     <button class="refresh-btn" id="refreshBtn" onclick="fetchAllPrices()">
@@ -6917,7 +6942,7 @@ let saThemeActive=new Set();
 let saRadarCharts={};
 
 function goStockHub(){show('page-stock-hub');}
-function goStockAnalysis(){show('page-stock-analysis');saInitThemes();calcStockScore();}
+function goStockAnalysis(){show('page-stock-analysis');saInitThemes();switchStockTab('macro',document.getElementById('stab1'));}
 
 function switchStockTab(tab,btn){
   document.querySelectorAll('#page-stock-analysis .tax-section').forEach(s=>s.classList.remove('active'));
